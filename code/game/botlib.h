@@ -25,12 +25,14 @@ struct weaponinfo_s;
 
 #define BOTFILESBASEFOLDER		"botfiles"
 //debug line colors
-#define LINECOLOR_NONE			-1
-#define LINECOLOR_RED			1//0xf2f2f0f0L
-#define LINECOLOR_GREEN			2//0xd0d1d2d3L
-#define LINECOLOR_BLUE			3//0xf3f3f1f1L
-#define LINECOLOR_YELLOW		4//0xdcdddedfL
-#define LINECOLOR_ORANGE		5//0xe0e1e2e3L
+#define LINECOLOR_NONE			0
+#define LINECOLOR_RED			1
+#define LINECOLOR_GREEN			2
+#define LINECOLOR_YELLOW		3
+#define LINECOLOR_BLUE			4
+#define LINECOLOR_MAGENTA		5
+#define LINECOLOR_CYAN			6
+#define LINECOLOR_WHITE			7
 
 //Print types
 #define PRT_MESSAGE				1
@@ -59,27 +61,28 @@ struct weaponinfo_s;
 #define BLERR_CANNOTLOADWEAPONCONFIG	12	//cannot load weapon config
 
 //action flags
-#define ACTION_ATTACK			0x0000001
-#define ACTION_USE				0x0000002
-#define ACTION_RESPAWN			0x0000008
-#define ACTION_JUMP				0x0000010
-#define ACTION_MOVEUP			0x0000020
-#define ACTION_CROUCH			0x0000080
-#define ACTION_MOVEDOWN			0x0000100
-#define ACTION_MOVEFORWARD		0x0000200
-#define ACTION_MOVEBACK			0x0000800
-#define ACTION_MOVELEFT			0x0001000
-#define ACTION_MOVERIGHT		0x0002000
-#define ACTION_DELAYEDJUMP		0x0008000
-#define ACTION_TALK				0x0010000
-#define ACTION_GESTURE			0x0020000
-#define ACTION_WALK				0x0080000
-#define ACTION_AFFIRMATIVE		0x0100000
-#define ACTION_NEGATIVE			0x0200000
-#define ACTION_GETFLAG			0x0800000
-#define ACTION_GUARDBASE		0x1000000
-#define ACTION_PATROL			0x2000000
-#define ACTION_FOLLOWME			0x8000000
+#define ACTION_ATTACK			0x00000001
+#define ACTION_USE				0x00000002
+#define ACTION_RESPAWN			0x00000008
+#define ACTION_JUMP				0x00000010
+#define ACTION_MOVEUP			0x00000020
+#define ACTION_CROUCH			0x00000080
+#define ACTION_MOVEDOWN			0x00000100
+#define ACTION_MOVEFORWARD		0x00000200
+#define ACTION_MOVEBACK			0x00000800
+#define ACTION_MOVELEFT			0x00001000
+#define ACTION_MOVERIGHT		0x00002000
+#define ACTION_DELAYEDJUMP		0x00008000
+#define ACTION_TALK				0x00010000
+#define ACTION_GESTURE			0x00020000
+#define ACTION_WALK				0x00080000
+#define ACTION_AFFIRMATIVE		0x00100000
+#define ACTION_NEGATIVE			0x00200000
+#define ACTION_GETFLAG			0x00800000
+#define ACTION_GUARDBASE		0x01000000
+#define ACTION_PATROL			0x02000000
+#define ACTION_FOLLOWME			0x08000000
+#define ACTION_JUMPEDLASTFRAME	0x10000000
 
 //the bot input, will be converted to an usercmd_t
 typedef struct bot_input_s
@@ -92,35 +95,7 @@ typedef struct bot_input_s
 	int weapon;				//weapon to use
 } bot_input_t;
 
-#ifndef BSPTRACE
-
-#define BSPTRACE
-
-//bsp_trace_t hit surface
-typedef struct bsp_surface_s
-{
-	char name[16];
-	int flags;
-	int value;
-} bsp_surface_t;
-
-//remove the bsp_trace_s structure definition l8r on
-//a trace is returned when a box is swept through the world
-typedef struct bsp_trace_s
-{
-	qboolean		allsolid;	// if true, plane is not valid
-	qboolean		startsolid;	// if true, the initial point was in a solid area
-	float			fraction;	// time completed, 1.0 = didn't hit anything
-	vec3_t			endpos;		// final position
-	cplane_t		plane;		// surface normal at impact
-	float			exp_dist;	// expanded plane distance
-	int				sidenum;	// number of the brush side hit
-	bsp_surface_t	surface;	// the hit point surface
-	int				contents;	// contents on other side of surface hit
-	int				ent;		// number of entity hit
-} bsp_trace_t;
-
-#endif	// BSPTRACE
+typedef trace_t bsp_trace_t;
 
 //entity state
 typedef struct bot_entitystate_s
@@ -129,7 +104,6 @@ typedef struct bot_entitystate_s
 	int		flags;			// entity flags
 	vec3_t	origin;			// origin of the entity
 	vec3_t	angles;			// angles of the model
-	vec3_t	old_origin;		// for lerping
 	vec3_t	mins;			// bounding box minimums
 	vec3_t	maxs;			// bounding box maximums
 	int		groundent;		// ground entity
@@ -148,8 +122,10 @@ typedef struct bot_entitystate_s
 //bot AI library exported functions
 typedef struct botlib_import_s
 {
+	//get time for measuring time lapse
+	int			(*MilliSeconds)(void);
 	//print messages from the bot library
-	void		(QDECL *Print)(int type, char *fmt, ...);
+	void		(QDECL *Print)(int type, const char *fmt, ...);
 	//trace a bbox through the world
 	void		(*Trace)(bsp_trace_t *trace, vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end, int passent, int contentmask);
 	//trace a bbox against a specific entity
@@ -163,7 +139,7 @@ typedef struct botlib_import_s
 	//
 	void		(*BSPModelMinsMaxsOrigin)(int modelnum, vec3_t angles, vec3_t mins, vec3_t maxs, vec3_t origin);
 	//send a bot client command
-	void		(*BotClientCommand)(int client, char *command);
+	void		(*BotClientCommand)( int client, const char *command );
 	//memory allocation
 	void		*(*GetMemory)(int size);		// allocate from Zone
 	void		(*FreeMemory)(void *ptr);		// free memory from Zone
@@ -209,10 +185,10 @@ typedef struct aas_export_s
 	//--------------------------------------------
 	int			(*AAS_PointContents)(vec3_t point);
 	int			(*AAS_NextBSPEntity)(int ent);
-	int			(*AAS_ValueForBSPEpairKey)(int ent, char *key, char *value, int size);
-	int			(*AAS_VectorForBSPEpairKey)(int ent, char *key, vec3_t v);
-	int			(*AAS_FloatForBSPEpairKey)(int ent, char *key, float *value);
-	int			(*AAS_IntForBSPEpairKey)(int ent, char *key, int *value);
+	int			(*AAS_ValueForBSPEpairKey)(int ent, const char *key, char *value, int size);
+	int			(*AAS_VectorForBSPEpairKey)(int ent, const char *key, vec3_t v);
+	int			(*AAS_FloatForBSPEpairKey)(int ent, const char *key, float *value);
+	int			(*AAS_IntForBSPEpairKey)(int ent, const char *key, int *value);
 	//--------------------------------------------
 	// be_aas_reach.c
 	//--------------------------------------------
@@ -236,9 +212,9 @@ typedef struct aas_export_s
 	//--------------------------------------------
 	int			(*AAS_Swimming)(vec3_t origin);
 	int			(*AAS_PredictClientMovement)(struct aas_clientmove_s *move,
-											int entnum, vec3_t origin,
+											int entnum, const vec3_t origin,
 											int presencetype, int onground,
-											vec3_t velocity, vec3_t cmdmove,
+											const vec3_t velocity, const vec3_t cmdmove,
 											int cmdframes,
 											int maxframes, float frametime,
 											int stopevent, int stopareanum, int visualize);
@@ -247,9 +223,9 @@ typedef struct aas_export_s
 typedef struct ea_export_s
 {
 	//ClientCommand elementary actions
-	void	(*EA_Command)(int client, char *command );
-	void	(*EA_Say)(int client, char *str);
-	void	(*EA_SayTeam)(int client, char *str);
+	void	(*EA_Command)(int client, const char *command);
+	void	(*EA_Say)(int client, const char *str);
+	void	(*EA_SayTeam)(int client, const char *str);
 	//
 	void	(*EA_Action)(int client, int action);
 	void	(*EA_Gesture)(int client);
@@ -281,7 +257,7 @@ typedef struct ai_export_s
 	//-----------------------------------
 	// be_ai_char.h
 	//-----------------------------------
-	int		(*BotLoadCharacter)(char *charfile, float skill);
+	int		(*BotLoadCharacter)(const char *charfile, float skill);
 	void	(*BotFreeCharacter)(int character);
 	float	(*Characteristic_Float)(int character, int index);
 	float	(*Characteristic_BFloat)(int character, int index, float min, float max);
@@ -293,24 +269,24 @@ typedef struct ai_export_s
 	//-----------------------------------
 	int		(*BotAllocChatState)(void);
 	void	(*BotFreeChatState)(int handle);
-	void	(*BotQueueConsoleMessage)(int chatstate, int type, char *message);
+	void	(*BotQueueConsoleMessage)(int chatstate, int type, const char *message);
 	void	(*BotRemoveConsoleMessage)(int chatstate, int handle);
 	int		(*BotNextConsoleMessage)(int chatstate, struct bot_consolemessage_s *cm);
 	int		(*BotNumConsoleMessages)(int chatstate);
-	void	(*BotInitialChat)(int chatstate, char *type, int mcontext, char *var0, char *var1, char *var2, char *var3, char *var4, char *var5, char *var6, char *var7);
-	int		(*BotNumInitialChats)(int chatstate, char *type);
+	void	(*BotInitialChat)(int chatstate, const char *type, int mcontext, char *var0, char *var1, char *var2, char *var3, char *var4, char *var5, char *var6, char *var7);
+	int		(*BotNumInitialChats)(int chatstate, const char *type);
 	int		(*BotReplyChat)(int chatstate, char *message, int mcontext, int vcontext, char *var0, char *var1, char *var2, char *var3, char *var4, char *var5, char *var6, char *var7);
 	int		(*BotChatLength)(int chatstate);
 	void	(*BotEnterChat)(int chatstate, int client, int sendto);
 	void	(*BotGetChatMessage)(int chatstate, char *buf, int size);
-	int		(*StringContains)(char *str1, char *str2, int casesensitive);
-	int		(*BotFindMatch)(char *str, struct bot_match_s *match, unsigned long int context);
+	int		(*StringContains)(const char *str1, const char *str2, int casesensitive);
+	int		(*BotFindMatch)(const char *str, struct bot_match_s *match, unsigned long int context);
 	void	(*BotMatchVariable)(struct bot_match_s *match, int variable, char *buf, int size);
 	void	(*UnifyWhiteSpaces)(char *string);
 	void	(*BotReplaceSynonyms)(char *string, unsigned long int context);
-	int		(*BotLoadChatFile)(int chatstate, char *chatfile, char *chatname);
+	int		(*BotLoadChatFile)(int chatstate, const char *chatfile, const char *chatname);
 	void	(*BotSetChatGender)(int chatstate, int gender);
-	void	(*BotSetChatName)(int chatstate, char *name, int client);
+	void	(*BotSetChatName)(int chatstate, const char *name, int client);
 	//-----------------------------------
 	// be_ai_goal.h
 	//-----------------------------------
@@ -328,19 +304,19 @@ typedef struct ai_export_s
 	int		(*BotChooseLTGItem)(int goalstate, vec3_t origin, int *inventory, int travelflags);
 	int		(*BotChooseNBGItem)(int goalstate, vec3_t origin, int *inventory, int travelflags,
 								struct bot_goal_s *ltg, float maxtime);
-	int		(*BotTouchingGoal)(vec3_t origin, struct bot_goal_s *goal);
+	int		(*BotTouchingGoal)(const vec3_t origin, const struct bot_goal_s *goal);
 	int		(*BotItemGoalInVisButNotVisible)(int viewer, vec3_t eye, vec3_t viewangles, struct bot_goal_s *goal);
-	int		(*BotGetLevelItemGoal)(int index, char *classname, struct bot_goal_s *goal);
+	int		(*BotGetLevelItemGoal)(int index, const char *classname, struct bot_goal_s *goal);
 	int		(*BotGetNextCampSpotGoal)(int num, struct bot_goal_s *goal);
-	int		(*BotGetMapLocationGoal)(char *name, struct bot_goal_s *goal);
+	int		(*BotGetMapLocationGoal)(const char *name, struct bot_goal_s *goal);
 	float	(*BotAvoidGoalTime)(int goalstate, int number);
 	void	(*BotSetAvoidGoalTime)(int goalstate, int number, float avoidtime);
 	void	(*BotInitLevelItems)(void);
 	void	(*BotUpdateEntityItems)(void);
-	int		(*BotLoadItemWeights)(int goalstate, char *filename);
+	int		(*BotLoadItemWeights)(int goalstate, const char *filename);
 	void	(*BotFreeItemWeights)(int goalstate);
 	void	(*BotInterbreedGoalFuzzyLogic)(int parent1, int parent2, int child);
-	void	(*BotSaveGoalFuzzyLogic)(int goalstate, char *filename);
+	void	(*BotSaveGoalFuzzyLogic)(int goalstate, const char *filename);
 	void	(*BotMutateGoalFuzzyLogic)(int goalstate, float range);
 	int		(*BotAllocGoalState)(int client);
 	void	(*BotFreeGoalState)(int handle);
@@ -364,7 +340,7 @@ typedef struct ai_export_s
 	//-----------------------------------
 	int		(*BotChooseBestFightWeapon)(int weaponstate, int *inventory);
 	void	(*BotGetWeaponInfo)(int weaponstate, int weapon, struct weaponinfo_s *weaponinfo);
-	int		(*BotLoadWeaponWeights)(int weaponstate, char *filename);
+	int		(*BotLoadWeaponWeights)(int weaponstate, const char *filename);
 	int		(*BotAllocWeaponState)(void);
 	void	(*BotFreeWeaponState)(int weaponstate);
 	void	(*BotResetWeaponState)(int weaponstate);
@@ -388,12 +364,12 @@ typedef struct botlib_export_s
 	//shutdown the bot library, returns BLERR_
 	int (*BotLibShutdown)(void);
 	//sets a library variable returns BLERR_
-	int (*BotLibVarSet)(char *var_name, char *value);
+	int (*BotLibVarSet)( const char *var_name, const char *value );
 	//gets a library variable returns BLERR_
-	int (*BotLibVarGet)(char *var_name, char *value, int size);
+	int (*BotLibVarGet)( const char *var_name, char *value, int size );
 
 	//sets a C-like define returns BLERR_
-	int (*PC_AddGlobalDefine)(char *string);
+	int (*PC_AddGlobalDefine)(const char *string);
 	int (*PC_LoadSourceHandle)(const char *filename);
 	int (*PC_FreeSourceHandle)(int handle);
 	int (*PC_ReadTokenHandle)(int handle, pc_token_t *pc_token);

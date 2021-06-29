@@ -1055,6 +1055,30 @@ typedef struct entityState_s {
 	int		generic1;
 } entityState_t;
 
+//
+// entityState_t->eType
+//
+typedef enum {
+	ET_GENERAL,
+	ET_PLAYER,
+	ET_ITEM,
+	ET_MISSILE,
+	ET_MOVER,
+	ET_BEAM,
+	ET_PORTAL,
+	ET_SPEAKER,
+	ET_PUSH_TRIGGER,
+	ET_TELEPORT_TRIGGER,
+	ET_INVISIBLE,
+	ET_GRAPPLE,				// grapple hooked on wall
+	ET_TEAM,
+	ET_CORONA,
+
+	ET_EVENTS				// any of the EV_* events can be added freestanding
+							// by setting eType to ET_EVENTS + eventNum
+							// this avoids having to set eFlags and eventNum
+} entityType_t;
+
 typedef enum {
 	CA_UNINITIALIZED,
 	CA_DISCONNECTED, 	// not talking to a server
@@ -1145,6 +1169,19 @@ typedef enum _flag_status {
 	FLAG_TAKEN_BLUE,	// One Flag CTF
 	FLAG_DROPPED
 } flagStatus_t;
+
+typedef enum {
+	GT_FFA,				// free for all
+	GT_TOURNAMENT,		// one on one tournament
+	GT_SINGLE_PLAYER,	// single player tournament
+	//-- team games go after this --
+	GT_TEAM,			// team deathmatch
+	GT_CTF,				// capture the flag
+	GT_1FCTF,
+	GT_OBELISK,
+	GT_HARVESTER,
+	GT_MAX_GAME_TYPE
+} gametype_t;
 
 #define SAY_ALL		0
 #define SAY_TEAM	1

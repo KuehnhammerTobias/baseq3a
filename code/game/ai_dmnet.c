@@ -38,9 +38,6 @@
 #include "../../ui/menudef.h"
 #endif
 
-//goal flag, see be_ai_goal.h for the other GFL_*
-#define GFL_AIR			128
-
 int numnodeswitches;
 char nodeswitch[MAX_NODESWITCHES+1][144];
 
@@ -139,7 +136,7 @@ int BotGoForAir(bot_state_t *bs, int tfl, bot_goal_t *ltg, float range) {
 	bot_goal_t goal;
 
 	//if the bot needs air
-	if (bs->lastair_time < FloatTime() - 6) {
+	if (bs->lastair_time < FloatTime() - 15) {
 		//
 #ifdef DEBUG
 		//BotAI_Print(PRT_MESSAGE, "going for air\n");
@@ -1362,7 +1359,7 @@ void BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult) {
 						//
 						BotAI_Trace(&bsptrace, bs->eye, NULL, NULL, target, bs->entitynum, MASK_SHOT);
 						// if the mine is visible from the current position
-						if (bsptrace.fraction >= 1.0 || bsptrace.ent == state.number) {
+						if (bsptrace.fraction >= 1.0 || bsptrace.entityNum == state.number) {
 							// shoot at the mine
 							trap_EA_Attack(bs->client);
 						}
@@ -1419,7 +1416,7 @@ void BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult) {
 						//
 						BotAI_Trace(&bsptrace, bs->eye, NULL, NULL, target, bs->entitynum, MASK_SHOT);
 						// if the mine is visible from the current position
-						if (bsptrace.fraction >= 1.0 || bsptrace.ent == state.number) {
+						if (bsptrace.fraction >= 1.0 || bsptrace.entityNum == state.number) {
 							// shoot at the mine
 							trap_EA_Attack(bs->client);
 						}
@@ -1494,7 +1491,7 @@ int AINode_Seek_ActivateEntity(bot_state_t *bs) {
 		//
 		BotAI_Trace(&bsptrace, bs->eye, NULL, NULL, bs->activatestack->target, bs->entitynum, MASK_SHOT);
 		// if the shootable entity is visible from the current position
-		if (bsptrace.fraction >= 1.0 || bsptrace.ent == goal->entitynum) {
+		if (bsptrace.fraction >= 1.0 || bsptrace.entityNum == goal->entitynum) {
 			targetvisible = qtrue;
 			// if holding the right weapon
 			if (bs->cur_ps.weapon == bs->activatestack->weapon) {

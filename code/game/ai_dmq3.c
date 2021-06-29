@@ -1891,7 +1891,7 @@ void BotUseKamikaze(bot_state_t *bs) {
 		VectorSubtract(bs->origin, target, dir);
 		if (VectorLengthSquared(dir) < Square(KAMIKAZE_DIST * 0.9)) {
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target, bs->client, CONTENTS_SOLID);
-			if (trace.fraction >= 1 || trace.ent == goal->entitynum) {
+			if (trace.fraction >= 1 || trace.entityNum == goal->entitynum) {
 				trap_EA_Use(bs->client);
 				return;
 			}
@@ -1963,7 +1963,7 @@ void BotUseInvulnerability(bot_state_t *bs) {
 		VectorSubtract(bs->origin, target, dir);
 		if (VectorLengthSquared(dir) < Square(200)) {
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target, bs->client, CONTENTS_SOLID);
-			if (trace.fraction >= 1 || trace.ent == goal->entitynum) {
+			if (trace.fraction >= 1 || trace.entityNum == goal->entitynum) {
 				trap_EA_Use(bs->client);
 				return;
 			}
@@ -1987,7 +1987,7 @@ void BotUseInvulnerability(bot_state_t *bs) {
 		VectorSubtract(bs->origin, target, dir);
 		if (VectorLengthSquared(dir) < Square(200)) {
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target, bs->client, CONTENTS_SOLID);
-			if (trace.fraction >= 1 || trace.ent == goal->entitynum) {
+			if (trace.fraction >= 1 || trace.entityNum == goal->entitynum) {
 				trap_EA_Use(bs->client);
 				return;
 			}
@@ -2004,7 +2004,7 @@ void BotUseInvulnerability(bot_state_t *bs) {
 		VectorSubtract(bs->origin, target, dir);
 		if (VectorLengthSquared(dir) < Square(300)) {
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target, bs->client, CONTENTS_SOLID);
-			if (trace.fraction >= 1 || trace.ent == goal->entitynum) {
+			if (trace.fraction >= 1 || trace.entityNum == goal->entitynum) {
 				trap_EA_Use(bs->client);
 				return;
 			}
@@ -2028,7 +2028,7 @@ void BotUseInvulnerability(bot_state_t *bs) {
 		VectorSubtract(bs->origin, target, dir);
 		if (VectorLengthSquared(dir) < Square(200)) {
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target, bs->client, CONTENTS_SOLID);
-			if (trace.fraction >= 1 || trace.ent == goal->entitynum) {
+			if (trace.fraction >= 1 || trace.entityNum == goal->entitynum) {
 				trap_EA_Use(bs->client);
 				return;
 			}
@@ -2894,7 +2894,7 @@ float BotEntityVisible(int viewer, vec3_t eye, vec3_t viewangles, float fov, int
 			}
 		}
 		//if a full trace or the hitent was hit
-		if (trace.fraction >= 1 || trace.ent == hitent) {
+		if (trace.fraction >= 1 || trace.entityNum == hitent) {
 			//check for fog, assuming there's only one fog brush where
 			//either the viewer or the entity is in or both are in
 			otherinfog = (trap_AAS_PointContents(middle) & CONTENTS_FOG);
@@ -2976,7 +2976,7 @@ int BotFindEnemy(bot_state_t *bs, int curenemy) {
 		VectorCopy(goal->origin, target);
 		target[2] += 1;
 		BotAI_Trace(&trace, bs->eye, NULL, NULL, target, bs->client, CONTENTS_SOLID);
-		if (trace.fraction >= 1 || trace.ent == goal->entitynum) {
+		if (trace.fraction >= 1 || trace.entityNum == goal->entitynum) {
 			if (goal->entitynum == bs->enemy) {
 				return qfalse;
 			}
@@ -3397,7 +3397,7 @@ void BotAimAtEnemy(bot_state_t *bs) {
 		//
 		BotAI_Trace(&trace, start, mins, maxs, bestorigin, bs->entitynum, MASK_SHOT);
 		//if the enemy is NOT hit
-		if (trace.fraction <= 1 && trace.ent != entinfo.number) {
+		if (trace.fraction <= 1 && trace.entityNum != entinfo.number) {
 			bestorigin[2] += 16;
 		}
 		//if it is not an instant hit weapon the bot might want to predict the enemy
@@ -3633,7 +3633,7 @@ void BotCheckAttack(bot_state_t *bs) {
 	if (!InFieldOfVision(bs->viewangles, fov, angles))
 		return;
 	BotAI_Trace(&bsptrace, bs->eye, NULL, NULL, bs->aimtarget, bs->client, CONTENTS_SOLID|CONTENTS_PLAYERCLIP);
-	if (bsptrace.fraction < 1 && bsptrace.ent != attackentity)
+	if (bsptrace.fraction < 1 && bsptrace.entityNum != attackentity)
 		return;
 
 	//get the weapon info
@@ -3651,15 +3651,15 @@ void BotCheckAttack(bot_state_t *bs) {
 	VectorMA(start, -12, forward, start);
 	BotAI_Trace(&trace, start, mins, maxs, end, bs->entitynum, MASK_SHOT);
 	//if the entity is a client
-	if (trace.ent >= 0 && trace.ent < MAX_CLIENTS) {
-		if (trace.ent != attackentity) {
+	if (trace.entityNum >= 0 && trace.entityNum < MAX_CLIENTS) {
+		if (trace.entityNum != attackentity) {
 			//if a teammate is hit
-			if (BotSameTeam(bs, trace.ent))
+			if (BotSameTeam(bs, trace.entityNum))
 				return;
 		}
 	}
 	//if won't hit the enemy or not attacking a player (obelisk)
-	if (trace.ent != attackentity || attackentity >= MAX_CLIENTS) {
+	if (trace.entityNum != attackentity || attackentity >= MAX_CLIENTS) {
 		//if the projectile does radial damage
 		if (wi.proj.damagetype & DAMAGETYPE_RADIAL) {
 			if (trace.fraction * 1000 < wi.proj.radius) {
@@ -3873,7 +3873,7 @@ int BotFuncButtonActivateGoal(bot_state_t *bs, int bspent, bot_activategoal_t *a
 		//
 		BotAI_Trace(&bsptrace, bs->eye, NULL, NULL, goalorigin, bs->entitynum, MASK_SHOT);
 		// if the button is visible from the current position
-		if (bsptrace.fraction >= 1.0 || bsptrace.ent == entitynum) {
+		if (bsptrace.fraction >= 1.0 || bsptrace.entityNum == entitynum) {
 			//
 			activategoal->goal.entitynum = entitynum; //NOTE: this is the entity number of the shootable button
 			activategoal->goal.number = 0;
