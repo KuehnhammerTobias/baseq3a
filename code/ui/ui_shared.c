@@ -237,7 +237,7 @@ void PC_SourceWarning(int handle, char *format, ...) {
 	static char string[4096];
 
 	va_start (argptr, format);
-	vsprintf (string, format, argptr);
+	ED_vsprintf (string, format, argptr);
 	va_end (argptr);
 
 	filename[0] = '\0';
@@ -259,7 +259,7 @@ void PC_SourceError(int handle, char *format, ...) {
 	static char string[4096];
 
 	va_start (argptr, format);
-	vsprintf (string, format, argptr);
+	ED_vsprintf (string, format, argptr);
 	va_end (argptr);
 
 	filename[0] = '\0';

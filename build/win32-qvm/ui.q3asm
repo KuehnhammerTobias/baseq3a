@@ -1,0 +1,10 @@
+ui_main
+..\..\..\..\code\ui\ui_syscalls
+ui_atoms
+ui_gameinfo
+ui_players
+ui_shared
+bg_misc
+bg_lib
+q_math
+q_shared
