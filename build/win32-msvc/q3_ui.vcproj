@@ -351,10 +351,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\code\q3_ui\ui_cdkey.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\code\q3_ui\ui_cinematics.c"
 				>
 			</File>

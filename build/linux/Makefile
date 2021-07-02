@@ -420,7 +420,6 @@ UIOBJ_ = \
   $(B)/$(MOD)/ui/bg_lib.o \
   $(B)/$(MOD)/ui/ui_addbots.o \
   $(B)/$(MOD)/ui/ui_atoms.o \
-  $(B)/$(MOD)/ui/ui_cdkey.o \
   $(B)/$(MOD)/ui/ui_cinematics.o \
   $(B)/$(MOD)/ui/ui_confirm.o \
   $(B)/$(MOD)/ui/ui_connect.o \

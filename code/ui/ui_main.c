@@ -183,8 +183,6 @@ int vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, int a
 	  case UI_DRAW_CONNECT_SCREEN:
 		  UI_DrawConnectScreen( arg0 );
 		  return 0;
-	  case UI_HASUNIQUECDKEY: // mod authors need to observe this
-	    return qtrue; // bk010117 - change this to qfalse for mods!
 
 	}
 
@@ -3208,37 +3206,6 @@ static void UI_RunMenuScript(char **args) {
 			Controls_SetDefaults();
 			trap_Cvar_Set("com_introPlayed", "1" );
 			trap_Cmd_ExecuteText( EXEC_APPEND, "vid_restart\n" );
-		} else if (Q_stricmp(name, "getCDKey") == 0) {
-			char out[17];
-			trap_GetCDKey(buff, 17);
-			trap_Cvar_Set("cdkey1", "");
-			trap_Cvar_Set("cdkey2", "");
-			trap_Cvar_Set("cdkey3", "");
-			trap_Cvar_Set("cdkey4", "");
-			if (strlen(buff) == CDKEY_LEN) {
-				Q_strncpyz(out, buff, 5);
-				trap_Cvar_Set("cdkey1", out);
-				Q_strncpyz(out, buff + 4, 5);
-				trap_Cvar_Set("cdkey2", out);
-				Q_strncpyz(out, buff + 8, 5);
-				trap_Cvar_Set("cdkey3", out);
-				Q_strncpyz(out, buff + 12, 5);
-				trap_Cvar_Set("cdkey4", out);
-			}
-
-		} else if (Q_stricmp(name, "verifyCDKey") == 0) {
-			buff[0] = '\0';
-			Q_strcat(buff, 1024, UI_Cvar_VariableString("cdkey1")); 
-			Q_strcat(buff, 1024, UI_Cvar_VariableString("cdkey2")); 
-			Q_strcat(buff, 1024, UI_Cvar_VariableString("cdkey3")); 
-			Q_strcat(buff, 1024, UI_Cvar_VariableString("cdkey4")); 
-			trap_Cvar_Set("cdkey", buff);
-			if (trap_VerifyCDKey(buff, UI_Cvar_VariableString("cdkeychecksum"))) {
-				trap_Cvar_Set("ui_cdkeyvalid", "CD Key Appears to be valid.");
-				trap_SetCDKey(buff);
-			} else {
-				trap_Cvar_Set("ui_cdkeyvalid", "CD Key does not appear to be valid.");
-			}
 		} else if (Q_stricmp(name, "loadArenas") == 0) {
 			UI_LoadArenas();
 			UI_MapCountByGameType(qfalse);
@@ -3506,10 +3473,6 @@ static void UI_RunMenuScript(char **args) {
 			if (String_Parse(args, &name2)) {
 				UI_Update(name2);
 			}
-		} else if (Q_stricmp(name, "setPbClStatus") == 0) {
-			int stat;
-			if ( Int_Parse( args, &stat ) )
-				trap_SetPbClStatus( stat );
 		}
 		else {
 			Com_Printf("unknown UI script %s\n", name);
@@ -4276,7 +4239,7 @@ static const char *UI_FeederItemText(float feederID, int index, int column, qhan
 		return UI_SelectedMap(index, &actual);
 	} else if (feederID == FEEDER_SERVERS) {
 		if (index >= 0 && index < uiInfo.serverStatus.numDisplayServers) {
-			int ping, game, punkbuster;
+			int ping, game;
 			if (lastColumn != column || lastTime > uiInfo.uiDC.realTime + 5000) {
 				trap_LAN_GetServerInfo(ui_netSource.integer, uiInfo.serverStatus.displayServers[index], info, MAX_STRING_CHARS);
 				lastColumn = column;
@@ -4319,13 +4282,6 @@ static const char *UI_FeederItemText(float feederID, int index, int column, qhan
 						return "...";
 					} else {
 						return Info_ValueForKey(info, "ping");
-					}
-				case SORT_PUNKBUSTER:
-					punkbuster = atoi(Info_ValueForKey(info, "punkbuster"));
-					if ( punkbuster ) {
-						return "Yes";
-					} else {
-						return "No";
 					}
 			}
 		}
@@ -5250,18 +5206,6 @@ void _UI_SetActiveMenu( uiMenuCommand_t menu ) {
 			trap_Key_SetCatcher( KEYCATCH_UI );
       Menus_ActivateByName("team");
 		  return;
-	  case UIMENU_NEED_CD:
-			// no cd check in TA
-			//trap_Key_SetCatcher( KEYCATCH_UI );
-      //Menus_ActivateByName("needcd");
-		  //UI_ConfirmMenu( "Insert the CD", NULL, NeedCDAction );
-		  return;
-	  case UIMENU_BAD_CD_KEY:
-			// no cd check in TA
-			//trap_Key_SetCatcher( KEYCATCH_UI );
-      //Menus_ActivateByName("badcd");
-		  //UI_ConfirmMenu( "Bad CD Key", NULL, NeedCDKeyAction );
-		  return;
 	  case UIMENU_POSTGAME:
 			//trap_Cvar_Set( "sv_killserver", "1" );
 			trap_Key_SetCatcher( KEYCATCH_UI );
@@ -5270,7 +5214,6 @@ void _UI_SetActiveMenu( uiMenuCommand_t menu ) {
 			}
 			Menus_CloseAll();
 			Menus_ActivateByName("endofgame");
-		  //UI_ConfirmMenu( "Bad CD Key", NULL, NeedCDKeyAction );
 		  return;
 	  case UIMENU_INGAME:
 		  trap_Cvar_Set( "cl_paused", "1" );
@@ -5614,9 +5557,6 @@ vmCvar_t	ui_server13;
 vmCvar_t	ui_server14;
 vmCvar_t	ui_server15;
 vmCvar_t	ui_server16;
-
-vmCvar_t	ui_cdkeychecked;
-
 vmCvar_t	ui_redteam;
 vmCvar_t	ui_redteam1;
 vmCvar_t	ui_redteam2;
@@ -5735,7 +5675,6 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_server14, "server14", "", CVAR_ARCHIVE },
 	{ &ui_server15, "server15", "", CVAR_ARCHIVE },
 	{ &ui_server16, "server16", "", CVAR_ARCHIVE },
-	{ &ui_cdkeychecked, "ui_cdkeychecked", "0", CVAR_ROM },
 	{ &ui_new, "ui_new", "0", CVAR_TEMP },
 	{ &ui_debug, "ui_debug", "0", CVAR_TEMP },
 	{ &ui_initialized, "ui_initialized", "0", CVAR_TEMP },

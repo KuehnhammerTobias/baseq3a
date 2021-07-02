@@ -58,9 +58,6 @@ DLLEXPORT intptr_t vmMain( int command, int arg0, int arg1 ) {
 	case UI_DRAW_CONNECT_SCREEN:
 		UI_DrawConnectScreen( arg0 );
 		return 0;
-
-	case UI_HASUNIQUECDKEY:	// mod authors need to observe this
-		return qtrue;		// change this to qfalse for mods!
 	}
 
 	return -1;
@@ -135,8 +132,6 @@ vmCvar_t	ui_server14;
 vmCvar_t	ui_server15;
 vmCvar_t	ui_server16;
 
-vmCvar_t	ui_cdkeychecked;
-
 // bk001129 - made static to avoid aliasing.
 static cvarTable_t		cvarTable[] = {
 	{ &ui_ffa_fraglimit, "ui_ffa_fraglimit", "20", CVAR_ARCHIVE },
@@ -192,9 +187,7 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_server13, "server13", "", CVAR_ARCHIVE },
 	{ &ui_server14, "server14", "", CVAR_ARCHIVE },
 	{ &ui_server15, "server15", "", CVAR_ARCHIVE },
-	{ &ui_server16, "server16", "", CVAR_ARCHIVE },
-
-	{ &ui_cdkeychecked, "ui_cdkeychecked", "0", CVAR_ROM }
+	{ &ui_server16, "server16", "", CVAR_ARCHIVE }
 };
 
 // bk001129 - made static to avoid aliasing

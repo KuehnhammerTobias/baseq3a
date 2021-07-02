@@ -192,8 +192,6 @@ cd vm\ui
 @if errorlevel 1 goto quit
 %cc3% %uidir%\ui_atoms.c
 @if errorlevel 1 goto quit
-%cc3% %uidir%\ui_cdkey.c
-@if errorlevel 1 goto quit
 %cc3% %uidir%\ui_cinematics.c
 @if errorlevel 1 goto quit
 %cc3% %uidir%\ui_confirm.c
