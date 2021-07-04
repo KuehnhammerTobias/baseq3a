@@ -618,7 +618,6 @@ typedef struct {
 	char		attackerName[MAX_NAME_LENGTH];
 	int			attackerClientNum;
 	int			attackerTime;
-
 	int			voiceTime;
 
 	// reward medals

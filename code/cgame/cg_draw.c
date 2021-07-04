@@ -439,7 +439,7 @@ void CG_DrawFlagModel( float x, float y, float w, float h, int team, qboolean fo
 		len = 0.5 * ( maxs[2] - mins[2] );		
 		origin[0] = len / 0.268;	// len / tan( fov/2 )
 
-		angles[YAW] = 60 * sin( ( cg.time % TMOD_2000 ) / 2000.0 );;
+		angles[YAW] = 60 * sin( ( cg.time % TMOD_2000 ) / 2000.0 );
 
 		if( team == TEAM_RED ) {
 			handle = cgs.media.redFlagModel;
@@ -571,6 +571,7 @@ void CG_DrawTeamBackground( int x, int y, int w, int h, float alpha, int team )
 /*
 ================
 CG_DrawStatusBar
+
 ================
 */
 #ifndef MISSIONPACK
@@ -675,7 +676,7 @@ static void CG_DrawStatusBar( void ) {
 			CG_SelectFont( 0 );
 #else
 			trap_R_SetColor( colors[color] );
-			CG_DrawField( 0, y, 3, value );
+			CG_DrawField (0, y, 3, value);
 #endif
 			trap_R_SetColor( NULL );
 
@@ -696,13 +697,13 @@ static void CG_DrawStatusBar( void ) {
 	//
 	value = ps->stats[STAT_HEALTH];
 	if ( value > 100 ) {
-		color = 3; // white
-	} else if ( value > 25 ) {
-		color = 0; 	// yellow
+		color = 3;		// white
+	} else if (value > 25) {
+		color = 0;	// yellow
 	} else if (value > 0) {
 		color = (cg.time >> 8) & 1;	// red/yellow flashing
 	} else {
-		color = 1; // red
+		color = 1;	// red
 	}
 
 #ifdef USE_NEW_FONT_RENDERER
@@ -717,11 +718,12 @@ static void CG_DrawStatusBar( void ) {
 	CG_ColorForHealth( hcolor );
 	trap_R_SetColor( hcolor );
 
+
 	//
 	// armor
 	//
 	value = ps->stats[STAT_ARMOR];
-	if ( value > 0 ) {
+	if (value > 0 ) {
 #ifdef USE_NEW_FONT_RENDERER
 		CG_SelectFont( 1 );
 		CG_DrawString( 370 + CHAR_WIDTH*3, y, va( "%i", value ), colors[ color ], CHAR_WIDTH, CHAR_HEIGHT, 0, DS_RIGHT | DS_PROPORTIONAL );
@@ -1309,6 +1311,7 @@ static float CG_DrawScores( float y ) {
 			s = va( "%2i", cgs.fraglimit );
 			CG_DrawString( x-4, y, s, colorWhite, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_SHADOW | DS_RIGHT );
 		}
+
 	}
 
 	return y1 - 8;
