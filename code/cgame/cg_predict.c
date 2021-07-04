@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // cg_predict.c -- this file generates cg.predictedPlayerState by either
 // interpolating between snapshots from the server or locally predicting
@@ -55,7 +75,6 @@ void CG_BuildSolidList( void ) {
 		}
 	}
 }
-
 
 /*
 ====================
@@ -119,7 +138,6 @@ static void CG_ClipMoveToEntities ( const vec3_t start, const vec3_t mins, const
 	}
 }
 
-
 /*
 ================
 CG_Trace
@@ -140,7 +158,6 @@ void	CG_Trace( trace_t *result, const vec3_t start, const vec3_t mins, const vec
 
 	*result = t;
 }
-
 
 /*
 ================
@@ -470,7 +487,7 @@ CG_TouchItem
 ===================
 */
 static void CG_TouchItem( centity_t *cent ) {
-	const gitem_t *item;
+	const gitem_t		*item;
 
 	if ( cg.allowPickupPrediction && cg.allowPickupPrediction > cg.time ) {
 		return;
@@ -479,18 +496,17 @@ static void CG_TouchItem( centity_t *cent ) {
 	if ( !cg_predictItems.integer ) {
 		return;
 	}
-
 	if ( !BG_PlayerTouchesItem( &cg.predictedPlayerState, &cent->currentState, cg.time ) ) {
 		return;
 	}
 
 	// never pick an item up twice in a prediction
-	if ( cent->delaySpawn > cg.time ) { 
+	if ( cent->delaySpawn > cg.time ) {
 		return;
 	}
 
 	if ( !BG_CanItemBeGrabbed( cgs.gametype, &cent->currentState, &cg.predictedPlayerState ) ) {
-		return;	// can't hold it
+		return;		// can't hold it
 	}
 
 	item = &bg_itemlist[ cent->currentState.modelindex ];
@@ -517,7 +533,6 @@ static void CG_TouchItem( centity_t *cent ) {
 
 	// grab it
 	BG_AddPredictableEventToPlayerstate( EV_ITEM_PICKUP, cent->currentState.modelindex , &cg.predictedPlayerState, cent - cg_entities );
-
 	// perform prediction
 	CG_PickupPrediction( cent, item );
 
@@ -940,7 +955,7 @@ void CG_PredictPlayerState( void ) {
 	// the last good position we had
 	cmdNum = current - CMD_BACKUP + 1;
 	trap_GetUserCmd( cmdNum, &oldestCmd );
-	if ( oldestCmd.serverTime > cg.snap->ps.commandTime
+	if ( oldestCmd.serverTime > cg.snap->ps.commandTime 
 		&& oldestCmd.serverTime < cg.time ) {	// special check for map_restart
 		if ( cg_showmiss.integer ) {
 			CG_Printf ("exceeded PACKET_BACKUP on commands\n");
@@ -1100,18 +1115,18 @@ void CG_PredictPlayerState( void ) {
 			} else {
 				vec3_t adjusted, new_angles;
 				CG_AdjustPositionForMover( cg.predictedPlayerState.origin, 
-					cg.predictedPlayerState.groundEntityNum, cg.physicsTime, cg.oldTime, adjusted, cg.predictedPlayerState.viewangles, new_angles);
+				cg.predictedPlayerState.groundEntityNum, cg.physicsTime, cg.oldTime, adjusted, cg.predictedPlayerState.viewangles, new_angles);
 
 				if ( cg_showmiss.integer ) {
-					if ( !VectorCompare( oldPlayerState.origin, adjusted ) ) {
-						CG_Printf( "prediction error\n" );
+					if (!VectorCompare( oldPlayerState.origin, adjusted )) {
+						CG_Printf("prediction error\n");
 					}
 				}
 				VectorSubtract( oldPlayerState.origin, adjusted, delta );
 				len = VectorLengthSquared( delta );
 				if ( len > (0.01f * 0.01f) ) {
 					if ( cg_showmiss.integer ) {
-						CG_Printf( "Prediction miss: %f\n", sqrt( len ) );
+						CG_Printf("Prediction miss: %f\n", sqrt(len));
 					}
 					if ( cg_errorDecay.integer ) {
 						int		t;
@@ -1149,7 +1164,7 @@ void CG_PredictPlayerState( void ) {
 #endif
 		if ( /*cg_optimizePrediction.integer && */ ( cmdNum >= predictCmd || ( stateIndex + 1 ) % NUM_SAVED_STATES == cg.stateHead ) ) {
 
-			Pmove( &cg_pmove );
+		Pmove (&cg_pmove);
 
 			// add push trigger movement effects
 			CG_TouchTriggerPrediction();
@@ -1190,13 +1205,13 @@ void CG_PredictPlayerState( void ) {
 	}
 
 	// adjust for the movement of the groundentity
-	CG_AdjustPositionForMover( cg.predictedPlayerState.origin, cg.predictedPlayerState.groundEntityNum, 
-		cg.physicsTime, cg.time, cg.predictedPlayerState.origin, 
-		cg.predictedPlayerState.viewangles, cg.predictedPlayerState.viewangles );
+	CG_AdjustPositionForMover( cg.predictedPlayerState.origin, 
+		cg.predictedPlayerState.groundEntityNum, 
+		cg.physicsTime, cg.time, cg.predictedPlayerState.origin, cg.predictedPlayerState.viewangles, cg.predictedPlayerState.viewangles);
 
 	if ( cg_showmiss.integer ) {
-		if ( cg.predictedPlayerState.eventSequence > oldPlayerState.eventSequence + MAX_PS_EVENTS ) {
-			CG_Printf( "WARNING: dropped event\n" );
+		if (cg.predictedPlayerState.eventSequence > oldPlayerState.eventSequence + MAX_PS_EVENTS) {
+			CG_Printf("WARNING: dropped event\n");
 		}
 	}
 
@@ -1204,9 +1219,11 @@ void CG_PredictPlayerState( void ) {
 	CG_TransitionPlayerState( &cg.predictedPlayerState, &oldPlayerState );
 
 	if ( cg_showmiss.integer ) {
-		if ( cg.eventSequence > cg.predictedPlayerState.eventSequence ) {
-			CG_Printf( "WARNING: double event\n" );
+		if (cg.eventSequence > cg.predictedPlayerState.eventSequence) {
+			CG_Printf("WARNING: double event\n");
 			cg.eventSequence = cg.predictedPlayerState.eventSequence;
 		}
 	}
 }
+
+

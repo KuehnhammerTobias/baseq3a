@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 
 // g_public.h -- game module information visible to server
@@ -13,7 +33,7 @@
 
 // TTimo
 // https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=551
-#define SVF_CLIENTMASK			0x00000002
+#define SVF_CLIENTMASK 0x00000002
 
 #define SVF_BOT					0x00000008	// set if the entity is a bot
 #define	SVF_BROADCAST			0x00000020	// send to all connected clients
@@ -28,11 +48,13 @@
 #define SVF_NOTSINGLECLIENT		0x00000800	// send entity to everyone but one client
 											// (entityShared_t->singleClient)
 
+
+
 //===============================================================
 
 
 typedef struct {
-	entityState_t	unused;				// communicated by server to clients
+	entityState_t	unused;			// communicated by server to clients
 
 	qboolean	linked;				// qfalse if not in any good cluster
 	int			linkcount;

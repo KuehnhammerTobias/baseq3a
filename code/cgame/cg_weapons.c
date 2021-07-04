@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // cg_weapons.c -- events and effects dealing with weapons
 #include "cg_local.h"
@@ -192,7 +212,7 @@ static void CG_NailgunEjectBrass( centity_t *cent ) {
 CG_RailTrail
 ==========================
 */
-void CG_RailTrail( const clientInfo_t *ci, const vec3_t start, const vec3_t end ) {
+void CG_RailTrail (const clientInfo_t *ci, const vec3_t start, const vec3_t end) {
 	vec3_t axis[36], move, move2, vec, temp;
 	float  len;
 	int    i, j, skip;
@@ -200,9 +220,9 @@ void CG_RailTrail( const clientInfo_t *ci, const vec3_t start, const vec3_t end 
 	localEntity_t *le;
 	refEntity_t   *re;
  
-	#define RADIUS   4
-	#define ROTATION 1
-	#define SPACING  5
+#define RADIUS   4
+#define ROTATION 1
+#define SPACING  5
  
 	le = CG_AllocLocalEntity();
 	re = &le->refEntity;
@@ -224,9 +244,9 @@ void CG_RailTrail( const clientInfo_t *ci, const vec3_t start, const vec3_t end 
 	VectorCopy(end, re->oldorigin);
  
 	re->shaderRGBA[0] = ci->color1[0] * 255;
-    re->shaderRGBA[1] = ci->color1[1] * 255;
-    re->shaderRGBA[2] = ci->color1[2] * 255;
-    re->shaderRGBA[3] = 255;
+	re->shaderRGBA[1] = ci->color1[1] * 255;
+	re->shaderRGBA[2] = ci->color1[2] * 255;
+	re->shaderRGBA[3] = 255;
 
 	le->color[0] = ci->color1[0] * 0.75;
 	le->color[1] = ci->color1[1] * 0.75;
@@ -235,7 +255,8 @@ void CG_RailTrail( const clientInfo_t *ci, const vec3_t start, const vec3_t end 
 
 	AxisClear( re->axis );
  
-	if ( cg_oldRail.integer != 0 ) {
+	if (cg_oldRail.integer != 0)
+	{
 		// nudge down a bit so it isn't exactly in center
 		//re->origin[2] -= 8;
 		//re->oldorigin[2] -= 8;
@@ -243,23 +264,25 @@ void CG_RailTrail( const clientInfo_t *ci, const vec3_t start, const vec3_t end 
 	}
 
 	//start[2] -= 4;
-	VectorCopy( start, move );
-	VectorSubtract( end, start, vec );
-	len = VectorNormalize( vec );
-	PerpendicularVector( temp, vec );
-
-	for ( i = 0 ; i < 36; i++ ) {
-		RotatePointAroundVector( axis[i], vec, temp, i * 10 ); //banshee 2.4 was 10
+	VectorCopy (start, move);
+	VectorSubtract (end, start, vec);
+	len = VectorNormalize (vec);
+	PerpendicularVector(temp, vec);
+	for (i = 0 ; i < 36; i++)
+	{
+		RotatePointAroundVector(axis[i], vec, temp, i * 10);//banshee 2.4 was 10
 	}
 
-	VectorMA( move, 20, vec, move );
-	VectorScale( vec, SPACING, vec );
+	VectorMA(move, 20, vec, move);
+	VectorScale (vec, SPACING, vec);
 
 	skip = -1;
  
 	j = 18;
-	for ( i = 0; i < len; i += SPACING ) {
-		if ( i != skip ) {
+	for (i = 0; i < len; i += SPACING)
+	{
+		if (i != skip)
+		{
 			skip = i + SPACING;
 			le = CG_AllocLocalEntity();
 			re = &le->refEntity;
@@ -291,21 +314,20 @@ void CG_RailTrail( const clientInfo_t *ci, const vec3_t start, const vec3_t end 
 			le->pos.trType = TR_LINEAR;
 			le->pos.trTime = cg.time;
 
-			VectorCopy( move, move2 );
-			VectorMA( move2, RADIUS , axis[j], move2 );
-			VectorCopy( move2, le->pos.trBase );
+			VectorCopy( move, move2);
+			VectorMA(move2, RADIUS , axis[j], move2);
+			VectorCopy(move2, le->pos.trBase);
 
 			le->pos.trDelta[0] = axis[j][0]*6;
 			le->pos.trDelta[1] = axis[j][1]*6;
 			le->pos.trDelta[2] = axis[j][2]*6;
 		}
 
-		VectorAdd( move, vec, move );
+		VectorAdd (move, vec, move);
 
 		j = j + ROTATION < 36 ? j + ROTATION : (j + ROTATION) % 36;
 	}
 }
-
 
 /*
 ==========================
@@ -507,26 +529,26 @@ static void CG_PlasmaTrail( centity_t *cent, const weaponInfo_t *wi ) {
 	VectorScale( xvelocity, waterScale, le->pos.trDelta );
 
 	AxisCopy( axisDefault, re->axis );
-	
+
 	if ( intShaderTime )
 		re->u.intShaderTime = cg.time;
 	else
 		re->u.shaderTime = cg.time / 1000.0f;
 
-    re->reType = RT_SPRITE;
-    re->radius = 0.25f;
+	re->reType = RT_SPRITE;
+	re->radius = 0.25f;
 	re->customShader = cgs.media.railRingsShader;
 	le->bounceFactor = 0.3f;
 
-    re->shaderRGBA[0] = wi->flashDlightColor[0] * 63;
-    re->shaderRGBA[1] = wi->flashDlightColor[1] * 63;
-    re->shaderRGBA[2] = wi->flashDlightColor[2] * 63;
-    re->shaderRGBA[3] = 63;
+	re->shaderRGBA[0] = wi->flashDlightColor[0] * 63;
+	re->shaderRGBA[1] = wi->flashDlightColor[1] * 63;
+	re->shaderRGBA[2] = wi->flashDlightColor[2] * 63;
+	re->shaderRGBA[3] = 63;
 
-    le->color[0] = wi->flashDlightColor[0] * 0.2;
-    le->color[1] = wi->flashDlightColor[1] * 0.2;
-    le->color[2] = wi->flashDlightColor[2] * 0.2;
-    le->color[3] = 0.25f;
+	le->color[0] = wi->flashDlightColor[0] * 0.2;
+	le->color[1] = wi->flashDlightColor[1] * 0.2;
+	le->color[2] = wi->flashDlightColor[2] * 0.2;
+	le->color[3] = 0.25f;
 
 	le->angles.trType = TR_LINEAR;
 	le->angles.trTime = cg.time;
@@ -536,9 +558,8 @@ static void CG_PlasmaTrail( centity_t *cent, const weaponInfo_t *wi ) {
 	le->angles.trDelta[0] = 1;
 	le->angles.trDelta[1] = 0.5;
 	le->angles.trDelta[2] = 0;
+
 }
-
-
 /*
 ==========================
 CG_GrappleTrail
@@ -1040,7 +1061,6 @@ static void CG_LightningBolt( centity_t *cent, vec3_t origin ) {
 		}
 
 		AngleVectors(angle, forward, NULL, NULL );
-
 	} else {
 		// !CPMA
 		AngleVectors( cent->lerpAngles, forward, NULL, NULL );
@@ -1333,7 +1353,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	nonPredictedCent = &cg_entities[cent->currentState.clientNum];
 
 	// if the index of the nonPredictedCent is not the same as the clientNum
-	// then this is a fake player (like on teh single player podiums), so
+	// then this is a fake player (like on the single player podiums), so
 	// go ahead and use the cent
 	if( ( nonPredictedCent - cg_entities ) != cent->currentState.clientNum ) {
 		nonPredictedCent = cent;
@@ -1373,10 +1393,11 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 		flash.shaderRGBA[3] = 255;
 	}
 
-	CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash" );
+	CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
 	trap_R_AddRefEntityToScene( &flash );
 
-	if ( ps || cg.renderingThirdPerson || cent->currentState.number != cg.predictedPlayerState.clientNum ) {
+	if ( ps || cg.renderingThirdPerson ||
+		cent->currentState.number != cg.predictedPlayerState.clientNum ) {
 		int radius;
 
 		// add lightning bolt
@@ -1412,8 +1433,8 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 			radius = WEAPON_FLASH_RADIUS + (rand() & WEAPON_FLASH_RADIUS_MOD);
 
 		if ( weapon->flashDlightColor[0] || weapon->flashDlightColor[1] || weapon->flashDlightColor[2] ) {
-			trap_R_AddLightToScene( flash.origin, radius, 
-				weapon->flashDlightColor[0], weapon->flashDlightColor[1], weapon->flashDlightColor[2] );
+			trap_R_AddLightToScene( flash.origin, radius, weapon->flashDlightColor[0],
+				weapon->flashDlightColor[1], weapon->flashDlightColor[2] );
 		}
 	}
 }
@@ -1429,7 +1450,7 @@ Add the weapon, and flash for the player's view
 void CG_AddViewWeapon( playerState_t *ps ) {
 	refEntity_t	hand;
 	centity_t	*cent;
-	const clientInfo_t *ci;
+	const clientInfo_t	*ci;
 	const weaponInfo_t *weapon;
 	vec3_t		fovOffset;
 	vec3_t		angles;
@@ -1520,7 +1541,6 @@ WEAPON SELECTION
 ==============================================================================
 */
 
-
 /*
 ===================
 CG_DrawWeaponSelect
@@ -1534,7 +1554,7 @@ void CG_DrawWeaponSelect( void ) {
 	int		x, y;
 	int		dx, dy;
 	int		weaponSelect;
-	const char *name;
+	const char	*name;
 	float	*color;
 	char	buf[16];
 
@@ -1641,7 +1661,6 @@ static qboolean CG_WeaponSelectable( int i ) {
 	return qtrue;
 }
 
-
 /*
 ===============
 CG_NextWeapon_f
@@ -1679,7 +1698,6 @@ void CG_NextWeapon_f( void ) {
 		cg.weaponSelect = original;
 	}
 }
-
 
 /*
 ===============
@@ -1719,7 +1737,6 @@ void CG_PrevWeapon_f( void ) {
 	}
 }
 
-
 /*
 ===============
 CG_Weapon_f
@@ -1751,7 +1768,6 @@ void CG_Weapon_f( void ) {
 	cg.weaponSelect = num;
 }
 
-
 /*
 ===================
 CG_OutOfAmmoChange
@@ -1775,6 +1791,7 @@ void CG_OutOfAmmoChange( void ) {
 		}
 	}
 }
+
 
 
 /*
@@ -2039,7 +2056,9 @@ void CG_MissileHitWall( weapon_t weapon, int clientNum, vec3_t origin, vec3_t di
 	// create the explosion
 	//
 	if ( mod ) {
-		le = CG_MakeExplosion( origin, dir, mod, shader, duration, isSprite );
+		le = CG_MakeExplosion( origin, dir, 
+							   mod,	shader,
+							   duration, isSprite );
 		le->light = light;
 		VectorCopy( lightColor, le->lightColor );
 		if ( weapon == WP_RAILGUN ) {
@@ -2060,11 +2079,10 @@ void CG_MissileHitWall( weapon_t weapon, int clientNum, vec3_t origin, vec3_t di
 		float	*color;
 
 		// colorize with client color
-		color = cgs.clientinfo[ clientNum ].color1; // was color2
-
-		CG_ImpactMark( mark, origin, dir, random()*360, color[0], color[1], color[2], 1.0, alphaFade, radius, qfalse );
+		color = cgs.clientinfo[clientNum].color1; // was color2
+		CG_ImpactMark( mark, origin, dir, random()*360, color[0],color[1], color[2],1.0, alphaFade, radius, qfalse );
 	} else {
-		CG_ImpactMark( mark, origin, dir, random()*360, 1.0, 1.0, 1.0, 1.0, alphaFade, radius, qfalse );
+		CG_ImpactMark( mark, origin, dir, random()*360, 1.0,1.0,1.0,1.0, alphaFade, radius, qfalse );
 	}
 }
 

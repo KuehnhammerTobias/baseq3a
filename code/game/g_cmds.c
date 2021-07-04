@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 #include "g_local.h"
 
@@ -30,7 +50,7 @@ void DeathmatchScoreboardMessage( gentity_t *ent ) {
 	// estimate prefix length to avoid oversize of final string
 	prefix = BG_sprintf( entry, "scores %i %i %i", level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE], numSorted );
 	
-	for ( i = 0 ; i < numSorted ; i++ ) {
+	for (i=0 ; i < numSorted ; i++) {
 
 		cl = &level.clients[level.sortedClients[i]];
 
@@ -42,20 +62,16 @@ void DeathmatchScoreboardMessage( gentity_t *ent ) {
 
 		if( cl->accuracy_shots ) {
 			accuracy = cl->accuracy_hits * 100 / cl->accuracy_shots;
-		} else {
+		}
+		else {
 			accuracy = 0;
 		}
-
 		perfect = ( cl->ps.persistant[PERS_RANK] == 0 && cl->ps.persistant[PERS_KILLED] == 0 ) ? 1 : 0;
 
-		j = BG_sprintf( entry, " %i %i %i %i %i %i %i %i %i %i %i %i %i %i",
-			level.sortedClients[i],
-			cl->ps.persistant[PERS_SCORE],
-			ping,
-			(level.time - cl->pers.enterTime)/60000,
-			scoreFlags,
-			g_entities[level.sortedClients[i]].s.powerups,
-			accuracy, 
+		j = BG_sprintf(entry,
+			" %i %i %i %i %i %i %i %i %i %i %i %i %i %i", level.sortedClients[i],
+			cl->ps.persistant[PERS_SCORE], ping, (level.time - cl->pers.enterTime)/60000,
+			scoreFlags, g_entities[level.sortedClients[i]].s.powerups, accuracy, 
 			cl->ps.persistant[PERS_IMPRESSIVE_COUNT],
 			cl->ps.persistant[PERS_EXCELLENT_COUNT],
 			cl->ps.persistant[PERS_GAUNTLET_FRAG_COUNT], 
@@ -63,15 +79,13 @@ void DeathmatchScoreboardMessage( gentity_t *ent ) {
 			cl->ps.persistant[PERS_ASSIST_COUNT], 
 			perfect,
 			cl->ps.persistant[PERS_CAPTURES]);
-
-		if ( stringlength + j + prefix >= sizeof( string ) )
+		if (stringlength + j + prefix >= sizeof(string))
 			break;
-
-		strcpy( string + stringlength, entry );
+		strcpy (string + stringlength, entry);
 		stringlength += j;
 	}
 
-	trap_SendServerCommand( ent-g_entities, va( "scores %i %i %i%s", i,
+	trap_SendServerCommand( ent-g_entities, va("scores %i %i %i%s", i, 
 		level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE],
 		string ) );
 }
@@ -87,6 +101,7 @@ Request current scoreboard information
 void Cmd_Score_f( gentity_t *ent ) {
 	DeathmatchScoreboardMessage( ent );
 }
+
 
 
 /*
@@ -112,7 +127,7 @@ qboolean	CheatsOk( gentity_t *ent ) {
 ConcatArgs
 ==================
 */
-char *ConcatArgs( int start ) {
+char	*ConcatArgs( int start ) {
 	static char line[MAX_STRING_CHARS];
 	char	arg[MAX_STRING_CHARS];
 	int		i, c, tlen;
@@ -212,7 +227,6 @@ int ClientNumberFromString( gentity_t *to, char *s ) {
 	return -1;
 }
 
-
 /*
 ==================
 Cmd_Give_f
@@ -220,13 +234,13 @@ Cmd_Give_f
 Give items to a client
 ==================
 */
-void Cmd_Give_f( gentity_t *ent )
+void Cmd_Give_f (gentity_t *ent)
 {
 	char		*name;
 	gitem_t		*it;
 	int			i;
 	qboolean	give_all;
-	gentity_t	*it_ent;
+	gentity_t		*it_ent;
 	trace_t		trace;
 
 	if ( !CheatsOk( ent ) ) {
@@ -323,9 +337,9 @@ Sets client to godmode
 argv(0) god
 ==================
 */
-void Cmd_God_f( gentity_t *ent )
+void Cmd_God_f (gentity_t *ent)
 {
-	const char *msg;
+	const char	*msg;
 
 	if ( !CheatsOk( ent ) ) {
 		return;
@@ -337,7 +351,7 @@ void Cmd_God_f( gentity_t *ent )
 	else
 		msg = "godmode ON\n";
 
-	trap_SendServerCommand( ent-g_entities, va( "print \"%s\"", msg ) );
+	trap_SendServerCommand( ent-g_entities, va("print \"%s\"", msg));
 }
 
 
@@ -351,7 +365,7 @@ argv(0) notarget
 ==================
 */
 void Cmd_Notarget_f( gentity_t *ent ) {
-	const char *msg;
+	const char	*msg;
 
 	if ( !CheatsOk( ent ) ) {
 		return;
@@ -363,7 +377,7 @@ void Cmd_Notarget_f( gentity_t *ent ) {
 	else
 		msg = "notarget ON\n";
 
-	trap_SendServerCommand( ent-g_entities, va( "print \"%s\"", msg ) );
+	trap_SendServerCommand( ent-g_entities, va("print \"%s\"", msg));
 }
 
 
@@ -375,7 +389,7 @@ argv(0) noclip
 ==================
 */
 void Cmd_Noclip_f( gentity_t *ent ) {
-	const char *msg;
+	const char	*msg;
 
 	if ( !CheatsOk( ent ) ) {
 		return;
@@ -402,13 +416,13 @@ and sends over a command to the client to resize the view,
 hide the scoreboard, and take a special screenshot
 ==================
 */
-void Cmd_LevelShot_f( gentity_t *ent ) {
-	if ( !CheatsOk( ent ) ) {
+void Cmd_LevelShot_f(gentity_t *ent)
+{
+	if(!CheatsOk(ent))
 		return;
-	}
 
 	// doesn't work in single player
-	if ( g_gametype.integer == GT_SINGLE_PLAYER ) {
+	if(g_gametype.integer == GT_SINGLE_PLAYER) {
 		trap_SendServerCommand( ent-g_entities, 
 			"print \"Must be in g_gametype 0 for levelshot\n\"" );
 		return;
@@ -416,13 +430,13 @@ void Cmd_LevelShot_f( gentity_t *ent ) {
 
 	if ( !ent->client->pers.localClient )
 	{
-		trap_SendServerCommand( ent - g_entities,
+		trap_SendServerCommand(ent-g_entities,
 			"print \"The levelshot command must be executed by a local client\n\"" );
 		return;
 	}
 
 	BeginIntermission();
-	trap_SendServerCommand( ent-g_entities, "clientLevelShot" );
+	trap_SendServerCommand(ent-g_entities, "clientLevelShot");
 }
 
 
@@ -433,7 +447,7 @@ Cmd_TeamTask_f
 */
 void Cmd_TeamTask_f( gentity_t *ent ) {
 	char userinfo[MAX_INFO_STRING];
-	char arg[MAX_TOKEN_CHARS];
+	char		arg[MAX_TOKEN_CHARS];
 	int task;
 	int client = ent->client - level.clients;
 
@@ -443,10 +457,10 @@ void Cmd_TeamTask_f( gentity_t *ent ) {
 	trap_Argv( 1, arg, sizeof( arg ) );
 	task = atoi( arg );
 
-	trap_GetUserinfo( client, userinfo, sizeof( userinfo ) );
-	Info_SetValueForKey( userinfo, "teamtask", va( "%d", task ) );
-	trap_SetUserinfo( client, userinfo );
-	ClientUserinfoChanged( client );
+	trap_GetUserinfo(client, userinfo, sizeof(userinfo));
+	Info_SetValueForKey(userinfo, "teamtask", va("%d", task));
+	trap_SetUserinfo(client, userinfo);
+	ClientUserinfoChanged(client);
 }
 
 
@@ -466,7 +480,6 @@ void Cmd_Kill_f( gentity_t *ent ) {
 	ent->client->ps.stats[STAT_HEALTH] = ent->health = -999;
 	player_die (ent, ent, ent, 100000, MOD_SUICIDE);
 }
-
 
 /*
 =================
@@ -637,12 +650,11 @@ qboolean SetTeam( gentity_t *ent, const char *s ) {
 
 	// if the player was dead leave the body
 	if ( ent->health <= 0 ) {
-		CopyToBodyQue( ent );
+		CopyToBodyQue(ent);
 	}
 
 	// he starts at 'base'
 	client->pers.teamState.state = TEAM_BEGIN;
-
 	if ( oldTeam != TEAM_SPECTATOR ) {
 		
 		// revert any casted votes
@@ -653,10 +665,11 @@ qboolean SetTeam( gentity_t *ent, const char *s ) {
 		ent->flags &= ~FL_GODMODE;
 		ent->client->ps.stats[STAT_HEALTH] = ent->health = 0;
 		player_die (ent, ent, ent, 100000, MOD_SUICIDE);
+
 	}
 
 	// they go to the end of the line for tournements
-	if ( team == TEAM_SPECTATOR ) {
+	if(team == TEAM_SPECTATOR) {
 		client->sess.spectatorTime = 0;
 	}
 
@@ -666,7 +679,6 @@ qboolean SetTeam( gentity_t *ent, const char *s ) {
 
 	checkTeamLeader = client->sess.teamLeader;
 	client->sess.teamLeader = qfalse;
-
 	if ( team == TEAM_RED || team == TEAM_BLUE ) {
 		teamLeader = TeamLeader( team );
 		// if there is no team leader or the team leader is a bot and this client is not a bot
@@ -674,7 +686,6 @@ qboolean SetTeam( gentity_t *ent, const char *s ) {
 			SetLeader( team, clientNum );
 		}
 	}
-
 	// make sure there is a team leader on the team the player came from
 	if ( oldTeam == TEAM_RED || oldTeam == TEAM_BLUE ) {
 		if ( checkTeamLeader ) {
@@ -693,7 +704,6 @@ qboolean SetTeam( gentity_t *ent, const char *s ) {
 
 	return qtrue;
 }
-
 
 /*
 =================
@@ -821,7 +831,6 @@ static void Cmd_Follow_f( gentity_t *ent ) {
 	ent->client->sess.spectatorClient = i;
 }
 
-
 /*
 =================
 Cmd_FollowCycle_f
@@ -885,6 +894,7 @@ void Cmd_FollowCycle_f( gentity_t *ent, int dir ) {
 G_Say
 ==================
 */
+
 static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char *name, const char *message ) {
 	if (!other) {
 		return;
@@ -908,8 +918,9 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 		return;
 	}
 
-	trap_SendServerCommand( other-g_entities, va( "%s \"%s%c%c%s\" %i", mode == SAY_TEAM ? "tchat" : "chat", 
-		name, Q_COLOR_ESCAPE, color, message, ent - g_entities ) );
+	trap_SendServerCommand( other-g_entities, va("%s \"%s%c%c%s\" %i", 
+		mode == SAY_TEAM ? "tchat" : "chat",
+		name, Q_COLOR_ESCAPE, color, message, ent - g_entities));
 }
 
 #define EC		"\x19"
@@ -999,7 +1010,6 @@ static void Cmd_Say_f( gentity_t *ent, int mode, qboolean arg0 ) {
 	G_Say( ent, NULL, mode, p );
 }
 
-
 /*
 ==================
 Cmd_Tell_f
@@ -1037,8 +1047,8 @@ static void Cmd_Tell_f( gentity_t *ent ) {
 	}
 }
 
-#ifdef MISSIONPACK
 
+#ifdef MISSIONPACK
 static void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *id, qboolean voiceonly ) {
 	int color;
 	char *cmd;
@@ -1235,6 +1245,7 @@ static void Cmd_VoiceTaunt_f( gentity_t *ent ) {
 	G_Voice( ent, NULL, SAY_ALL, VOICECHAT_TAUNT, qfalse );
 }
 #endif
+
 
 
 static char	*gc_orders[] = {
@@ -1445,7 +1456,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	Com_sprintf( level.voteString, sizeof( level.voteString ), cmd );
 	Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", level.voteString );
 
-	trap_SendServerCommand( -1, va( "print \"%s called a vote(%s).\n\"", ent->client->pers.netname, cmd ) );
+	trap_SendServerCommand( -1, va("print \"%s called a vote(%s).\n\"", ent->client->pers.netname, cmd));
 
 	// start the voting, the caller automatically votes yes
 	level.voteTime = level.time;
@@ -1456,7 +1467,6 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		level.clients[i].ps.eFlags &= ~EF_VOTED;
 		level.clients[i].pers.voted = 0;
 	}
-
 	ent->client->ps.eFlags |= EF_VOTED;
 	ent->client->pers.voted = 1;
 
@@ -1467,7 +1477,6 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	trap_SetConfigstring( CS_VOTE_YES, va("%i", level.voteYes ) );
 	trap_SetConfigstring( CS_VOTE_NO, va("%i", level.voteNo ) );	
 }
-
 
 /*
 ==================
@@ -1481,12 +1490,10 @@ static void Cmd_Vote_f( gentity_t *ent ) {
 		trap_SendServerCommand( ent-g_entities, "print \"No vote in progress.\n\"" );
 		return;
 	}
-
 	if ( ent->client->pers.voted != 0 ) {
 		trap_SendServerCommand( ent-g_entities, "print \"Vote already cast.\n\"" );
 		return;
 	}
-
 	if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		trap_SendServerCommand( ent-g_entities, "print \"Not allowed to vote as spectator.\n\"" );
 		return;
@@ -1501,11 +1508,11 @@ static void Cmd_Vote_f( gentity_t *ent ) {
 	if ( msg[0] == 'y' || msg[0] == 'Y' || msg[0] == '1' ) {
 		level.voteYes++;
 		ent->client->pers.voted = 1;
-		trap_SetConfigstring( CS_VOTE_YES, va( "%i", level.voteYes ) );
+		trap_SetConfigstring( CS_VOTE_YES, va("%i", level.voteYes ) );
 	} else {
 		level.voteNo++;
 		ent->client->pers.voted = -1;
-		trap_SetConfigstring( CS_VOTE_NO, va( "%i", level.voteNo ) );	
+		trap_SetConfigstring( CS_VOTE_NO, va("%i", level.voteNo ) );	
 	}
 
 	// a majority will be determined in CheckVote, which will also account
@@ -1669,7 +1676,7 @@ static void Cmd_CallTeamVote_f( gentity_t *ent ) {
 	level.teamVoteNo[cs_offset] = 0;
 
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
-		if ( level.clients[i].sess.sessionTeam == team ) {
+		if (level.clients[i].sess.sessionTeam == team) {
 			level.clients[i].ps.eFlags &= ~EF_TEAMVOTED;
 			level.clients[i].pers.teamVoted = 0;
 		}
@@ -1684,7 +1691,6 @@ static void Cmd_CallTeamVote_f( gentity_t *ent ) {
 	trap_SetConfigstring( CS_TEAMVOTE_YES + cs_offset, va("%i", level.teamVoteYes[cs_offset] ) );
 	trap_SetConfigstring( CS_TEAMVOTE_NO + cs_offset, va("%i", level.teamVoteNo[cs_offset] ) );
 }
-
 
 /*
 ==================
@@ -1791,7 +1797,6 @@ static void Cmd_Stats_f( gentity_t *ent ) {
 */
 }
 
-
 /*
 =================
 ClientCommand
@@ -1802,18 +1807,18 @@ void ClientCommand( int clientNum ) {
 	char	cmd[MAX_TOKEN_CHARS];
 
 	ent = g_entities + clientNum;
-	if ( !ent->client )
+	if (!ent->client)
 		return;
 
 	trap_Argv( 0, cmd, sizeof( cmd ) );
 
-	if ( ent->client->pers.connected != CON_CONNECTED ) {
-		if ( ent->client->pers.connected == CON_CONNECTING && g_gametype.integer >= GT_TEAM ) {
-			if ( Q_stricmp( cmd, "team" ) == 0 && !level.restarted ) {
-				Cmd_Team_f( ent ); // early team override
+	if (ent->client->pers.connected != CON_CONNECTED) {
+		if (ent->client->pers.connected == CON_CONNECTING && g_gametype.integer >= GT_TEAM) {
+			if (Q_stricmp (cmd, "team") == 0 && !level.restarted) {
+				Cmd_Team_f (ent); // early team override
 			}
 		}
-		return;	// not fully in game yet
+		return;		// not fully in game yet
 	}
 
 	if (Q_stricmp (cmd, "say") == 0) {
@@ -1908,5 +1913,5 @@ void ClientCommand( int clientNum ) {
 	else if (Q_stricmp (cmd, "stats") == 0)
 		Cmd_Stats_f( ent );
 	else
-		trap_SendServerCommand( clientNum, va( "print \"unknown cmd %s\n\"", cmd ) );
+		trap_SendServerCommand( clientNum, va("print \"unknown cmd %s\n\"", cmd ) );
 }

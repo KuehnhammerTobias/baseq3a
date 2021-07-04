@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // cg_drawtools.c -- helper functions called by cg_draw, cg_scoreboard, cg_info, etc
 #include "cg_local.h"
@@ -10,15 +30,19 @@ CG_AdjustFrom640
 Adjusted for resolution and screen aspect ratio
 ================
 */
-void CG_AdjustFrom640( float *x, float *y, float *w, float *h ) 
-{
+void CG_AdjustFrom640( float *x, float *y, float *w, float *h ) {
+#if 0
+	// adjust for wide screens
+	if ( cgs.glconfig.vidWidth * 480 > cgs.glconfig.vidHeight * 640 ) {
+		*x += 0.5 * ( cgs.glconfig.vidWidth - ( cgs.glconfig.vidHeight * 640 / 480 ) );
+	}
+#endif
 	// scale for screen sizes
 	*x = *x * cgs.screenXScale + cgs.screenXBias;
 	*y = *y * cgs.screenYScale + cgs.screenYBias;
 	*w *= cgs.screenXScale;
 	*h *= cgs.screenYScale;
 }
-
 
 /*
 ================
@@ -64,15 +88,12 @@ void CG_DrawSides(float x, float y, float w, float h, float size) {
 	trap_R_DrawStretchPic( x + w - size, y, size, h, 0, 0, 0, 0, cgs.media.whiteShader );
 }
 
-
 void CG_DrawTopBottom(float x, float y, float w, float h, float size) {
 	CG_AdjustFrom640( &x, &y, &w, &h );
 	size *= cgs.screenYScale;
 	trap_R_DrawStretchPic( x, y, w, size, 0, 0, 0, 0, cgs.media.whiteShader );
 	trap_R_DrawStretchPic( x, y + h - size, w, size, 0, 0, 0, 0, cgs.media.whiteShader );
 }
-
-
 /*
 ================
 UI_DrawRect
@@ -83,11 +104,12 @@ Coordinates are 640*480 virtual values
 void CG_DrawRect( float x, float y, float width, float height, float size, const float *color ) {
 	trap_R_SetColor( color );
 
-	CG_DrawTopBottom(x, y, width, height, size);
-	CG_DrawSides(x, y, width, height, size);
+  CG_DrawTopBottom(x, y, width, height, size);
+  CG_DrawSides(x, y, width, height, size);
 
 	trap_R_SetColor( NULL );
 }
+
 
 
 /*
@@ -101,6 +123,7 @@ void CG_DrawPic( float x, float y, float width, float height, qhandle_t hShader 
 	CG_AdjustFrom640( &x, &y, &width, &height );
 	trap_R_DrawStretchPic( x, y, width, height, 0, 0, 1, 1, hShader );
 }
+
 
 
 /*
@@ -743,7 +766,6 @@ int CG_DrawStrlen( const char *str ) {
 	return count;
 }
 
-
 /*
 =============
 CG_TileClearBox
@@ -761,6 +783,7 @@ static void CG_TileClearBox( int x, int y, int w, int h, qhandle_t hShader ) {
 	t2 = (y+h)/64.0;
 	trap_R_DrawStretchPic( x, y, w, h, s1, t1, s2, t2, hShader );
 }
+
 
 
 /*
@@ -799,6 +822,7 @@ void CG_TileClear( void ) {
 	// clear right of view screen
 	CG_TileClearBox( right, top, w - right, bottom - top + 1, cgs.media.backTileShader );
 }
+
 
 
 /*
@@ -930,7 +954,6 @@ void CG_GetColorForHealth( int health, int armor, vec4_t hcolor ) {
 		hcolor[1] = ( health - 30 ) / 30.0;
 	}
 }
-
 
 /*
 =================

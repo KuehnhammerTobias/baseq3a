@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 #include "g_local.h"
 
@@ -34,8 +54,6 @@
 #define	RESPAWN_HOLDABLE	60000
 #define	RESPAWN_MEGAHEALTH	35000 //120000
 #define	RESPAWN_POWERUP		120000
-
-//======================================================================
 
 int SpawnTime( gentity_t *ent, qboolean firstSpawn ) 
 {
@@ -80,6 +98,7 @@ int SpawnTime( gentity_t *ent, qboolean firstSpawn )
 	}
 } 
 
+//======================================================================
 
 int Pickup_Powerup( gentity_t *ent, gentity_t *other ) {
 	int			quantity;
@@ -87,8 +106,10 @@ int Pickup_Powerup( gentity_t *ent, gentity_t *other ) {
 	gclient_t	*client;
 
 	if ( !other->client->ps.powerups[ent->item->giTag] ) {
-		// round timing to seconds to make multiple powerup timers count in sync
-		other->client->ps.powerups[ent->item->giTag] = level.time - ( level.time % 1000 );
+		// round timing to seconds to make multiple powerup timers
+		// count in sync
+		other->client->ps.powerups[ent->item->giTag] = 
+			level.time - ( level.time % 1000 );
 	}
 
 	if ( ent->count ) {
@@ -117,11 +138,11 @@ int Pickup_Powerup( gentity_t *ent, gentity_t *other ) {
 			continue;
 		}
 
-		// if same team in team game, no sound
-		// cannot use OnSameTeam as it expects to g_entities, not clients
-		if ( g_gametype.integer >= GT_TEAM && other->client->sess.sessionTeam == client->sess.sessionTeam  ) {
-			continue;
-		}
+    // if same team in team game, no sound
+    // cannot use OnSameTeam as it expects to g_entities, not clients
+  	if ( g_gametype.integer >= GT_TEAM && other->client->sess.sessionTeam == client->sess.sessionTeam  ) {
+      continue;
+    }
 
 		// if too far away, no sound
 		VectorSubtract( ent->s.pos.trBase, client->ps.origin, delta );
@@ -145,10 +166,8 @@ int Pickup_Powerup( gentity_t *ent, gentity_t *other ) {
 		// anti-reward
 		client->ps.persistant[PERS_PLAYEREVENTS] ^= PLAYEREVENT_DENIEDREWARD;
 	}
-
 	return SpawnTime( ent, qfalse ); // return RESPAWN_POWERUP;
 }
-
 
 //======================================================================
 
@@ -243,8 +262,7 @@ int Pickup_Holdable( gentity_t *ent, gentity_t *other ) {
 
 //======================================================================
 
-
-static void Add_Ammo( gentity_t *ent, int weapon, int count )
+static void Add_Ammo (gentity_t *ent, int weapon, int count)
 {
 	ent->client->ps.ammo[weapon] += count;
 	if ( ent->client->ps.ammo[weapon] > AMMO_HARD_LIMIT ) {
@@ -252,8 +270,7 @@ static void Add_Ammo( gentity_t *ent, int weapon, int count )
 	}
 }
 
-
-static int Pickup_Ammo( gentity_t *ent, gentity_t *other )
+static int Pickup_Ammo (gentity_t *ent, gentity_t *other)
 {
 	int		quantity;
 
@@ -263,7 +280,7 @@ static int Pickup_Ammo( gentity_t *ent, gentity_t *other )
 		quantity = ent->item->quantity;
 	}
 
-	Add_Ammo( other, ent->item->giTag, quantity );
+	Add_Ammo (other, ent->item->giTag, quantity);
 
 	return SpawnTime( ent, qfalse ); // return RESPAWN_AMMO;
 }
@@ -271,7 +288,7 @@ static int Pickup_Ammo( gentity_t *ent, gentity_t *other )
 //======================================================================
 
 
-static int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
+static int Pickup_Weapon (gentity_t *ent, gentity_t *other) {
 	int		quantity;
 
 	if ( ent->count < 0 ) {
@@ -315,7 +332,7 @@ static int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 
 //======================================================================
 
-static int Pickup_Health( gentity_t *ent, gentity_t *other ) {
+static int Pickup_Health (gentity_t *ent, gentity_t *other) {
 	int			max;
 	int			quantity;
 
@@ -345,14 +362,13 @@ static int Pickup_Health( gentity_t *ent, gentity_t *other ) {
 	}
 	other->client->ps.stats[STAT_HEALTH] = other->health;
 
-	//if ( ent->item->quantity == 100 ) { // mega health respawns slow
+	//if ( ent->item->quantity == 100 ) {		// mega health respawns slow
 	//	return RESPAWN_MEGAHEALTH;
 	//} else {
 	//	return RESPAWN_HEALTH;
 	//}
 	return SpawnTime( ent, qfalse );
 }
-
 
 //======================================================================
 
@@ -390,51 +406,51 @@ RespawnItem
 ===============
 */
 void RespawnItem( gentity_t *ent ) {
-	
-	if ( !ent ) {
+	if (!ent) {
 		return;
 	}
-	
+
 	// randomly select from teamed entities
-	if ( ent->team ) {
-		gentity_t *master;
+	if (ent->team) {
+		gentity_t	*master;
 		int	count;
 		int choice;
 
 		if ( !ent->teammaster ) {
-			G_Error( "RespawnItem: bad teammaster" );
+			G_Error( "RespawnItem: bad teammaster");
 		}
 
 		master = ent->teammaster;
 
-		for ( count = 0, ent = master; ent; ent = ent->teamchain, count++ ) {
+		for (count = 0, ent = master; ent; ent = ent->teamchain, count++) {
 			// reset spawn timers on all teamed entities
 			ent->nextthink = 0;
 		}
 
 		choice = rand() % count;
 
-		for ( count = 0, ent = master; ent && count < choice; ent = ent->teamchain, count++ )
+		for (count = 0, ent = master; ent && count < choice; ent = ent->teamchain, count++)
 			;
 	}
 
-	if ( !ent ) {
+	if (!ent) {
 		return;
 	}
 
 	ent->r.contents = CONTENTS_TRIGGER;
 	ent->s.eFlags &= ~EF_NODRAW;
 	ent->r.svFlags &= ~SVF_NOCLIENT;
-	trap_LinkEntity( ent );
+	trap_LinkEntity (ent);
 
 	if ( ent->item->giType == IT_POWERUP ) {
 		// play powerup spawn sound to all clients
 		gentity_t	*te;
 
 		// if the powerup respawn sound should Not be global
-		if ( ent->speed ) {
+		if (ent->speed) {
 			te = G_TempEntity( ent->s.pos.trBase, EV_GENERAL_SOUND );
-		} else {
+		}
+		else {
 			te = G_TempEntity( ent->s.pos.trBase, EV_GLOBAL_SOUND );
 		}
 		te->s.eventParm = G_SoundIndex( "sound/items/poweruprespawn.wav" );
@@ -530,7 +546,7 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
 	}
 
 	// play the normal pickup sound
-	if ( predict ) {
+	if (predict) {
 		G_AddPredictableEvent( other, EV_ITEM_PICKUP, ent->s.modelindex );
 	} else {
 		G_AddEvent( other, EV_ITEM_PICKUP, ent->s.modelindex );
@@ -605,7 +621,6 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
 		ent->nextthink = level.time + respawn;
 		ent->think = RespawnItem;
 	}
-
 	trap_LinkEntity( ent );
 }
 
@@ -758,7 +773,7 @@ void FinishSpawningItem( gentity_t *ent ) {
 		return;
 	}
 
-	trap_LinkEntity( ent );
+	trap_LinkEntity (ent);
 }
 
 
@@ -933,14 +948,12 @@ Items can't be immediately dropped to floor, because they might
 be on an entity that hasn't spawned yet.
 ============
 */
-void G_SpawnItem( gentity_t *ent, gitem_t *item ) {
-
+void G_SpawnItem (gentity_t *ent, gitem_t *item) {
 	G_SpawnFloat( "random", "0", &ent->random );
 	G_SpawnFloat( "wait", "0", &ent->wait );
 
 	RegisterItem( item );
-
-	if ( G_ItemDisabled( item ) ) {
+	if ( G_ItemDisabled(item) ) {
 		ent->tag = TAG_DONTSPAWN;
 		return;
 	}
@@ -1067,3 +1080,4 @@ void G_RunItem( gentity_t *ent ) {
 
 	G_BounceItem( ent, &tr );
 }
+

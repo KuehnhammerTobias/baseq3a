@@ -1,6 +1,4 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
 //
-// Copyright (C) 1999-2000 Id Software, Inc.
 //
 // bg_lib,c -- standard C library replacement routines used by code
 // compiled for the virtual machine
@@ -19,11 +17,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
+ * 3. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -57,10 +51,10 @@ static void	 swapfunc(char *, char *, int, int);
  */
 #define swapcode(TYPE, parmi, parmj, n) { 		\
 	long i = (n) / sizeof (TYPE); 			\
-	register TYPE *pi = (TYPE *) (parmi); 		\
-	register TYPE *pj = (TYPE *) (parmj); 		\
+	register TYPE *pi = (TYPE *) (parmi); 			\
+	register TYPE *pj = (TYPE *) (parmj); 			\
 	do { 						\
-		register TYPE	t = *pi;		\
+		register TYPE	t = *pi;			\
 		*pi++ = *pj;				\
 		*pj++ = t;				\
         } while (--i > 0);				\
@@ -209,7 +203,8 @@ char *strcat( char *strDestination, const char *strSource ) {
 	}
 	while ( *strSource ) {
 		*s = *strSource;
-		s++; strSource++;
+		s++;
+		strSource++;
 	}
 	*s = 0;
 	return strDestination;
@@ -221,7 +216,8 @@ char *strcpy( char *strDestination, const char *strSource ) {
 	s = strDestination;
 	while ( *strSource ) {
 		*s = *strSource;
-		s++; strSource++;
+		s++;
+		strSource++;
 	}
 	*s = 0;
 	return strDestination;
@@ -244,6 +240,7 @@ char *strchr( const char *string, int c ) {
 		}
 		string++;
 	}
+
 	if(c)
 		return NULL;
 	else
@@ -275,6 +272,7 @@ int tolower( int c ) {
 	return c;
 }
 
+
 int toupper( int c ) {
 	if ( c >= 'a' && c <= 'z' ) {
 		c += 'A' - 'a';
@@ -282,18 +280,24 @@ int toupper( int c ) {
 	return c;
 }
 
-void *memmove( void *dest, const void *src, size_t count ) {
+void *memmove(void *dest, const void *src, size_t count)
+{
 	int		i;
 
-	if ( dest > src ) {
-		for ( i = count-1 ; i >= 0 ; i-- ) {
-			((char *)dest)[i] = ((char *)src)[i];
-		}
-	} else {
-		for ( i = 0 ; i < count ; i++ ) {
-			((char *)dest)[i] = ((char *)src)[i];
+	if( dest > src)
+	{
+		for (i = count-1 ; i >= 0 ; i--)
+		{
+			((char *) dest)[i] = ((char *) src)[i];
 		}
 	}
+	else
+	{
+		for(i = 0; i < count; i++) {
+			((char *) dest)[i] = ((char *) src)[i];
+		}
+	}
+
 	return dest;
 }
 #endif
@@ -324,11 +328,13 @@ char *strncpy( char *strDest, const char *strSource, size_t count ) {
 	s = strDest;
 	while ( *strSource && count ) {
 		*s = *strSource;
-		s++; strSource++;
+		s++;
+		strSource++;
 		count--;
 	}
 	while ( count-- ) {
-		*s = '\0'; s++;
+		*s = '\0';
+		s++;
 	}
 	return strDest;
 }
@@ -608,7 +614,8 @@ double atof( const char *string ) {
 	c = string[0];
 	if ( c != '.' ) {
 		do {
-			c = *string; string++;
+			c = *string;
+			string++;
 			if ( c < '0' || c > '9' ) {
 				break;
 			}
@@ -625,7 +632,8 @@ double atof( const char *string ) {
 
 		fraction = 0.1;
 		do {
-			c = *string; string++;
+			c = *string;
+			string++;
 			if ( c < '0' || c > '9' ) {
 				break;
 			}
@@ -677,7 +685,8 @@ double _atof( const char **stringPtr ) {
 	value = 0;
 	if ( string[0] != '.' ) {
 		do {
-			c = *string; string++;
+			c = *string;
+			string++;
 			if ( c < '0' || c > '9' ) {
 				break;
 			}
@@ -692,7 +701,8 @@ double _atof( const char **stringPtr ) {
 
 		fraction = 0.1;
 		do {
-			c = *string; string++;
+			c = *string;
+			string++;
 			if ( c < '0' || c > '9' ) {
 				break;
 			}
@@ -743,7 +753,8 @@ int atoi( const char *string ) {
 	// read digits
 	value = 0;
 	do {
-		c = *string; string++;
+		c = *string;
+		string++;
 		if ( c < '0' || c > '9' ) {
 			break;
 		}

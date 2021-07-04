@@ -1,11 +1,31 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // cg_event.c -- handle entity events at snapshot or playerstate transitions
 
 #include "cg_local.h"
 
 // for the voice chats
-#ifdef MISSIONPACK // bk001205
+#ifdef MISSIONPACK
 #include "../../ui/menudef.h"
 #endif
 //==========================================================================
@@ -54,7 +74,6 @@ const char	*CG_PlaceString( int rank ) {
 	return str;
 }
 
-
 /*
 =============
 CG_Obituary
@@ -90,8 +109,7 @@ static void CG_Obituary( entityState_t *ent ) {
 	}
 
 	targetInfo = CG_ConfigString( CS_PLAYERS + target );
-	if ( !targetInfo[0] )
-	{
+	if ( !targetInfo[0] ) {
 		return;
 	}
 	Q_strncpyz( targetName, Info_ValueForKey( targetInfo, "n" ), sizeof(targetName) - 2);
@@ -190,7 +208,7 @@ static void CG_Obituary( entityState_t *ent ) {
 		}
 	}
 
-	if ( message ) {
+	if (message) {
 		CG_Printf( "%s %s.\n", targetName, message);
 		// switch to first killer if not following anyone
 		if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR && cg_followKiller.integer ) {
@@ -323,8 +341,9 @@ static void CG_Obituary( entityState_t *ent ) {
 			break;
 		}
 
-		if ( message ) {
-			CG_Printf( "%s %s %s%s\n", targetName, message, attackerName, message2 );
+		if (message) {
+			CG_Printf( "%s %s %s%s\n", 
+				targetName, message, attackerName, message2);
 			// switch to first killer if not following anyone
 			if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR && cg_followKiller.integer ) {
 				if ( !cg.followTime && attacker != cg.snap->ps.clientNum && attacker < MAX_CLIENTS ) {
@@ -339,8 +358,8 @@ static void CG_Obituary( entityState_t *ent ) {
 	// we don't know what it was
 	CG_Printf( "%s "S_COLOR_STRIP"died.\n", targetName );
 }
-//==========================================================================
 
+//==========================================================================
 
 /*
 ===============
@@ -399,8 +418,8 @@ static void CG_UseItem( centity_t *cent ) {
 		break;
 #endif
 	}
-}
 
+}
 
 /*
 ================
@@ -434,7 +453,6 @@ static void CG_ItemPickup( int itemNum ) {
 
 }
 
-
 /*
 ================
 CG_WaterLevel
@@ -449,7 +467,7 @@ int CG_WaterLevel(centity_t *cent) {
 
 	anim = cent->currentState.legsAnim & ~ANIM_TOGGLEBIT;
 
-	if ( anim == LEGS_WALKCR || anim == LEGS_IDLECR ) {
+	if (anim == LEGS_WALKCR || anim == LEGS_IDLECR) {
 		viewheight = CROUCH_VIEWHEIGHT;
 	} else {
 		viewheight = DEFAULT_VIEWHEIGHT;
@@ -465,7 +483,7 @@ int CG_WaterLevel(centity_t *cent) {
 	point[2] = cent->lerpOrigin[2] + MINS_Z + 1;
 	contents = CG_PointContents(point, -1);
 
-	if ( contents & MASK_WATER ) {
+	if (contents & MASK_WATER) {
 		sample2 = viewheight - MINS_Z;
 		sample1 = sample2 / 2;
 		waterlevel = 1;
@@ -494,7 +512,7 @@ Also called by playerstate transition
 ================
 */
 void CG_PainEvent( centity_t *cent, int health ) {
-	const char *snd;
+	const char	*snd;
 
 	// don't do more than two pain sounds a second
 	if ( cg.time - cent->pe.painTime < 500 ) {
@@ -516,7 +534,6 @@ void CG_PainEvent( centity_t *cent, int health ) {
 	} else {
 		snd = "*pain100_1.wav";
 	}
-
 	// play a gurp sound instead of a normal pain sound
 	if (CG_WaterLevel(cent) == 3) {
 		if (rand()&1) {
@@ -527,7 +544,6 @@ void CG_PainEvent( centity_t *cent, int health ) {
 	} else {
 		trap_S_StartSound(NULL, cent->currentState.number, CHAN_VOICE, CG_CustomSound(cent->currentState.number, snd));
 	}
-
 	// save pain time for programitic twitch animation
 	cent->pe.painTime = cg.time;
 	cent->pe.painDirection ^= 1;
@@ -586,34 +602,31 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 				cgs.media.footsteps[ ci->footsteps ][rand()&3] );
 		}
 		break;
-
 	case EV_FOOTSTEP_METAL:
 		if (cg_footsteps.integer) {
 			trap_S_StartSound (NULL, es->number, CHAN_BODY, 
 				cgs.media.footsteps[ FOOTSTEP_METAL ][rand()&3] );
 		}
 		break;
-
 	case EV_FOOTSPLASH:
 		if (cg_footsteps.integer) {
 			trap_S_StartSound (NULL, es->number, CHAN_BODY, 
 				cgs.media.footsteps[ FOOTSTEP_SPLASH ][rand()&3] );
 		}
 		break;
-
 	case EV_FOOTWADE:
 		if (cg_footsteps.integer) {
 			trap_S_StartSound (NULL, es->number, CHAN_BODY, 
 				cgs.media.footsteps[ FOOTSTEP_SPLASH ][rand()&3] );
 		}
 		break;
-
 	case EV_SWIM:
 		if (cg_footsteps.integer) {
 			trap_S_StartSound (NULL, es->number, CHAN_BODY, 
 				cgs.media.footsteps[ FOOTSTEP_SPLASH ][rand()&3] );
 		}
 		break;
+
 
 	case EV_FALL_SHORT:
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.landSound );
@@ -623,7 +636,6 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 			cg.landTime = cg.time;
 		}
 		break;
-
 	case EV_FALL_MEDIUM:
 		// use normal pain sound
 		trap_S_StartSound( NULL, es->number, CHAN_VOICE, CG_CustomSound( es->number, "*pain100_1.wav" ) );
@@ -635,7 +647,6 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 			cg.landTime = cg.time;
 		}
 		break;
-
 	case EV_FALL_FAR:
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO, CG_CustomSound( es->number, "*fall1.wav" ) );
 		cent->pe.painIgnore = qtrue;
@@ -707,32 +718,25 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 		if ( cg.time - cent->pe.painTime > 50 )
 			trap_S_StartSound (NULL, es->number, CHAN_VOICE, CG_CustomSound( es->number, "*jump1.wav" ) );
 		break;
-
 	case EV_TAUNT:
 		trap_S_StartSound (NULL, es->number, CHAN_VOICE, CG_CustomSound( es->number, "*taunt.wav" ) );
 		break;
-
 #ifdef MISSIONPACK
 	case EV_TAUNT_YES:
 		CG_VoiceChatLocal(SAY_TEAM, qfalse, es->number, COLOR_CYAN, VOICECHAT_YES);
 		break;
-
 	case EV_TAUNT_NO:
 		CG_VoiceChatLocal(SAY_TEAM, qfalse, es->number, COLOR_CYAN, VOICECHAT_NO);
 		break;
-
 	case EV_TAUNT_FOLLOWME:
 		CG_VoiceChatLocal(SAY_TEAM, qfalse, es->number, COLOR_CYAN, VOICECHAT_FOLLOWME);
 		break;
-
 	case EV_TAUNT_GETFLAG:
 		CG_VoiceChatLocal(SAY_TEAM, qfalse, es->number, COLOR_CYAN, VOICECHAT_ONGETFLAG);
 		break;
-
 	case EV_TAUNT_GUARDBASE:
 		CG_VoiceChatLocal(SAY_TEAM, qfalse, es->number, COLOR_CYAN, VOICECHAT_ONDEFENSE);
 		break;
-
 	case EV_TAUNT_PATROL:
 		CG_VoiceChatLocal(SAY_TEAM, qfalse, es->number, COLOR_CYAN, VOICECHAT_ONPATROL);
 		break;
@@ -740,15 +744,12 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 	case EV_WATER_TOUCH:
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.watrInSound );
 		break;
-
 	case EV_WATER_LEAVE:
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.watrOutSound );
 		break;
-
 	case EV_WATER_UNDER:
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.watrUnSound );
 		break;
-
 	case EV_WATER_CLEAR:
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO, CG_CustomSound( es->number, "*gasp.wav" ) );
 		break;
@@ -859,11 +860,9 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 			CG_OutOfAmmoChange();
 		}
 		break;
-
 	case EV_CHANGE_WEAPON:
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.selectSound );
 		break;
-
 	case EV_FIRE_WEAPON:
 		CG_FireWeapon( cent );
 		break;
@@ -905,7 +904,6 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 	case EV_ITEM_POP:
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.respawnSound );
 		break;
-
 	case EV_ITEM_RESPAWN:
 		cent->miscTime = cg.time;	// scale up from this
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.respawnSound );
@@ -933,32 +931,25 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 	case EV_PROXIMITY_MINE_TRIGGER:
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.wstbactvSound );
 		break;
-
 	case EV_KAMIKAZE:
 		CG_KamikazeEffect( cent->lerpOrigin );
 		break;
-
 	case EV_OBELISKEXPLODE:
 		CG_ObeliskExplode( cent->lerpOrigin, es->eventParm );
 		break;
-
 	case EV_OBELISKPAIN:
 		CG_ObeliskPain( cent->lerpOrigin );
 		break;
-
 	case EV_INVUL_IMPACT:
 		CG_InvulnerabilityImpact( cent->lerpOrigin, cent->currentState.angles );
 		break;
-
 	case EV_JUICED:
 		CG_InvulnerabilityJuiced( cent->lerpOrigin );
 		break;
-
 	case EV_LIGHTNINGBOLT:
 		CG_LightningBoltBeam(es->origin2, es->pos.trBase);
 		break;
 #endif
-
 	case EV_SCOREPLUM:
 		CG_ScorePlum( cent->currentState.otherEntityNum, cent->lerpOrigin, cent->currentState.time );
 		break;
@@ -983,8 +974,8 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 
 	case EV_RAILTRAIL:
 		cent->currentState.weapon = WP_RAILGUN;
-
-		if ( cent->currentState.clientNum == cg.snap->ps.clientNum && !cg_thirdPerson.integer ) 
+		
+		if(cent->currentState.clientNum == cg.snap->ps.clientNum && !cg_thirdPerson.integer )
 		{
 			VectorCopy( cg.refdef.vieworg, vec );
 			fovOffset = -0.2f * ( cgs.fov - 90.0f );
@@ -1080,7 +1071,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 								CG_AddBufferedSound( cgs.media.yourTeamTookTheFlagSound );
 							else
 #endif
-						 	CG_AddBufferedSound( cgs.media.enemyTookYourFlagSound );
+							CG_AddBufferedSound( cgs.media.enemyTookYourFlagSound );
 						}
 						else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
 #ifdef MISSIONPACK
@@ -1165,13 +1156,15 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 	case EV_DEATH1:
 	case EV_DEATH2:
 	case EV_DEATH3:
-		if ( CG_WaterLevel(cent) == 3 ) {
-			trap_S_StartSound( NULL, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*drown.wav") );
+
+		if (CG_WaterLevel(cent) == 3) {
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*drown.wav"));
 		} else {
-			trap_S_StartSound( NULL, es->number, CHAN_VOICE, CG_CustomSound(es->number, va("*death%i.wav", event - EV_DEATH1 + 1)) );
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, CG_CustomSound(es->number, va("*death%i.wav", event - EV_DEATH1 + 1)));
 		}
 
 		break;
+
 
 	case EV_OBITUARY:
 		CG_Obituary( es );
@@ -1187,7 +1180,6 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 		}
 		trap_S_StartSound (NULL, es->number, CHAN_ITEM, cgs.media.quadSound );
 		break;
-
 	case EV_POWERUP_BATTLESUIT:
 		if ( es->number == cg.snap->ps.clientNum ) {
 			cg.powerupActive = PW_BATTLESUIT;
@@ -1195,7 +1187,6 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 		}
 		trap_S_StartSound (NULL, es->number, CHAN_ITEM, cgs.media.protectSound );
 		break;
-
 	case EV_POWERUP_REGEN:
 		if ( es->number == cg.snap->ps.clientNum ) {
 			cg.powerupActive = PW_REGEN;
@@ -1235,6 +1226,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 		CG_Error( "Unknown event: %i", event );
 		break;
 	}
+
 }
 
 
@@ -1273,5 +1265,6 @@ void CG_CheckEvents( centity_t *cent ) {
 	BG_EvaluateTrajectory( &cent->currentState.pos, cg.snap->serverTime, cent->lerpOrigin );
 	CG_SetEntitySoundPosition( cent );
 
-	CG_EntityEvent( cent, cent->lerpOrigin, -1 );
+	CG_EntityEvent( cent, cent->lerpOrigin, -1);
 }
+

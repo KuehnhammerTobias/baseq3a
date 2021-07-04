@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 /*
 =======================================================================
@@ -42,7 +62,9 @@ typedef struct {
 	menubitmap_s	arrows;
 	menubitmap_s	up;
 	menubitmap_s	down;
+
 	menutext_s		bots[7];
+
 	menulist_s		skill;
 	menulist_s		team;
 	menubitmap_s	go;
@@ -241,11 +263,11 @@ static void UI_AddBotsMenu_Init( void ) {
 	int		gametype;
 	int		count;
 
-	//trap_GetConfigString(CS_SERVERINFO, info, MAX_INFO_STRING);
+	//trap_GetConfigString(CS_SERVERINFO, info, MAX_INFO_STRING);   
 	//gametype = atoi( Info_ValueForKey( info,"g_gametype" ) );
 	gametype = trap_Cvar_VariableValue( "ui_gametype" );
 
-	memset( &addBotsMenuInfo, 0, sizeof( addBotsMenuInfo ) );
+	memset( &addBotsMenuInfo, 0 ,sizeof(addBotsMenuInfo) );
 	addBotsMenuInfo.menu.draw = UI_AddBotsMenu_Draw;
 	addBotsMenuInfo.menu.fullscreen = qfalse;
 	addBotsMenuInfo.menu.wrapAround = qtrue;
@@ -351,7 +373,6 @@ static void UI_AddBotsMenu_Init( void ) {
 	UI_AddBotsMenu_SetBotNames();
 
 	Menu_AddItem( &addBotsMenuInfo.menu, &addBotsMenuInfo.arrows );
-
 	Menu_AddItem( &addBotsMenuInfo.menu, &addBotsMenuInfo.up );
 	Menu_AddItem( &addBotsMenuInfo.menu, &addBotsMenuInfo.down );
 	for( n = 0; n < count; n++ ) {

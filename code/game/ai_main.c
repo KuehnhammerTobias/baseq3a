@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 
 /*****************************************************************************
@@ -72,7 +92,7 @@ void ExitLevel( void );
 BotAI_Print
 ==================
 */
-void QDECL BotAI_Print( int type, const char *fmt, ... ) {
+void QDECL BotAI_Print(int type, const char *fmt, ...) {
 	char str[2048];
 	va_list ap;
 
@@ -140,14 +160,13 @@ int BotAI_GetClientState( int clientNum, playerState_t *state ) {
 	return qtrue;
 }
 
-
 /*
 ==================
 BotAI_GetEntityState
 ==================
 */
 qboolean BotAI_GetEntityState( int entityNum, entityState_t *state ) {
-	const gentity_t *ent;
+	const gentity_t	*ent;
 
 	ent = g_entities + entityNum;
 
@@ -164,7 +183,6 @@ qboolean BotAI_GetEntityState( int entityNum, entityState_t *state ) {
 	memcpy( state, &ent->s, sizeof(entityState_t) );
 	return qtrue;
 }
-
 
 /*
 ==================
@@ -184,7 +202,6 @@ int BotAI_GetSnapshotEntity( int clientNum, int sequence, entityState_t *state )
 
 	return sequence + 1;
 }
-
 
 /*
 ==================
@@ -799,7 +816,6 @@ void BotInputToUserCommand(bot_input_t *bi, usercmd_t *ucmd, int delta_angles[3]
 
 	//clear the whole structure
 	memset(ucmd, 0, sizeof(usercmd_t));
-	//
 	//Com_Printf("dir = %f %f %f speed = %f\n", bi->dir[0], bi->dir[1], bi->dir[2], bi->speed);
 	//the duration for the user command in milli seconds
 	ucmd->serverTime = time;
@@ -850,22 +866,21 @@ void BotInputToUserCommand(bot_input_t *bi, usercmd_t *ucmd, int delta_angles[3]
 	AngleVectors(angles, forward, right, NULL);
 	//bot input speed is in the range [0, 400]
 	bi->speed = bi->speed * 127 / 400;
-
 	//set the view independent movement
-	f = DotProduct( forward, bi->dir );
-	r = DotProduct( right, bi->dir );
-	u = fabs( forward[2] ) * bi->dir[2];
-	m = fabs( f );
+	f = DotProduct(forward, bi->dir);
+	r = DotProduct(right, bi->dir);
+	u = fabs(forward[2]) * bi->dir[2];
+	m = fabs(f);
 
-	if ( fabs( r ) > m ) {
-		m = fabs( r );
+	if (fabs(r) > m) {
+		m = fabs(r);
 	}
 
-	if ( fabs( u ) > m) {
-		m = fabs( u );
+	if (fabs(u) > m) {
+		m = fabs(u);
 	}
 
-	if ( m > 0 ) {
+	if (m > 0) {
 		f *= bi->speed / m;
 		r *= bi->speed / m;
 		u *= bi->speed / m;
@@ -966,7 +981,7 @@ int BotAI(int client, float thinktime) {
 	}
 
 	//retrieve the current client state
-	BotAI_GetClientState( client, &bs->cur_ps );
+	BotAI_GetClientState(client, &bs->cur_ps);
 
 	//retrieve any waiting server commands
 	while( trap_BotGetServerCommand(client, buf, sizeof(buf)) ) {
@@ -1143,14 +1158,15 @@ void BotReadSessionData(bot_state_t *bs) {
 BotAISetupClient
 ==============
 */
-qboolean BotAISetupClient( int client, struct bot_settings_s *settings, qboolean restart ) {
+qboolean BotAISetupClient(int client, struct bot_settings_s *settings, qboolean restart) {
 	char filename[MAX_PATH], name[MAX_PATH], gender[MAX_PATH];
 	bot_state_t *bs;
 	int errnum;
 
 	if (!botstates[client]) botstates[client] = G_Alloc(sizeof(bot_state_t));
 	bs = botstates[client];
-	if ( bs == NULL ) {
+
+	if (bs == NULL) {
 		return qfalse;
 	}
 
@@ -1233,7 +1249,7 @@ qboolean BotAISetupClient( int client, struct bot_settings_s *settings, qboolean
 	if (restart) {
 		BotReadSessionData(bs);
 	}
-	//bot has been setup succesfully
+	//bot has been setup successfully
 	return qtrue;
 }
 
@@ -1282,7 +1298,6 @@ int BotAIShutdownClient(int client, qboolean restart) {
 	//everything went ok
 	return qtrue;
 }
-
 
 /*
 ==============
@@ -1347,14 +1362,14 @@ int BotAILoadMap( int restart ) {
 	int			i;
 
 	trap_GetServerinfo( serverinfo, sizeof( serverinfo ) );
-	Q_strncpyz( mapname, Info_ValueForKey( serverinfo, "mapname" ), sizeof( mapname ) );
+	Q_strncpyz( mapname, Info_ValueForKey( serverinfo, "mapname"), sizeof( mapname ) );
 
-	if ( !restart ) {
+	if (!restart) {
 		trap_BotLibLoadMap( mapname );
 	}
 
-	for ( i = 0; i < level.maxclients; i++ ) {
-		if ( botstates[i] && botstates[i]->inuse ) {
+	for (i = 0; i < level.maxclients; i++) {
+		if (botstates[i] && botstates[i]->inuse) {
 			BotResetState( botstates[i] );
 			botstates[i]->setupcount = 4;
 		}
@@ -1461,28 +1476,28 @@ int BotAIStartFrame(int time) {
 		//update entities in the botlib
 		s = skip;
 		ent = g_entities;
-		for ( i = 0; i < level.num_entities; i++, s++, ent++ ) {
+		for (i = 0; i < level.num_entities; i++, s++, ent++) {
 			ent = &g_entities[i];
-			if ( !ent->inuse || !ent->r.linked || ent->r.svFlags & SVF_NOCLIENT ) {
+			if (!ent->inuse || !ent->r.linked || ent->r.svFlags & SVF_NOCLIENT) {
 				if ( *s == qfalse ) {
 					*s = qtrue;
-					trap_BotLibUpdateEntity( i, NULL );
+					trap_BotLibUpdateEntity(i, NULL);
 				}
 				continue;
 			}
 			// do not update missiles
-			if ( ent->s.eType == ET_MISSILE && ent->s.weapon != WP_GRAPPLING_HOOK ) {
+			if (ent->s.eType == ET_MISSILE && ent->s.weapon != WP_GRAPPLING_HOOK) {
 				if ( *s == qfalse ) {
 					*s = qtrue;
-					trap_BotLibUpdateEntity( i, NULL );
+					trap_BotLibUpdateEntity(i, NULL);
 				}
 				continue;
 			}
 			// do not update event only entities
-			if ( ent->s.eType > ET_EVENTS ) {
+			if (ent->s.eType > ET_EVENTS) {
 				if ( *s == qfalse ) {
 					*s = qtrue;
-					trap_BotLibUpdateEntity( i, NULL );
+					trap_BotLibUpdateEntity(i, NULL);
 				}
 				continue;
 			}
@@ -1522,7 +1537,7 @@ int BotAIStartFrame(int time) {
 			state.weapon = ent->s.weapon;
 			//
 			*s = qfalse;
-			trap_BotLibUpdateEntity( i, &state );
+			trap_BotLibUpdateEntity(i, &state);
 		}
 
 		BotAIRegularUpdate();
@@ -1571,95 +1586,66 @@ int BotAIStartFrame(int time) {
 BotInitLibrary
 ==============
 */
-int BotInitLibrary( void ) {
+int BotInitLibrary(void) {
 	char buf[MAX_CVAR_VALUE_STRING];
 
 	//set the maxclients and maxentities library variables before calling BotSetupLibrary
-	trap_Cvar_VariableStringBuffer( "sv_maxclients", buf, sizeof( buf ) );
-	if ( !buf[0] )
-		strcpy( buf, "8" );
-	trap_BotLibVarSet( "maxclients", buf );
-
+	trap_Cvar_VariableStringBuffer("sv_maxclients", buf, sizeof(buf));
+	if (!buf[0])
+		strcpy(buf, "8");
+	trap_BotLibVarSet("maxclients", buf);
 	Com_sprintf(buf, sizeof(buf), "%d", MAX_GENTITIES);
 	trap_BotLibVarSet("maxentities", buf);
 	//bsp checksum
 	trap_Cvar_VariableStringBuffer("sv_mapChecksum", buf, sizeof(buf));
-	if ( buf[0] )
-		trap_BotLibVarSet( "sv_mapChecksum", buf );
-
+	if (buf[0]) trap_BotLibVarSet("sv_mapChecksum", buf);
 	//maximum number of aas links
 	trap_Cvar_VariableStringBuffer("max_aaslinks", buf, sizeof(buf));
-	if ( buf[0] )
-		trap_BotLibVarSet( "max_aaslinks", buf );
-
+	if (buf[0]) trap_BotLibVarSet("max_aaslinks", buf);
 	//maximum number of items in a level
 	trap_Cvar_VariableStringBuffer("max_levelitems", buf, sizeof(buf));
-	if ( buf[0] )
-		trap_BotLibVarSet( "max_levelitems", buf );
-
+	if (buf[0]) trap_BotLibVarSet("max_levelitems", buf);
 	//game type
 	trap_Cvar_VariableStringBuffer("g_gametype", buf, sizeof(buf));
-	if ( !buf[0] )
-		strcpy( buf, "0" );
+	if (!buf[0]) strcpy(buf, "0");
 	trap_BotLibVarSet("g_gametype", buf);
 	//bot developer mode and log file
 	trap_BotLibVarSet("bot_developer", bot_developer.string);
 	trap_BotLibVarSet("log", buf);
 	//no chatting
 	trap_Cvar_VariableStringBuffer("bot_nochat", buf, sizeof(buf));
-	if ( buf[0] )
-		trap_BotLibVarSet( "nochat", "0" );
-
+	if (buf[0]) trap_BotLibVarSet("nochat", "0");
 	//visualize jump pads
 	trap_Cvar_VariableStringBuffer("bot_visualizejumppads", buf, sizeof(buf));
-	if ( buf[0] )
-		trap_BotLibVarSet( "bot_visualizejumppads", buf );
-	
+	if (buf[0]) trap_BotLibVarSet("bot_visualizejumppads", buf);
 	//forced clustering calculations
 	trap_Cvar_VariableStringBuffer("bot_forceclustering", buf, sizeof(buf));
-	if ( buf[0] )
-		trap_BotLibVarSet( "forceclustering", buf );
-	
+	if (buf[0]) trap_BotLibVarSet("forceclustering", buf);
 	//forced reachability calculations
 	trap_Cvar_VariableStringBuffer("bot_forcereachability", buf, sizeof(buf));
-	if ( buf[0] )
-		trap_BotLibVarSet( "forcereachability", buf );
-	
+	if (buf[0]) trap_BotLibVarSet("forcereachability", buf);
 	//force writing of AAS to file
 	trap_Cvar_VariableStringBuffer("bot_forcewrite", buf, sizeof(buf));
-	if ( buf[0] )
-		trap_BotLibVarSet( "forcewrite", buf );
-	
+	if (buf[0]) trap_BotLibVarSet("forcewrite", buf);
 	//no AAS optimization
 	trap_Cvar_VariableStringBuffer("bot_aasoptimize", buf, sizeof(buf));
-	if ( buf[0] )
-		trap_BotLibVarSet( "aasoptimize", buf );
-	
+	if (buf[0]) trap_BotLibVarSet("aasoptimize", buf);
 	//
 	trap_Cvar_VariableStringBuffer("bot_saveroutingcache", buf, sizeof(buf));
-	if ( buf[0] )
-		trap_BotLibVarSet( "saveroutingcache", buf );
-	
+	if (buf[0]) trap_BotLibVarSet("saveroutingcache", buf);
 	//reload instead of cache bot character files
 	trap_Cvar_VariableStringBuffer("bot_reloadcharacters", buf, sizeof(buf));
-	if ( !buf[0] )
-		strcpy( buf, "0" );
+	if (!buf[0]) strcpy(buf, "0");
 	trap_BotLibVarSet("bot_reloadcharacters", buf);
 	//base directory
 	trap_Cvar_VariableStringBuffer("fs_basepath", buf, sizeof(buf));
-	if ( buf[0] )
-		trap_BotLibVarSet( "basedir", buf );
-
+	if (buf[0]) trap_BotLibVarSet("basedir", buf);
 	//home directory
 	trap_Cvar_VariableStringBuffer("fs_homepath", buf, sizeof(buf));
-	if ( buf[0] )
-		trap_BotLibVarSet( "homedir", buf );
-
+	if (buf[0]) trap_BotLibVarSet("homedir", buf);
 	//game directory
-	trap_Cvar_VariableStringBuffer( "fs_game", buf, sizeof( buf ) );
-	if ( buf[0] ) 
-		trap_BotLibVarSet( "gamedir", buf );
-
+	trap_Cvar_VariableStringBuffer("fs_game", buf, sizeof(buf));
+	if (buf[0]) trap_BotLibVarSet("gamedir", buf);
 #ifdef MISSIONPACK
 	trap_BotLibDefine("MISSIONPACK");
 #endif
@@ -1697,9 +1683,7 @@ int BotAISetup( int restart ) {
 	memset( botstates, 0, sizeof(botstates) );
 
 	errnum = BotInitLibrary();
-	if ( errnum != BLERR_NOERROR )
-		return qfalse;
-
+	if (errnum != BLERR_NOERROR) return qfalse;
 	return qtrue;
 }
 
@@ -1715,8 +1699,8 @@ int BotAIShutdown( int restart ) {
 	//if the game is restarted for a tournament
 	if ( restart ) {
 		//shutdown all the bots in the botlib
-		for ( i = 0; i < level.maxclients; i++ ) {
-			if ( botstates[i] && botstates[i]->inuse ) {
+		for (i = 0; i < level.maxclients; i++) {
+			if (botstates[i] && botstates[i]->inuse) {
 				BotAIShutdownClient(botstates[i]->client, restart);
 			}
 		}

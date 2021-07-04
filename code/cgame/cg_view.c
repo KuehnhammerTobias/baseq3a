@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // cg_view.c -- setup all the parameters (position, angle, etc)
 // for a 3D rendering
@@ -64,8 +84,7 @@ void CG_TestModel_f (void) {
 		cg.testModelEntity.frame = 1;
 		cg.testModelEntity.oldframe = 0;
 	}
-
-	if ( !cg.testModelEntity.hModel ) {
+	if (! cg.testModelEntity.hModel ) {
 		CG_Printf( "Can't register model '%s'.\n", cg.testModelName );
 		return;
 	}
@@ -745,7 +764,7 @@ static void CG_PlayBufferedSounds( void ) {
 	if ( cg.soundTime < cg.time ) {
 		if (cg.soundBufferOut != cg.soundBufferIn && cg.soundBuffer[cg.soundBufferOut]) {
 			cg.soundPlaying = cg.soundBuffer[cg.soundBufferOut];
-			trap_S_StartLocalSound( cg.soundPlaying, CHAN_ANNOUNCER );
+			trap_S_StartLocalSound(cg.soundPlaying, CHAN_ANNOUNCER);
 			cg.soundBuffer[cg.soundBufferOut] = 0;
 			cg.soundBufferOut = (cg.soundBufferOut + 1) % MAX_SOUNDBUFFER;
 			cg.soundTime = cg.time + 750;
@@ -853,7 +872,7 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 
 	// build the render lists
 	if ( !cg.hyperspace ) {
-		CG_AddPacketEntities();	// alter calcViewValues, so predicted player state is correct
+		CG_AddPacketEntities();			// alter calcViewValues, so predicted player state is correct
 		CG_AddMarks();
 		CG_AddParticles ();
 		CG_AddLocalEntities();
@@ -915,4 +934,7 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 	if ( cg_stats.integer ) {
 		CG_Printf( "cg.clientFrame:%i\n", cg.clientFrame );
 	}
+
+
 }
+

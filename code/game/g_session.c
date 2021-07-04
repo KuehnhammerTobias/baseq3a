@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 #include "g_local.h"
 
@@ -38,7 +58,6 @@ void G_WriteClientSessionData( gclient_t *client ) {
 
 	trap_Cvar_Set( var, s );
 }
-
 
 /*
 ================
@@ -100,7 +119,7 @@ Called on a first-time connect
 */
 void G_InitSessionData( gclient_t *client, const char *team, qboolean isBot ) {
 	clientSession_t	*sess;
-	
+
 	sess = &client->sess;
 
 	// initial team determination
@@ -137,7 +156,8 @@ void G_InitSessionData( gclient_t *client, const char *team, qboolean isBot ) {
 			default:
 			case GT_FFA:
 			case GT_SINGLE_PLAYER:
-				if ( g_maxGameClients.integer > 0 && level.numNonSpectatorClients >= g_maxGameClients.integer ) {
+				if ( g_maxGameClients.integer > 0 && 
+					level.numNonSpectatorClients >= g_maxGameClients.integer ) {
 					sess->sessionTeam = TEAM_SPECTATOR;
 				} else {
 					if ( g_autoJoin.integer & 1 || isBot || g_gametype.integer == GT_SINGLE_PLAYER )
@@ -186,7 +206,6 @@ void G_InitWorldSession( void ) {
 		G_Printf( "Gametype changed, clearing session data.\n" );
 	}
 }
-
 
 /*
 ==================

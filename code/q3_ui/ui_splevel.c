@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 /*
 =============================================================================
@@ -211,7 +231,7 @@ static void UI_SPLevelMenu_SetMenuArena( int n, int level, const char *arenaInfo
 		levelMenuInfo.levelScores[n] = 8;
 	}
 
-	Com_sprintf( levelMenuInfo.levelPicNames[n], sizeof( levelMenuInfo.levelPicNames[n] ), "levelshots/%s.tga", map );
+	Com_sprintf( levelMenuInfo.levelPicNames[n], sizeof(levelMenuInfo.levelPicNames[n]), "levelshots/%s.tga", map );
 	if( !trap_R_RegisterShaderNoMip( levelMenuInfo.levelPicNames[n] ) ) {
 		strcpy( levelMenuInfo.levelPicNames[n], ART_MAP_UNKNOWN );
 	}
@@ -591,7 +611,7 @@ static void UI_SPLevelMenu_MenuDraw( void ) {
 
 	// show levelshots for levels of current tier
 	Vector4Copy( color_white, color );
-	color[3] = 0.5+0.5*sin( ( uis.realtime % TMOD_075 ) / PULSE_DIVISOR );
+	color[3] = 0.5+0.5*sin((uis.realtime % TMOD_075 )/PULSE_DIVISOR);
 	for ( n = 0; n < levelMenuInfo.numMaps; n++ ) {
 		x = levelMenuInfo.item_maps[n].generic.x;
 		y = levelMenuInfo.item_maps[n].generic.y;

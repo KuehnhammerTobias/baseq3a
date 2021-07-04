@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 
 #include "g_local.h"
@@ -305,7 +325,7 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 		client->ps.speed = g_speed.value * 1.25f; // faster than normal
 
 		// set up for pmove
-		memset( &pm, 0, sizeof( pm ) );
+		memset (&pm, 0, sizeof(pm));
 		pm.ps = &client->ps;
 		pm.cmd = *ucmd;
 		if ( client->noclip )
@@ -316,7 +336,7 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 		pm.pointcontents = trap_PointContents;
 
 		// perform a pmove
-		Pmove( &pm );
+		Pmove (&pm);
 		// save results of pmove
 		VectorCopy( client->ps.origin, ent->s.origin );
 
@@ -751,8 +771,7 @@ void ClientThink_real( gentity_t *ent ) {
 	if ( ucmd->serverTime < level.time - 1000 ) {
 		ucmd->serverTime = level.time - 1000;
 //		G_Printf("serverTime >>>>>\n" );
-	}
-
+	} 
 	// unlagged
 	client->frameOffset = trap_Milliseconds() - level.frameStartTime;
 	client->lastCmdTime = ucmd->serverTime;
@@ -769,11 +788,12 @@ void ClientThink_real( gentity_t *ent ) {
 	}
 
 	if ( pmove_msec.integer < 8 ) {
-		trap_Cvar_Set( "pmove_msec", "8" );
-		trap_Cvar_Update( &pmove_msec );
-	} else if ( pmove_msec.integer > 33 ) {
-		trap_Cvar_Set( "pmove_msec", "33" );
-		trap_Cvar_Update( &pmove_msec );
+		trap_Cvar_Set("pmove_msec", "8");
+		trap_Cvar_Update(&pmove_msec);
+	}
+	else if (pmove_msec.integer > 33) {
+		trap_Cvar_Set("pmove_msec", "33");
+		trap_Cvar_Update(&pmove_msec);
 	}
 
 	if ( pmove_fixed.integer ) {
@@ -993,7 +1013,6 @@ void ClientThink_real( gentity_t *ent ) {
 	ClientTimerActions( ent, msec );
 }
 
-
 /*
 ==================
 ClientThink
@@ -1073,7 +1092,6 @@ void SpectatorClientEndFrame( gentity_t *ent ) {
 		ent->client->ps.pm_flags &= ~PMF_SCOREBOARD;
 	}
 }
-
 
 /*
 ==============
@@ -1221,3 +1239,5 @@ void ClientEndFrame( gentity_t *ent ) {
 //	i = trap_AAS_PointReachabilityAreaIndex( ent->client->ps.origin );
 //	ent->client->areabits[i >> 3] |= 1 << (i & 7);
 }
+
+

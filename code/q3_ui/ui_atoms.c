@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 /**********************************************************************
 	UI_ATOMS.C
@@ -9,16 +29,14 @@
 
 uiStatic_t		uis;
 qboolean		m_entersound;		// after a frame, so caching won't disrupt the sound
-
 // these are here so the functions in q_shared.c can link
 #ifndef UI_HARD_LINKED
-
 void QDECL Com_Error( int level, const char *fmt, ... ) {
 	va_list		argptr;
 	char		text[2048];
 
-	va_start( argptr, fmt );
-	ED_vsprintf( text, fmt, argptr );
+	va_start (argptr, fmt);
+	ED_vsprintf (text, fmt, argptr);
 	va_end (argptr);
 
 	trap_Error( text );
@@ -28,15 +46,14 @@ void QDECL Com_Printf( const char *fmt, ... ) {
 	va_list		argptr;
 	char		text[2048];
 
-	va_start( argptr, fmt );
-	ED_vsprintf( text, fmt, argptr );
+	va_start (argptr, fmt);
+	ED_vsprintf (text, fmt, argptr);
 	va_end (argptr);
 
 	trap_Print( text );
 }
 
 #endif
-
 /*
 =================
 UI_ClampCvar
@@ -674,7 +691,6 @@ static void UI_DrawString2( int x, int y, const char* str, vec4_t color, int cha
 	trap_R_SetColor( NULL );
 }
 
-
 /*
 =================
 UI_DrawString
@@ -754,7 +770,6 @@ void UI_DrawString( int x, int y, const char* str, int style, vec4_t color )
 	UI_DrawString2(x,y,str,drawcolor,charw,charh);
 }
 
-
 /*
 =================
 UI_DrawChar
@@ -770,7 +785,6 @@ void UI_DrawChar( int x, int y, int ch, int style, vec4_t color )
 	UI_DrawString( x, y, buff, style, color );
 }
 
-
 qboolean UI_IsFullscreen( void ) {
 	if ( uis.activemenu && ( trap_Key_GetCatcher() & KEYCATCH_UI ) ) {
 		return uis.activemenu->fullscreen;
@@ -781,7 +795,7 @@ qboolean UI_IsFullscreen( void ) {
 
 void UI_SetActiveMenu( uiMenuCommand_t menu ) {
 	// this should be the ONLY way the menu system is brought up
-	// enusure minumum menu data is cached
+	// ensure minimum menu data is cached
 	Menu_Cache();
 
 	switch ( menu ) {
@@ -801,7 +815,6 @@ void UI_SetActiveMenu( uiMenuCommand_t menu ) {
 		UI_InGameMenu();
 		return;
 		
-	// bk001204
 	case UIMENU_TEAM:
 	case UIMENU_POSTGAME:
 	default:
@@ -811,7 +824,6 @@ void UI_SetActiveMenu( uiMenuCommand_t menu ) {
 	  break;
 	}
 }
-
 
 /*
 =================
@@ -839,7 +851,6 @@ void UI_KeyEvent( int key, int down ) {
 		trap_S_StartLocalSound( s, CHAN_LOCAL_SOUND );
 }
 
-
 /*
 =================
 UI_MouseEvent
@@ -850,7 +861,7 @@ void UI_MouseEvent( int dx, int dy )
 	int				i;
 	menucommon_s*	m;
 
-	if ( !uis.activemenu )
+	if (!uis.activemenu)
 		return;
 
 	// update virtual mouse cursor coordinates
@@ -858,18 +869,18 @@ void UI_MouseEvent( int dx, int dy )
 	uis.cursory += dy * uis.cursorScaleR;
 	
 	// clamp virtual coordinates
-	if ( uis.cursorx < uis.screenXmin )
+	if (uis.cursorx < uis.screenXmin)
 		uis.cursorx = uis.screenXmin;
-	else if ( uis.cursorx > uis.screenXmax )
+	else if (uis.cursorx > uis.screenXmax)
 		uis.cursorx = uis.screenXmax;
 
-	if ( uis.cursory < uis.screenYmin )
+	if (uis.cursory < uis.screenYmin)
 		uis.cursory = uis.screenYmin;
-	else if ( uis.cursory > uis.screenYmax )
+	else if (uis.cursory > uis.screenYmax)
 		uis.cursory = uis.screenYmax;
 
 	// region test the active menu items
-	for ( i = 0; i < uis.activemenu->nitems; i++ )
+	for (i=0; i<uis.activemenu->nitems; i++)
 	{
 		m = (menucommon_s*)uis.activemenu->items[i];
 
@@ -905,7 +916,6 @@ void UI_MouseEvent( int dx, int dy )
 		((menucommon_s*)(uis.activemenu->items[uis.activemenu->cursor]))->flags &= ~QMF_HASMOUSEFOCUS;
 	}
 }
-
 
 char *UI_Argv( int arg ) {
 	static char	buffer[MAX_STRING_CHARS];
@@ -961,6 +971,7 @@ void UI_Cache_f( void ) {
 //	UI_SaveConfigMenu_Cache();
 	UI_BotSelectMenu_Cache();
 	UI_ModsMenu_Cache();
+
 }
 
 
@@ -1018,7 +1029,6 @@ qboolean UI_ConsoleCommand( int realTime ) {
 	return qfalse;
 }
 
-
 /*
 =================
 UI_Shutdown
@@ -1026,7 +1036,6 @@ UI_Shutdown
 */
 void UI_Shutdown( void ) {
 }
-
 
 /*
 =================
@@ -1048,7 +1057,6 @@ void UI_Init( void ) {
 	uis.menusp     = 0;
 }
 
-
 /*
 ================
 UI_AdjustFrom640
@@ -1064,7 +1072,6 @@ void UI_AdjustFrom640( float *x, float *y, float *w, float *h ) {
 	*h *= uis.scale;
 }
 
-
 void UI_DrawNamedPic( float x, float y, float width, float height, const char *picname ) {
 	qhandle_t	hShader;
 
@@ -1072,7 +1079,6 @@ void UI_DrawNamedPic( float x, float y, float width, float height, const char *p
 	UI_AdjustFrom640( &x, &y, &width, &height );
 	trap_R_DrawStretchPic( x, y, width, height, 0, 0, 1, 1, hShader );
 }
-
 
 void UI_DrawHandlePic( float x, float y, float w, float h, qhandle_t hShader ) {
 	float	s0;
@@ -1180,7 +1186,7 @@ void UI_Refresh( int realtime )
 		{
 			// draw the background
 			trap_R_DrawStretchPic( 0, 0, uis.glconfig.vidWidth, uis.glconfig.vidHeight, 0, 0, 1, 1, uis.menuBackNoLogoShader );
-			if ( uis.activemenu->showlogo ) {
+			if( uis.activemenu->showlogo ) {
 				UI_DrawHandlePic( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, uis.menuBackShader );
 			}
 		}
@@ -1201,10 +1207,10 @@ void UI_Refresh( int realtime )
 	UI_DrawCursor( uis.cursorx-16, uis.cursory-16, 32, 32 );
 
 #ifndef NDEBUG
-	if ( uis.debug )
+	if (uis.debug)
 	{
 		// cursor coordinates
-		UI_DrawString( 0, 0, va( "(%1.1f,%1.1f)", uis.cursorx, uis.cursory ), UI_LEFT|UI_SMALLFONT, colorRed );
+		UI_DrawString( 0, 0, va("(%1.1f,%1.1f)",uis.cursorx,uis.cursory), UI_LEFT|UI_SMALLFONT, colorRed );
 	}
 #endif
 

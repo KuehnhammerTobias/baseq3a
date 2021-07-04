@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 #include "g_local.h"
 
@@ -9,6 +29,7 @@
 #endif
 
 static dllSyscall_t syscall = (dllSyscall_t)-1;
+
 
 DLLEXPORT void dllEntry( dllSyscall_t syscallptr ) {
 	syscall = syscallptr;
@@ -24,7 +45,8 @@ void	trap_Print( const char *text ) {
 	syscall( G_PRINT, text );
 }
 
-void	trap_Error( const char *text ) {
+void trap_Error( const char *text )
+{
 	syscall( G_ERROR, text );
 }
 
@@ -215,11 +237,11 @@ int trap_BotLibShutdown( void ) {
 	return syscall( BOTLIB_SHUTDOWN );
 }
 
-int trap_BotLibVarSet( const char *var_name, const char *value ) {
+int trap_BotLibVarSet(const char *var_name, const char *value) {
 	return syscall( BOTLIB_LIBVAR_SET, var_name, value );
 }
 
-int trap_BotLibVarGet( const char *var_name, char *value, int size ) {
+int trap_BotLibVarGet(const char *var_name, char *value, int size) {
 	return syscall( BOTLIB_LIBVAR_GET, var_name, value, size );
 }
 
@@ -664,7 +686,7 @@ void trap_BotSaveGoalFuzzyLogic(int goalstate, char *filename) {
 }
 
 void trap_BotMutateGoalFuzzyLogic(int goalstate, float range) {
-	syscall( BOTLIB_AI_MUTATE_GOAL_FUZZY_LOGIC, goalstate, PASSFLOAT( range ) );
+	syscall( BOTLIB_AI_MUTATE_GOAL_FUZZY_LOGIC, goalstate, PASSFLOAT(range) );
 }
 
 int trap_BotAllocGoalState(int state) {

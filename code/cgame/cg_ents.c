@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // cg_ents.c -- present snapshot entities, happens every single frame
 
@@ -125,11 +145,11 @@ static void CG_EntityEffects( const centity_t *cent ) {
 		float		i, r, g, b;
 
 		cl = cent->currentState.constantLight;
-		r = (float)(( cl >> 0 ) & 255) / 255.0;
-		g = (float)(( cl >> 8 ) & 255) / 255.0;
-		b = (float)(( cl >> 16 ) & 255) / 255.0;
-		i = (float)(( cl >> 24 ) & 255) * 4.0;
-		trap_R_AddLightToScene( cent->lerpOrigin, i, r, g, b );
+		r = (float) ((cl >> 0) & 255) / 255.0;
+		g = (float) ((cl >> 8) & 255) / 255.0;
+		b = (float) ((cl >> 16) & 255) / 255.0;
+		i = (float) ((cl >> 24) & 255) * 4.0;
+		trap_R_AddLightToScene(cent->lerpOrigin, i, r, g, b);
 	}
 
 }
@@ -142,7 +162,7 @@ CG_General
 */
 static void CG_General( const centity_t *cent ) {
 	refEntity_t			ent;
-	const entityState_t	*s1;
+	const entityState_t		*s1;
 
 	s1 = &cent->currentState;
 
@@ -207,7 +227,7 @@ CG_Item
 static void CG_Item( centity_t *cent ) {
 	refEntity_t		ent;
 	entityState_t	*es;
-	const gitem_t	*item;
+	const gitem_t			*item;
 	int				msec;
 	float			frac;
 	float			scale;
@@ -342,7 +362,6 @@ static void CG_Item( centity_t *cent ) {
 
 	// add to refresh list
 	trap_R_AddRefEntityToScene(&ent);
-
 #ifdef MISSIONPACK
 	if ( item->giType == IT_WEAPON && wi->barrelModel ) {
 		refEntity_t	barrel;
@@ -405,7 +424,7 @@ CG_Missile
 static void CG_Missile( centity_t *cent ) {
 	refEntity_t			ent;
 	entityState_t		*s1;
-	const weaponInfo_t	*weapon;
+	const weaponInfo_t		*weapon;
 	const clientInfo_t	*ci;
 //	int	col;
 
@@ -570,7 +589,7 @@ CG_Mover
 */
 static void CG_Mover( const centity_t *cent ) {
 	refEntity_t			ent;
-	const entityState_t	*s1;
+	const entityState_t		*s1;
 
 	s1 = &cent->currentState;
 
@@ -598,7 +617,7 @@ static void CG_Mover( const centity_t *cent ) {
 	// add the secondary model
 	if ( s1->modelindex2 ) {
 		ent.skinNum = 0;
-		ent.hModel = cgs.gameModels[ s1->modelindex2 % MAX_MODELS ];
+		ent.hModel = cgs.gameModels[s1->modelindex2 % MAX_MODELS];
 		trap_R_AddRefEntityToScene(&ent);
 	}
 
@@ -613,7 +632,7 @@ Also called as an event
 */
 void CG_Beam( const centity_t *cent ) {
 	refEntity_t			ent;
-	const entityState_t	*s1;
+	const entityState_t		*s1;
 
 	s1 = &cent->currentState;
 
@@ -639,7 +658,7 @@ CG_Portal
 */
 static void CG_Portal( const centity_t *cent ) {
 	refEntity_t			ent;
-	const entityState_t *s1;
+	const entityState_t		*s1;
 
 	s1 = &cent->currentState;
 
@@ -672,21 +691,21 @@ CG_AdjustPositionForMover
 Also called by client movement prediction code
 =========================
 */
-void CG_AdjustPositionForMover( const vec3_t in, int moverNum, int fromTime, int toTime, vec3_t out, const vec3_t angles_in, vec3_t angles_out ) {
+void CG_AdjustPositionForMover(const vec3_t in, int moverNum, int fromTime, int toTime, vec3_t out, const vec3_t angles_in, vec3_t angles_out ) {
 	centity_t	*cent;
 	vec3_t	oldOrigin, origin, deltaOrigin;
 	vec3_t	oldAngles, angles, deltaAngles;
 
 	if ( moverNum <= 0 || moverNum >= ENTITYNUM_MAX_NORMAL ) {
 		VectorCopy( in, out );
-		VectorCopy( angles_in, angles_out );
+		VectorCopy(angles_in, angles_out);
 		return;
 	}
 
 	cent = &cg_entities[ moverNum ];
 	if ( cent->currentState.eType != ET_MOVER ) {
 		VectorCopy( in, out );
-		VectorCopy( angles_in, angles_out );
+		VectorCopy(angles_in, angles_out);
 		return;
 	}
 
@@ -778,7 +797,7 @@ static void CG_CalcEntityLerpPositions( centity_t *cent ) {
 	// player state
 	if ( cent != &cg.predictedPlayerEntity ) {
 		CG_AdjustPositionForMover( cent->lerpOrigin, cent->currentState.groundEntityNum, 
-		cg.snap->serverTime, cg.time, cent->lerpOrigin, cent->lerpAngles, cent->lerpAngles );
+		cg.snap->serverTime, cg.time, cent->lerpOrigin, cent->lerpAngles, cent->lerpAngles);
 	}
 }
 

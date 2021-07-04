@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 //
 // gameinfo.c
@@ -140,7 +160,6 @@ static void UI_LoadArenasFromFile( const char *filename ) {
 	ui_numArenas += UI_ParseInfos( buf, MAX_ARENAS - ui_numArenas, &ui_arenaInfos[ui_numArenas] );
 }
 
-
 /*
 ===============
 UI_LoadArenas
@@ -169,8 +188,7 @@ static void UI_LoadArenas( void ) {
 	}
 
 	// get all arenas from .arena files
-	numdirs = trap_FS_GetFileList( "scripts", ".arena", dirlist, sizeof( dirlist ) );
-
+	numdirs = trap_FS_GetFileList("scripts", ".arena", dirlist, sizeof( dirlist ) );
 	dirptr  = dirlist;
 	for (i = 0; i < numdirs; i++, dirptr += dirlen+1) {
 		dirlen = strlen(dirptr);
@@ -179,7 +197,7 @@ static void UI_LoadArenas( void ) {
 		UI_LoadArenasFromFile(filename);
 	}
 	trap_Print( va( "%i arenas parsed\n", ui_numArenas ) );
-	if (outOfMemory) trap_Print(S_COLOR_YELLOW"WARNING: not anough memory in pool to load all arenas\n");
+	if (outOfMemory) trap_Print(S_COLOR_YELLOW"WARNING: not enough memory in pool to load all arenas\n");
 
 	// set initial numbers
 	for( n = 0; n < ui_numArenas; n++ ) {
@@ -329,9 +347,8 @@ static void UI_LoadBotsFromFile( const char *filename ) {
 	trap_FS_FCloseFile( f );
 
 	ui_numBots += UI_ParseInfos( buf, MAX_BOTS - ui_numBots, &ui_botInfos[ui_numBots] );
-	if (outOfMemory) trap_Print(S_COLOR_YELLOW"WARNING: not anough memory in pool to load all bots\n");
+	if (outOfMemory) trap_Print(S_COLOR_YELLOW"WARNING: not enough memory in pool to load all bots\n");
 }
-
 
 /*
 ===============
@@ -349,15 +366,16 @@ static void UI_LoadBots( void ) {
 
 	ui_numBots = 0;
 
-	trap_Cvar_Register( &botsFile, "g_botsFile", "", CVAR_ARCHIVE | CVAR_LATCH );
-	if ( *botsFile.string && trap_Cvar_VariableValue( "ui_gametype" ) != GT_SINGLE_PLAYER ) {
-		UI_LoadBotsFromFile( botsFile.string );
-	} else {
-		UI_LoadBotsFromFile( "scripts/bots.txt" );
+	trap_Cvar_Register( &botsFile, "g_botsFile", "", CVAR_ARCHIVE|CVAR_LATCH );
+	if( *botsFile.string && trap_Cvar_VariableValue( "ui_gametype" ) != GT_SINGLE_PLAYER ) {
+		UI_LoadBotsFromFile(botsFile.string);
+	}
+	else {
+		UI_LoadBotsFromFile("scripts/bots.txt");
 	}
 
 	// get all bots from .bot files
-	numdirs = trap_FS_GetFileList( "scripts", ".bot", dirlist, sizeof( dirlist ) );
+	numdirs = trap_FS_GetFileList("scripts", ".bot", dirlist, sizeof(dirlist) );
 	dirptr  = dirlist;
 	for (i = 0; i < numdirs; i++, dirptr += dirlen+1) {
 		dirlen = strlen(dirptr);
@@ -778,7 +796,7 @@ void UI_SPUnlockMedals_f( void ) {
 
 	trap_Cvar_Set( "g_spAwards", awardData );
 
-	trap_Print( "All levels unlocked at 100\n" );
+	trap_Print( "All awards unlocked at 100\n" );
 }
 
 

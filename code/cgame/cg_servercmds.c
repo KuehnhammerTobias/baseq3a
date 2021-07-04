@@ -1,13 +1,32 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // cg_servercmds.c -- reliably sequenced text commands sent by the server
 // these are processed at snapshot transition time, so there will definately
 // be a valid snapshot this frame
 
 #include "cg_local.h"
-
-#ifdef MISSIONPACK // bk001204
-#include "../../ui/menudef.h" // bk001205 - for Q3_ui as well
+#ifdef MISSIONPACK
+#include "../../ui/menudef.h"
 
 typedef struct {
 	const char *order;
@@ -68,7 +87,7 @@ static void CG_ParseScores( void ) {
 		cg.scores[i].accuracy = atoi(CG_Argv(i * 14 + 10));
 		cg.scores[i].impressiveCount = atoi(CG_Argv(i * 14 + 11));
 		cg.scores[i].excellentCount = atoi(CG_Argv(i * 14 + 12));
-		cg.scores[i].gauntletCount = atoi(CG_Argv(i * 14 + 13));
+		cg.scores[i].guantletCount = atoi(CG_Argv(i * 14 + 13));
 		cg.scores[i].defendCount = atoi(CG_Argv(i * 14 + 14));
 		cg.scores[i].assistCount = atoi(CG_Argv(i * 14 + 15));
 		cg.scores[i].perfect = atoi(CG_Argv(i * 14 + 16));
@@ -85,12 +104,13 @@ static void CG_ParseScores( void ) {
 #ifdef MISSIONPACK
 	CG_SetScoreSelection(NULL);
 #endif
-}
 
+}
 
 /*
 =================
 CG_ParseTeamInfo
+
 =================
 */
 static void CG_ParseTeamInfo( void ) {
@@ -99,12 +119,16 @@ static void CG_ParseTeamInfo( void ) {
 
 	numSortedTeamPlayers = atoi( CG_Argv( 1 ) );
 	if( (unsigned) numSortedTeamPlayers > TEAM_MAXOVERLAY )
+	{
 		numSortedTeamPlayers = TEAM_MAXOVERLAY;
+	}
 
 	for ( i = 0 ; i < numSortedTeamPlayers ; i++ ) {
 		client = atoi( CG_Argv( i * 6 + 2 ) );
-		if ( (unsigned) client >= MAX_CLIENTS )
+		if( (unsigned) client >= MAX_CLIENTS )
+		{
 			continue;
+		}
 
 		sortedTeamPlayers[i] = client;
 
@@ -131,7 +155,7 @@ void CG_ParseServerinfo( void ) {
 
 	info = CG_ConfigString( CS_SERVERINFO );
 	cgs.gametype = atoi( Info_ValueForKey( info, "g_gametype" ) );
-	trap_Cvar_Set( "ui_gametype", va( "%i", cgs.gametype ) );
+	trap_Cvar_Set("ui_gametype", va("%i", cgs.gametype));
 	cgs.dmflags = atoi( Info_ValueForKey( info, "dmflags" ) );
 	cgs.teamflags = atoi( Info_ValueForKey( info, "teamflags" ) );
 	cgs.fraglimit = atoi( Info_ValueForKey( info, "fraglimit" ) );
@@ -212,7 +236,6 @@ static void CG_ParseWarmup( void ) {
 	cg.warmup = warmup;
 }
 
-
 /*
 ================
 CG_SetConfigValues
@@ -239,7 +262,6 @@ void CG_SetConfigValues( void ) {
 #endif
 	CG_ParseWarmup();
 }
-
 
 /*
 =====================
@@ -280,7 +302,6 @@ void CG_ShaderStateChanged(void) {
 		}
 	}
 }
-
 
 /*
 ================
@@ -469,8 +490,8 @@ static void CG_MapRestart( void ) {
 
 	// make sure the "3 frags left" warnings play again
 	cg.fraglimitWarnings = 0;
-	cg.timelimitWarnings = 0;
 
+	cg.timelimitWarnings = 0;
 	cg.rewardTime = 0;
 	cg.rewardStack = 0;
 	cg.intermissionStarted = qfalse;
@@ -482,19 +503,18 @@ static void CG_MapRestart( void ) {
 
 	CG_StartMusic();
 
-	trap_S_ClearLoopingSounds( qtrue );
+	trap_S_ClearLoopingSounds(qtrue);
 
 	cg.allowPickupPrediction = cg.time + PICKUP_PREDICTION_DELAY;
 
 	// we really should clear more parts of cg here and stop sounds
 
 	// play the "fight" sound if this is a restart without warmup
-	if ( cg.warmup == 0 /* && cgs.gametype == GT_TOURNAMENT */ ) {
+	if ( cg.warmup == 0 /* && cgs.gametype == GT_TOURNAMENT */) {
 		// force sound playback in CG_WarmupEvents()
 		cg.warmup = cg.time;
 		cg.warmupCount = -1;
 	}
-
 #ifdef MISSIONPACK
 	if (cg_singlePlayerActive.integer) {
 		trap_Cvar_Set("ui_matchStartTime", va("%i", cg.time));
@@ -503,8 +523,7 @@ static void CG_MapRestart( void ) {
 		}
 	}
 #endif
-
-	trap_Cvar_Set( "cg_thirdPerson", "0" );
+	trap_Cvar_Set("cg_thirdPerson", "0");
 }
 
 #ifdef MISSIONPACK
@@ -728,7 +747,6 @@ int CG_GetVoiceChat( voiceChatList_t *voiceChatList, const char *id, sfxHandle_t
 	return qfalse;
 }
 
-
 /*
 =================
 CG_VoiceChatListForClient
@@ -840,7 +858,6 @@ CG_PlayVoiceChat
 =================
 */
 void CG_PlayVoiceChat( bufferedVoiceChat_t *vchat ) {
-
 	// if we are going into the intermission, don't start any voices
 	if ( cg.intermissionStarted ) {
 		return;
@@ -867,7 +884,6 @@ void CG_PlayVoiceChat( bufferedVoiceChat_t *vchat ) {
 	voiceChatBuffer[cg.voiceChatBufferOut].snd = 0;
 }
 
-
 /*
 =====================
 CG_PlayBufferedVoieChats
@@ -885,14 +901,12 @@ void CG_PlayBufferedVoiceChats( void ) {
 	}
 }
 
-
 /*
 =====================
 CG_AddBufferedVoiceChat
 =====================
 */
 void CG_AddBufferedVoiceChat( bufferedVoiceChat_t *vchat ) {
-
 	// if we are going into the intermission, don't start any voices
 	if ( cg.intermissionStarted ) {
 		return;
@@ -906,14 +920,12 @@ void CG_AddBufferedVoiceChat( bufferedVoiceChat_t *vchat ) {
 	}
 }
 
-
 /*
 =================
 CG_VoiceChatLocal
 =================
 */
 void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, const char *cmd ) {
-
 	char *chat;
 	voiceChatList_t *voiceChatList;
 	clientInfo_t *ci;
@@ -955,7 +967,6 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 	}
 }
 
-
 /*
 =================
 CG_VoiceChat
@@ -983,7 +994,6 @@ void CG_VoiceChat( int mode ) {
 }
 #endif // MISSIONPACK
 
-
 /*
 =================
 CG_RemoveChatEscapeChar
@@ -1001,7 +1011,6 @@ static void CG_RemoveChatEscapeChar( char *text ) {
 	}
 	text[l] = '\0';
 }
-
 
 /*
 =================

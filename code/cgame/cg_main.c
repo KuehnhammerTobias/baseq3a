@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // cg_main.c -- initialization and primary entry point for cgame
 #include "cg_local.h"
@@ -40,7 +60,7 @@ This is the only way control passes into the module.
 This must be the very first function compiled into the .q3vm file
 ================
 */
-DLLEXPORT intptr_t vmMain( int command, int arg0, int arg1, int arg2 ) {
+DLLEXPORT intptr_t vmMain( int command, int arg0, int arg1, int arg2) {
 
 	switch ( command ) {
 	case CG_INIT:
@@ -206,29 +226,29 @@ vmCvar_t	cg_followKiller;
 
 typedef struct {
 	vmCvar_t	*vmCvar;
-	const char	*cvarName;
-	const char	*defaultString;
-	const int	cvarFlags;
+	const char		*cvarName;
+	const char		*defaultString;
+	const int			cvarFlags;
 } cvarTable_t;
 
 static const cvarTable_t cvarTable[] = {
-	{ &cg_ignore, "cg_ignore", "0", 0 }, // used for debugging
+	{ &cg_ignore, "cg_ignore", "0", 0 },	// used for debugging
 	{ &cg_autoswitch, "cg_autoswitch", "1", CVAR_ARCHIVE },
 	{ &cg_drawGun, "cg_drawGun", "1", CVAR_ARCHIVE },
 	{ &cg_zoomFov, "cg_zoomfov", "22.5", CVAR_ARCHIVE },
 	{ &cg_fov, "cg_fov", "90", CVAR_ARCHIVE },
 	{ &cg_viewsize, "cg_viewsize", "100", CVAR_ARCHIVE },
-	{ &cg_shadows, "cg_shadows", "1", CVAR_ARCHIVE },
-	{ &cg_gibs, "cg_gibs", "1", CVAR_ARCHIVE },
-	{ &cg_draw2D, "cg_draw2D", "1", CVAR_ARCHIVE },
-	{ &cg_drawStatus, "cg_drawStatus", "1", CVAR_ARCHIVE },
-	{ &cg_drawTimer, "cg_drawTimer", "0", CVAR_ARCHIVE },
-	{ &cg_drawFPS, "cg_drawFPS", "0", CVAR_ARCHIVE },
+	{ &cg_shadows, "cg_shadows", "1", CVAR_ARCHIVE  },
+	{ &cg_gibs, "cg_gibs", "1", CVAR_ARCHIVE  },
+	{ &cg_draw2D, "cg_draw2D", "1", CVAR_ARCHIVE  },
+	{ &cg_drawStatus, "cg_drawStatus", "1", CVAR_ARCHIVE  },
+	{ &cg_drawTimer, "cg_drawTimer", "0", CVAR_ARCHIVE  },
+	{ &cg_drawFPS, "cg_drawFPS", "0", CVAR_ARCHIVE  },
 	{ &cg_drawSnapshot, "cg_drawSnapshot", "0", CVAR_ARCHIVE  },
-	{ &cg_draw3dIcons, "cg_draw3dIcons", "1", CVAR_ARCHIVE },
-	{ &cg_drawIcons, "cg_drawIcons", "1", CVAR_ARCHIVE },
-	{ &cg_drawAmmoWarning, "cg_drawAmmoWarning", "1", CVAR_ARCHIVE },
-	{ &cg_drawAttacker, "cg_drawAttacker", "1", CVAR_ARCHIVE },
+	{ &cg_draw3dIcons, "cg_draw3dIcons", "1", CVAR_ARCHIVE  },
+	{ &cg_drawIcons, "cg_drawIcons", "1", CVAR_ARCHIVE  },
+	{ &cg_drawAmmoWarning, "cg_drawAmmoWarning", "1", CVAR_ARCHIVE  },
+	{ &cg_drawAttacker, "cg_drawAttacker", "1", CVAR_ARCHIVE  },
 	{ &cg_drawSpeed, "cg_drawSpeed", "0", CVAR_ARCHIVE },
 	{ &cg_drawCrosshair, "cg_drawCrosshair", "4", CVAR_ARCHIVE },
 	{ &cg_drawCrosshairNames, "cg_drawCrosshairNames", "1", CVAR_ARCHIVE },
@@ -365,7 +385,6 @@ void CG_RegisterCvars( void ) {
 	//trap_Cvar_Register(NULL, "team_headmodel", DEFAULT_TEAM_HEAD, CVAR_USERINFO | CVAR_ARCHIVE );
 }
 
-
 /*																																			
 ===================
 CG_ForceModelChange
@@ -373,17 +392,16 @@ CG_ForceModelChange
 */
 void CG_ForceModelChange( void ) {
 	const char *clientInfo;
-	int	i;
+	int		i;
 
-	for ( i = 0 ; i < MAX_CLIENTS ; i++ ) {
-		clientInfo = CG_ConfigString( CS_PLAYERS + i );
+	for (i=0 ; i<MAX_CLIENTS ; i++) {
+		clientInfo = CG_ConfigString( CS_PLAYERS+i );
 		if ( !clientInfo[0] ) {
 			continue;
 		}
 		CG_NewClientInfo( i );
 	}
 }
-
 
 /*
 =================
@@ -431,7 +449,6 @@ void CG_UpdateCvars( void ) {
 		CG_ForceModelChange();
 	}
 }
-
 
 int CG_CrosshairPlayer( void ) {
 	if ( cg.time > ( cg.crosshairClientTime + 1000 ) ) {
@@ -495,15 +512,13 @@ void QDECL Com_Printf( const char *msg, ... ) {
 }
 
 #endif
-
 /*
 ================
 CG_Argv
 ================
 */
-const char *CG_Argv( int arg ) 
-{
-	static char	buffer[ 2 ][ MAX_STRING_CHARS ];
+const char *CG_Argv( int arg ) {
+	static char	buffer[ 2 ][MAX_STRING_CHARS];
 	static int index = 0;
 
 	index ^= 1;
@@ -525,7 +540,7 @@ The server says this item is used on this level
 static void CG_RegisterItemSounds( int itemNum ) {
 	gitem_t			*item;
 	char			data[MAX_QPATH];
-	const char		*s, *start;
+	const char			*s, *start;
 	int				len;
 
 	item = &bg_itemlist[ itemNum ];
@@ -688,9 +703,7 @@ static void CG_RegisterSounds( void ) {
 	cgs.media.hitSounds[1] = trap_S_RegisterSound( "sound/feedback/hit50.wav", qfalse );
 	cgs.media.hitSounds[2] = trap_S_RegisterSound( "sound/feedback/hit75.wav", qfalse );
 	cgs.media.hitSounds[3] = trap_S_RegisterSound( "sound/feedback/hit100.wav", qfalse );
-
 	cgs.media.hitSound = trap_S_RegisterSound( "sound/feedback/hit.wav", qfalse );
-
 #ifdef MISSIONPACK
 	cgs.media.hitSoundHighArmor = trap_S_RegisterSound( "sound/feedback/hithi.wav", qfalse );
 	cgs.media.hitSoundLowArmor = trap_S_RegisterSound( "sound/feedback/hitlo.wav", qfalse );
@@ -873,7 +886,7 @@ static void CG_RegisterGraphics( void ) {
 	// precache status bar pics
 	CG_LoadingString( "game media" );
 
-	for ( i = 0 ; i < ARRAY_LEN( sb_nums ) ; i++ ) {
+	for ( i=0 ; i<ARRAY_LEN( sb_nums ) ; i++) {
 		cgs.media.numberShaders[i] = trap_R_RegisterShader( sb_nums[i] );
 	}
 
@@ -926,17 +939,13 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.hastePuffShader = trap_R_RegisterShader("hasteSmokePuff" );
 
 #ifdef MISSIONPACK
-	if ( cgs.gametype == GT_CTF || cgs.gametype == GT_1FCTF || cgs.gametype == GT_HARVESTER || cg_buildScript.integer ) {
-#else
-	if ( cgs.gametype == GT_CTF || cg_buildScript.integer ) {
-#endif
+	if ( cgs.gametype == GT_HARVESTER || cg_buildScript.integer ) {
 		cgs.media.redCubeModel = trap_R_RegisterModel( "models/powerups/orb/r_orb.md3" );
 		cgs.media.blueCubeModel = trap_R_RegisterModel( "models/powerups/orb/b_orb.md3" );
 		cgs.media.redCubeIcon = trap_R_RegisterShader( "icons/skull_red" );
 		cgs.media.blueCubeIcon = trap_R_RegisterShader( "icons/skull_blue" );
 	}
 
-#ifdef MISSIONPACK
 	if ( cgs.gametype == GT_CTF || cgs.gametype == GT_1FCTF || cgs.gametype == GT_HARVESTER || cg_buildScript.integer ) {
 #else
 	if ( cgs.gametype == GT_CTF || cg_buildScript.integer ) {
@@ -973,6 +982,7 @@ static void CG_RegisterGraphics( void ) {
 	}
 
 	if ( cgs.gametype == GT_OBELISK || cg_buildScript.integer ) {
+		cgs.media.rocketExplosionShader = trap_R_RegisterShader("rocketExplosion");
 		cgs.media.overloadBaseModel = trap_R_RegisterModel( "models/powerups/overload_base.md3" );
 		cgs.media.overloadTargetModel = trap_R_RegisterModel( "models/powerups/overload_target.md3" );
 		cgs.media.overloadLightsModel = trap_R_RegisterModel( "models/powerups/overload_lights.md3" );
@@ -1059,7 +1069,7 @@ static void CG_RegisterGraphics( void ) {
 	memset( cg_weapons, 0, sizeof( cg_weapons ) );
 
 	// only register the items that the server says we need
-	Q_strncpyz( items, CG_ConfigString(CS_ITEMS), sizeof( items ) );
+	Q_strncpyz(items, CG_ConfigString(CS_ITEMS), sizeof(items));
 
 	for ( i = 1 ; i < bg_numItems ; i++ ) {
 		if ( items[ i ] == '1' || cg_buildScript.integer ) {
@@ -1104,7 +1114,7 @@ static void CG_RegisterGraphics( void ) {
 		}
 		cgs.gameModels[i] = trap_R_RegisterModel( modelName );
 	}
-	
+
 	cgs.media.cursor = trap_R_RegisterShaderNoMip( "menu/art/3_cursor2" );
 #ifdef MISSIONPACK
 	// new stuff
@@ -1154,7 +1164,7 @@ CG_BuildSpectatorString
 
 =======================
 */
-void CG_BuildSpectatorString( void ) {
+void CG_BuildSpectatorString(void) {
 	int i;
 	cg.spectatorList[0] = 0;
 	for (i = 0; i < MAX_CLIENTS; i++) {
@@ -1471,7 +1481,7 @@ qboolean CG_Load_Menu(char **p) {
 			return qtrue;
 		}
 
-		if ( !token || token[0] == 0 ) {
+		if (!token || token[0] == 0) {
 			return qfalse;
 		}
 
@@ -1518,7 +1528,7 @@ void CG_LoadMenus(const char *menuFile) {
 
 	while ( 1 ) {
 		token = COM_ParseExt( &p, qtrue );
-		if( !token || token[0] == 0 || token[0] == '}') {
+		if (!token || token[0] == 0 || token[0] == '}') {
 			break;
 		}
 
@@ -1736,18 +1746,14 @@ static void CG_FeederSelection(float feederID, int index) {
 		cg.selectedScore = index;
 	}
 }
-#endif
 
-#ifdef MISSIONPACK
 static float CG_Cvar_Get(const char *cvar) {
 	char buff[128];
 	memset(buff, 0, sizeof(buff));
 	trap_Cvar_VariableStringBuffer(cvar, buff, sizeof(buff));
 	return atof(buff);
 }
-#endif
 
-#ifdef MISSIONPACK
 void CG_Text_PaintWithCursor(float x, float y, float scale, vec4_t color, const char *text, int cursorPos, char cursor, int limit, int style) {
 	CG_Text_Paint(x, y, scale, color, text, 0, limit, style);
 }
@@ -1957,7 +1963,6 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum ) {
 
 	// get the rendering configuration from the client system
 	trap_GetGlconfig( &cgs.glconfig );
-
 	cgs.screenXBias = 0.0;
 	cgs.screenYBias = 0.0;
 	
@@ -1982,11 +1987,9 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum ) {
 	if ( cgs.cursorScaleR < 0.5 ) {
 		cgs.cursorScaleR = 0.5;
 	}
-
 #ifdef USE_NEW_FONT_RENDERER
 	CG_LoadFonts();
 #endif
-
 	// get the gamestate from the client system
 	trap_GetGameState( &cgs.gameState );
 
@@ -2059,7 +2062,6 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum ) {
 	trap_S_ClearLoopingSounds( qtrue );
 }
 
-
 /*
 =================
 CG_Shutdown
@@ -2083,9 +2085,7 @@ CG_EventHandling
       3 - hud editor
 */
 #ifndef MISSIONPACK
-void CG_EventHandling( cgame_event_t type ) 
-{
-
+void CG_EventHandling(cgame_event_t type) {
 }
 
 
@@ -2127,8 +2127,7 @@ void CG_SetScoreCatcher( qboolean enable )
 }
 
 
-void CG_KeyEvent( int key, qboolean down ) 
-{
+void CG_KeyEvent(int key, qboolean down) {
 	// process scoreboard clicks etc.
 	if ( cgs.score_catched && down ) 
 	{
@@ -2141,9 +2140,7 @@ void CG_KeyEvent( int key, qboolean down )
 	}
 }
 
-
-void CG_MouseEvent( int x, int y )
-{
+void CG_MouseEvent(int x, int y) {
 	cgs.cursorX += x * cgs.cursorScaleR;
 	cgs.cursorY += y * cgs.cursorScaleR;
 
@@ -2162,3 +2159,4 @@ void CG_MouseEvent( int x, int y )
 	}
 }
 #endif
+

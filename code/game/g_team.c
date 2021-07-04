@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 
 #include "g_local.h"
@@ -29,7 +49,7 @@ void Team_InitGame( void ) {
 	case GT_CTF:
 		teamgame.redStatus = -1; // Invalid to force update
 		Team_SetFlagStatus( TEAM_RED, FLAG_ATBASE );
-		teamgame.blueStatus = -1; // Invalid to force update
+		 teamgame.blueStatus = -1; // Invalid to force update
 		Team_SetFlagStatus( TEAM_BLUE, FLAG_ATBASE );
 		break;
 #ifdef MISSIONPACK
@@ -43,48 +63,43 @@ void Team_InitGame( void ) {
 	}
 }
 
-
-int OtherTeam( team_t team ) {
-	if ( team == TEAM_RED )
+int OtherTeam(team_t team) {
+	if (team==TEAM_RED)
 		return TEAM_BLUE;
-	else if ( team == TEAM_BLUE )
+	else if (team==TEAM_BLUE)
 		return TEAM_RED;
 	return team;
 }
 
-
-const char *TeamName( team_t team ) {
-	if ( team == TEAM_RED )
+const char *TeamName(team_t team)  {
+	if (team==TEAM_RED)
 		return "RED";
-	else if ( team == TEAM_BLUE )
+	else if (team==TEAM_BLUE)
 		return "BLUE";
-	else if ( team == TEAM_SPECTATOR )
+	else if (team==TEAM_SPECTATOR)
 		return "SPECTATOR";
 	return "FREE";
 }
 
-
-const char *OtherTeamName( team_t team ) {
-	if ( team == TEAM_RED )
+const char *OtherTeamName(team_t team) {
+	if (team==TEAM_RED)
 		return "BLUE";
-	else if ( team == TEAM_BLUE )
+	else if (team==TEAM_BLUE)
 		return "RED";
-	else if ( team == TEAM_SPECTATOR )
+	else if (team==TEAM_SPECTATOR)
 		return "SPECTATOR";
 	return "FREE";
 }
 
-
-const char *TeamColorString( team_t team ) {
-	if ( team == TEAM_RED )
+const char *TeamColorString(team_t team) {
+	if (team==TEAM_RED)
 		return S_COLOR_RED;
-	else if ( team == TEAM_BLUE )
+	else if (team==TEAM_BLUE)
 		return S_COLOR_BLUE;
-	else if ( team == TEAM_SPECTATOR )
+	else if (team==TEAM_SPECTATOR)
 		return S_COLOR_YELLOW;
 	return S_COLOR_WHITE;
 }
-
 
 // NULL for everyone
 void QDECL PrintMsg( gentity_t *ent, const char *fmt, ... ) {
@@ -93,7 +108,7 @@ void QDECL PrintMsg( gentity_t *ent, const char *fmt, ... ) {
 	char		*p;
 	
 	va_start (argptr,fmt);
-	if ( ED_vsprintf( msg, fmt, argptr ) >= sizeof( msg ) ) {
+	if (ED_vsprintf (msg, fmt, argptr) >= sizeof(msg)) {
 		G_Error ( "PrintMsg overrun" );
 	}
 	va_end (argptr);
@@ -105,7 +120,6 @@ void QDECL PrintMsg( gentity_t *ent, const char *fmt, ... ) {
 	trap_SendServerCommand ( ( (ent == NULL) ? -1 : ent-g_entities ), va("print \"%s\"", msg ));
 }
 
-
 /*
 ==============
 AddTeamScore
@@ -114,7 +128,7 @@ AddTeamScore
  for gametype GT_TEAM the level.teamScores is updated in AddScore in g_combat.c
 ==============
 */
-void AddTeamScore( vec3_t origin, team_t team, int score ) {
+void AddTeamScore(vec3_t origin, team_t team, int score) {
 	int			eventParm;
 	int			otherTeam;
 	gentity_t	*te;
@@ -147,7 +161,6 @@ void AddTeamScore( vec3_t origin, team_t team, int score ) {
 		te->r.svFlags |= SVF_BROADCAST;
 		te->s.eventParm = eventParm;
 	}
-
 	level.teamScores[ team ] += score;
 }
 
@@ -181,38 +194,38 @@ static void Team_SetFlagStatus( team_t team, flagStatus_t status ) {
 
 	switch( team ) {
 	case TEAM_RED:	// CTF
-		if ( teamgame.redStatus != status ) {
+		if( teamgame.redStatus != status ) {
 			teamgame.redStatus = status;
 			modified = qtrue;
 		}
 		break;
 
 	case TEAM_BLUE:	// CTF
-		if ( teamgame.blueStatus != status ) {
+		if( teamgame.blueStatus != status ) {
 			teamgame.blueStatus = status;
 			modified = qtrue;
 		}
 		break;
 
 	case TEAM_FREE:	// One Flag CTF
-		if ( teamgame.flagStatus != status ) {
+		if( teamgame.flagStatus != status ) {
 			teamgame.flagStatus = status;
 			modified = qtrue;
 		}
 		break;
-
 	default:
 		return;
 	}
 
-	if ( modified ) {
+	if( modified ) {
 		char st[4];
 
-		if ( g_gametype.integer == GT_CTF ) {
+		if( g_gametype.integer == GT_CTF ) {
 			st[0] = ctfFlagStatusRemap[teamgame.redStatus];
 			st[1] = ctfFlagStatusRemap[teamgame.blueStatus];
 			st[2] = '\0';
-		} else {	// GT_1FCTF
+		}
+		else {		// GT_1FCTF
 			st[0] = oneFlagStatusRemap[teamgame.flagStatus];
 			st[1] = '\0';
 		}
@@ -220,7 +233,6 @@ static void Team_SetFlagStatus( team_t team, flagStatus_t status ) {
 		trap_SetConfigstring( CS_FLAGSTATUS, st );
 	}
 }
-
 
 void Team_CheckDroppedItem( gentity_t *dropped ) {
 	if( dropped->item->giTag == PW_REDFLAG ) {
@@ -234,29 +246,27 @@ void Team_CheckDroppedItem( gentity_t *dropped ) {
 	}
 }
 
-
 /*
 ================
 Team_ForceGesture
 ================
 */
-static void Team_ForceGesture( team_t team ) {
+static void Team_ForceGesture(team_t team) {
 	int i;
 	gentity_t *ent;
 
-	for ( i = 0; i < level.maxclients; i++ ) {
+	for (i = 0; i < level.maxclients; i++) {
 		ent = &g_entities[i];
-		if ( !ent->inuse )
+		if (!ent->inuse)
 			continue;
-		if ( !ent->client )
+		if (!ent->client)
 			continue;
-		if ( ent->client->sess.sessionTeam != team )
+		if (ent->client->sess.sessionTeam != team)
 			continue;
 		//
 		ent->flags |= FL_FORCE_GESTURE;
 	}
 }
-
 
 /*
 ================
@@ -484,7 +494,6 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 	}
 }
 
-
 /*
 ================
 Team_CheckHurtCarrier
@@ -550,7 +559,6 @@ static gentity_t *Team_ResetFlag( team_t team ) {
 	return rent;
 }
 
-
 void Team_ResetFlags( void ) {
 	if( g_gametype.integer == GT_CTF ) {
 		Team_ResetFlag( TEAM_RED );
@@ -562,7 +570,6 @@ void Team_ResetFlags( void ) {
 	}
 #endif
 }
-
 
 static void Team_ReturnFlagSound( gentity_t *ent, team_t team ) {
 	gentity_t	*te;
@@ -582,18 +589,17 @@ static void Team_ReturnFlagSound( gentity_t *ent, team_t team ) {
 	te->r.svFlags |= SVF_BROADCAST;
 }
 
-
 static void Team_TakeFlagSound( gentity_t *ent, team_t team ) {
 	gentity_t	*te;
 
-	if ( ent == NULL ) {
-		G_Printf( "Warning:  NULL passed to Team_TakeFlagSound\n" );
+	if (ent == NULL) {
+		G_Printf ("Warning:  NULL passed to Team_TakeFlagSound\n");
 		return;
 	}
 
 	// only play sound when the flag was at the base
 	// or not picked up the last 10 seconds
-	switch ( team ) {
+	switch(team) {
 		case TEAM_RED:
 			if( teamgame.blueStatus != FLAG_ATBASE ) {
 				if (teamgame.blueTakenTime > level.time - 10000)
@@ -609,7 +615,6 @@ static void Team_TakeFlagSound( gentity_t *ent, team_t team ) {
 			}
 			teamgame.redTakenTime = level.time;
 			break;
-
 		default:
 			return;
 	}
@@ -623,7 +628,6 @@ static void Team_TakeFlagSound( gentity_t *ent, team_t team ) {
 	}
 	te->r.svFlags |= SVF_BROADCAST;
 }
-
 
 static void Team_CaptureFlagSound( gentity_t *ent, team_t team ) {
 	gentity_t	*te;
@@ -643,7 +647,6 @@ static void Team_CaptureFlagSound( gentity_t *ent, team_t team ) {
 	te->r.svFlags |= SVF_BROADCAST;
 }
 
-
 void Team_ReturnFlag( team_t team ) {
 	Team_ReturnFlagSound(Team_ResetFlag(team), team);
 	if( team == TEAM_FREE ) {
@@ -653,7 +656,6 @@ void Team_ReturnFlag( team_t team ) {
 		PrintMsg(NULL, "The %s flag has returned!\n", TeamName(team));
 	}
 }
-
 
 void Team_FreeEntity( gentity_t *ent ) {
 	if( ent->item->giTag == PW_REDFLAG ) {
@@ -666,7 +668,6 @@ void Team_FreeEntity( gentity_t *ent ) {
 		Team_ReturnFlag( TEAM_FREE );
 	}
 }
-
 
 /*
 ==============
@@ -772,6 +773,8 @@ static int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, team_t team ) {
 	// Ok, let's do the player loop, hand out the bonuses
 	for (i = 0; i < level.maxclients; i++) {
 		player = &g_entities[i];
+
+		// also make sure we don't award assist bonuses to the flag carrier himself.
 		if (!player->inuse || player == other)
 			continue;
 
@@ -780,7 +783,7 @@ static int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, team_t team ) {
 			player->client->pers.teamState.lasthurtcarrier = -5;
 		} else {
 #ifdef MISSIONPACK
-				AddScore(player, ent->r.currentOrigin, CTF_TEAM_BONUS);
+			AddScore(player, ent->r.currentOrigin, CTF_TEAM_BONUS);
 #endif
 			// award extra points for capture assists
 			if (player->client->pers.teamState.lastreturnedflag + 
@@ -813,7 +816,6 @@ static int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, team_t team ) {
 
 	return 0; // Do not respawn this automatically
 }
-
 
 static int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, team_t team ) {
 	gclient_t *cl = other->client;
@@ -852,7 +854,6 @@ static int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, team_t team ) 
 
 	return -1; // Do not respawn this automatically, but do delete it if it was FL_DROPPED
 }
-
 
 int Pickup_Team( gentity_t *ent, gentity_t *other ) {
 	int team;
@@ -907,7 +908,6 @@ int Pickup_Team( gentity_t *ent, gentity_t *other ) {
 	}
 	return Team_TouchEnemyFlag( ent, other, team );
 }
-
 
 /*
 ===========
@@ -990,14 +990,14 @@ go to a random point that doesn't telefrag
 gentity_t *SelectRandomTeamSpawnPoint( gentity_t *ent, int teamstate, team_t team ) {
 	gentity_t	*spot;
 	int			selection;
-	gentity_t	*spots[ MAX_TEAM_SPAWN_POINTS ];
+	gentity_t	*spots[MAX_TEAM_SPAWN_POINTS];
 	int			numSpots;
 	int			checkMask;
 	int			n;
 	qboolean	checkState;
 	qboolean	checkTelefrag;
 
-	if ( team != TEAM_RED && team != TEAM_BLUE )
+	if (team != TEAM_RED && team != TEAM_BLUE)
 		return NULL;
 
 	checkMask = 3;
@@ -1024,7 +1024,7 @@ __rescan:
 			}
 		}
 		spots[ numSpots++ ] = spot;
-		if ( numSpots >= MAX_TEAM_SPAWN_POINTS )
+		if (numSpots >= MAX_TEAM_SPAWN_POINTS)
 			break;
 	}
 
@@ -1046,17 +1046,17 @@ __rescan:
 SelectCTFSpawnPoint
 ============
 */
-gentity_t *SelectCTFSpawnPoint( gentity_t *ent, team_t team, int teamstate, vec3_t origin, vec3_t angles ) {
+gentity_t *SelectCTFSpawnPoint (gentity_t *ent, team_t team, int teamstate, vec3_t origin, vec3_t angles) {
 	gentity_t	*spot;
 
-	spot = SelectRandomTeamSpawnPoint( ent, teamstate, team );
+	spot = SelectRandomTeamSpawnPoint (ent, teamstate, team );
 
-	if ( !spot ) {
+	if (!spot) {
 		return SelectSpawnPoint( ent, vec3_origin, origin, angles );
 	}
 
-	VectorCopy( spot->s.origin, origin );
-	VectorCopy( spot->s.angles, angles );
+	VectorCopy (spot->s.origin, origin);
+	VectorCopy (spot->s.angles, angles);
 	origin[2] += 9.0f;
 
 	return spot;
@@ -1096,8 +1096,7 @@ void TeamplayInfoMessage( gentity_t *ent ) {
 	// but in client order (so they don't keep changing position on the overlay)
 	for (i = 0, cnt = 0; i < level.maxclients && cnt < TEAM_MAXOVERLAY; i++) {
 		player = g_entities + level.sortedClients[i];
-		if (player->inuse && player->client->sess.sessionTeam ==
-			ent->client->sess.sessionTeam ) {
+		if (player->inuse && player->client->sess.sessionTeam == ent->client->sess.sessionTeam ) {
 			clients[cnt++] = level.sortedClients[i];
 		}
 	}
@@ -1111,31 +1110,30 @@ void TeamplayInfoMessage( gentity_t *ent ) {
 
 	for (i = 0, cnt = 0; i < level.maxclients && cnt < TEAM_MAXOVERLAY; i++) {
 		player = g_entities + i;
-		if ( player->inuse && player->client->sess.sessionTeam ==
-			ent->client->sess.sessionTeam ) {
+		if (player->inuse && player->client->sess.sessionTeam == ent->client->sess.sessionTeam ) {
 
 			h = player->client->ps.stats[STAT_HEALTH];
 			a = player->client->ps.stats[STAT_ARMOR];
 			if (h < 0) h = 0;
 			if (a < 0) a = 0;
 
-			j = BG_sprintf( entry, " %i %i %i %i %i %i",
+			j = BG_sprintf(entry,
+				" %i %i %i %i %i %i", 
 //				level.sortedClients[i], player->client->pers.teamState.location, h, a, 
 				i, player->client->pers.teamState.location, h, a, 
 				player->client->ps.weapon, player->s.powerups);
-			if ( stringlength + j >= sizeof( string ) )
+			if (stringlength + j >= sizeof(string))
 				break;
-			strcpy( string + stringlength, entry );
+			strcpy (string + stringlength, entry);
 			stringlength += j;
 			cnt++;
 		}
 	}
 
-	trap_SendServerCommand( ent-g_entities, va( "tinfo %i %s", cnt, string ) );
+	trap_SendServerCommand( ent-g_entities, va("tinfo %i %s", cnt, string) );
 }
 
-
-void CheckTeamStatus( void ) {
+void CheckTeamStatus(void) {
 	int i;
 	gentity_t *loc, *ent;
 

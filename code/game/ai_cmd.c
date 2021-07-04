@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 
 /*****************************************************************************
@@ -211,56 +231,47 @@ float BotGetTime(bot_match_t *match) {
 	return 0;
 }
 
-
 /*
 ==================
 FindClientByName
 ==================
 */
-int FindClientByName( const char *name ) {
+int FindClientByName(const char *name) {
 	char buf[ MAX_INFO_STRING ];
 	int i;
 
-	for ( i = 0; i < level.maxclients; i++ ) {
-		ClientName( i, buf, sizeof( buf ) );
-		if ( !Q_stricmp( buf, name ) ) 
-			return i; // exact match
+	for (i = 0; i < level.maxclients; i++) {
+		ClientName(i, buf, sizeof(buf));
+		if (!Q_stricmp(buf, name)) return i; // exact match
 	}
-
-	for ( i = 0; i < level.maxclients ; i++ ) {
-		ClientName(i, buf, sizeof( buf ) );
-		if ( stristr( buf, name ) )
-			return i; // partial match
+	for (i = 0; i < level.maxclients; i++) {
+		ClientName(i, buf, sizeof(buf));
+		if (stristr(buf, name)) return i; // partial match
 	}
-
 	return -1;
 }
-
 
 /*
 ==================
 FindEnemyByName
 ==================
 */
-int FindEnemyByName( bot_state_t *bs, const char *name ) {
-	char buf[MAX_INFO_STRING];
+int FindEnemyByName(bot_state_t *bs, const char *name) {
 	int i;
+	char buf[MAX_INFO_STRING];
 
 	for (i = 0; i < level.maxclients; i++) {
 		if (BotSameTeam(bs, i)) continue;
 		ClientName(i, buf, sizeof(buf));
 		if (!Q_stricmp(buf, name)) return i;
 	}
-
 	for (i = 0; i < level.maxclients; i++) {
 		if (BotSameTeam(bs, i)) continue;
 		ClientName(i, buf, sizeof(buf));
 		if (stristr(buf, name)) return i;
 	}
-
 	return -1;
 }
-
 
 /*
 ==================
@@ -1292,7 +1303,7 @@ void BotMatch_StartTeamLeaderShip(bot_state_t *bs, bot_match_t *match) {
 	if (match->subtype & ST_I) {
 		//get the team mate that will be the team leader
 		trap_BotMatchVariable(match, NETNAME, teammate, sizeof(teammate));
-		Q_strncpyz( bs->teamleader, teammate, sizeof( bs->teamleader ) );
+		Q_strncpyz( bs->teamleader, teammate, sizeof(bs->teamleader));
 	}
 	//chats for someone else
 	else {

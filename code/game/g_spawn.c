@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 
 #include "g_local.h"
@@ -55,7 +75,7 @@ qboolean	G_SpawnVector( const char *key, const char *defaultString, float *out )
 // fields are needed for spawning from the entity string
 //
 typedef enum {
-	F_INT, 
+	F_INT,
 	F_FLOAT,
 	F_LSTRING,			// string on disk, pointer in memory, TAG_LEVEL
 	F_GSTRING,			// string on disk, pointer in memory, TAG_GAME
@@ -69,8 +89,8 @@ typedef enum {
 
 typedef struct
 {
-	const char *name;
-	int		ofs;
+	const char	*name;
+	int	ofs;
 	fieldtype_t	type;
 	//int		flags;
 } field_t;
@@ -333,7 +353,7 @@ in a gentity
 ===============
 */
 void G_ParseField( const char *key, const char *value, gentity_t *ent ) {
-	const field_t *f;
+	const field_t	*f;
 	byte	*b;
 	float	v;
 	vec3_t	vec;
@@ -593,12 +613,13 @@ void SP_worldspawn( void ) {
 		// assume that g_doWarmup is always 1
 		level.warmupTime = -1;
 		if ( g_warmup.integer > 0 ) {
-			trap_SetConfigstring( CS_WARMUP, va( "%i", level.warmupTime ) );
+			trap_SetConfigstring( CS_WARMUP, va("%i", level.warmupTime) );
 		} else {
 			trap_SetConfigstring( CS_WARMUP, "" );
 		}
 		G_LogPrintf( "Warmup:\n" );
 	}
+
 }
 
 
@@ -629,3 +650,4 @@ void G_SpawnEntitiesFromString( void ) {
 
 	level.spawning = qfalse;			// any future calls to G_Spawn*() will be errors
 }
+

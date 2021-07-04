@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 
 #include "g_local.h"
@@ -160,7 +180,7 @@ qboolean	G_TryPushingEntity( gentity_t *check, gentity_t *pusher, vec3_t move, v
 	}
 
 	// if it is ok to leave in the old position, do it
-	// this is only relevent for riding entities, not pushed
+	// this is only relevant for riding entities, not pushed
 	// Sliding trapdoors can cause this.
 	VectorCopy( (pushed_p-1)->origin, check->s.pos.trBase);
 	if ( check->client ) {
@@ -811,13 +831,13 @@ static void Touch_DoorTriggerSpectator( gentity_t *ent, gentity_t *other, trace_
 	vec3_t origin;
 	float	len, doorMin, doorMax;
 
-	VectorCopy( other->s.origin, origin );
+	VectorCopy(other->s.origin, origin);
 
 	axis = ent->count;
 	doorMax = other->s.origin[axis] - ent->r.absmax[axis];
 	doorMin = other->s.origin[axis] - ent->r.absmin[axis];
 
-	if ( fabs(doorMax) < fabs(doorMin) ) {
+	if (fabs(doorMax) < fabs(doorMin)) {
 		origin[axis] = ent->r.absmin[axis] - 1;
 		len = doorMax + 120;
 	} else {
@@ -829,7 +849,7 @@ static void Touch_DoorTriggerSpectator( gentity_t *ent, gentity_t *other, trace_
 		return;
 	}
 
-	TeleportPlayer( other, origin, NULL );
+	TeleportPlayer(other, origin, NULL);
 }
 
 /*

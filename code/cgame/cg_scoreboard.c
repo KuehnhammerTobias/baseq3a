@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // cg_scoreboard -- draw the scoreboard on top of the game screen
 #include "cg_local.h"
@@ -53,7 +73,7 @@
 static qboolean localClient; // true if local client has been displayed
 
 
-/*
+							 /*
 =================
 CG_DrawScoreboard
 =================
@@ -124,7 +144,8 @@ static void CG_DrawClientScore( int y, score_t *score, float *color, float fade,
 			BG_sprintf( string, "%i/%i", ci->wins, ci->losses );
 			if( ci->handicap < 100 && !ci->botSkill ) {
 				CG_DrawString( iconx, y + SMALLCHAR_HEIGHT/2, string, color, SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0, DS_FORCE_COLOR );
-			} else {
+			}
+			else {
 				CG_DrawString( iconx, y, string, color, SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0, DS_FORCE_COLOR );
 			}
 		}
@@ -154,11 +175,11 @@ static void CG_DrawClientScore( int y, score_t *score, float *color, float fade,
 #endif
 	// draw the score line
 	if ( score->ping == -1 ) {
-		BG_sprintf( string, " connecting" );
+		BG_sprintf( string," connecting" );
 	} else if ( ci->team == TEAM_SPECTATOR ) {
-		BG_sprintf( string, " SPECT %3i %4i", score->ping, score->time );
+		BG_sprintf( string," SPECT %3i %4i", score->ping, score->time );
 	} else {
-		BG_sprintf( string, "%5i %4i %4i", score->score, score->ping, score->time );
+		BG_sprintf( string,"%5i %4i %4i", score->score, score->ping, score->time );
 	}
 
 	// highlight your position
@@ -194,8 +215,7 @@ static void CG_DrawClientScore( int y, score_t *score, float *color, float fade,
 
 		hcolor[3] = fade * 0.7;
 		CG_FillRect( SB_SCORELINE_X + BIGCHAR_WIDTH + (SB_RATING_WIDTH / 2), y, 
-			640 - SB_SCORELINE_X - BIGCHAR_WIDTH - (SB_RATING_WIDTH/2),
-			BIGCHAR_HEIGHT+1, hcolor );
+			640 - SB_SCORELINE_X - BIGCHAR_WIDTH - (SB_RATING_WIDTH/2), BIGCHAR_HEIGHT+1, hcolor );
 	}
 
 	VectorSet( c, 1, 1, 1 ); c[3] = fade;
@@ -338,19 +358,19 @@ qboolean CG_DrawOldScoreboard( void ) {
 		fade = fadeColor[3];
 	}
 
+
 	// fragged by ... line
 	if ( cg.killerName[0] ) {
-		s = va( "Fragged by %s", cg.killerName );
+		s = va("Fragged by %s", cg.killerName );
 		CG_DrawString( 320, 40, s, fadeColor, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_SHADOW | DS_CENTER | DS_PROPORTIONAL );
 	}
 
 	// current rank
 	if ( cgs.gametype < GT_TEAM) {
 		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
-			s = va( "%s place with %i",
+			s = va("%s place with %i",
 				CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ),
 				cg.snap->ps.persistant[PERS_SCORE] );
-
 			CG_DrawString( 320, 60, s, fadeColor, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_SHADOW | DS_CENTER | DS_PROPORTIONAL );
 		}
 	} else {
@@ -501,15 +521,14 @@ void CG_DrawOldTourneyScoreboard( void ) {
 		// teamplay scoreboard
 		//
 		CG_DrawString( 8, y, "Red Team", colorWhite, GIANT_WIDTH, GIANT_HEIGHT, 0, DS_SHADOW );
-		s = va( "%i", cg.teamScores[0] );
+		s = va("%i", cg.teamScores[0] );
 		CG_DrawString( 632, y, s, colorWhite, GIANT_WIDTH, GIANT_HEIGHT, 0, DS_SHADOW | DS_RIGHT );
 		
 		y += 64;
 
 		CG_DrawString( 8, y, "Blue Team", colorWhite, GIANT_WIDTH, GIANT_HEIGHT, 0, DS_SHADOW );
-		s = va( "%i", cg.teamScores[1] );
+		s = va("%i", cg.teamScores[1] );
 		CG_DrawString( 632, y, s, colorWhite, GIANT_WIDTH, GIANT_HEIGHT, 0, DS_SHADOW | DS_RIGHT );
-
 	} else {
 		//
 		// free for all scoreboard
@@ -524,9 +543,12 @@ void CG_DrawOldTourneyScoreboard( void ) {
 			}
 
 			CG_DrawString( 8, y, ci->name, colorWhite, GIANT_WIDTH, GIANT_HEIGHT, 0, DS_SHADOW | DS_FORCE_COLOR | DS_PROPORTIONAL );
-			s = va( "%i", ci->score );
+			s = va("%i", ci->score );
 			CG_DrawString( 632, y, s, colorWhite, GIANT_WIDTH, GIANT_HEIGHT, 0, DS_SHADOW | DS_RIGHT );
 			y += 64;
 		}
 	}
+
+
 }
+

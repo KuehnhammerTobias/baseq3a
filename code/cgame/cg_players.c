@@ -1,11 +1,29 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // cg_players.c -- handle the media and animation for player entities
 #include "cg_local.h"
-
 #define	PM_SKIN "pm"
-
-static const char *cg_customSoundNames[ MAX_CUSTOM_SOUNDS ] = {
+static const char	*cg_customSoundNames[MAX_CUSTOM_SOUNDS] = {
 	"*death1.wav",
 	"*death2.wav",
 	"*death3.wav",
@@ -275,13 +293,12 @@ static qboolean	CG_ParseAnimationFile( const char *filename, clientInfo_t *ci ) 
 	return qtrue;
 }
 
-
 /*
 ==========================
 CG_FileExists
 ==========================
 */
-static qboolean	CG_FileExists( const char *filename ) {
+static qboolean	CG_FileExists(const char *filename) {
 	int len;
 	fileHandle_t	f;
 
@@ -291,13 +308,11 @@ static qboolean	CG_FileExists( const char *filename ) {
 		trap_FS_FCloseFile( f );
 	}
 
-	if ( len > 0 ) {
+	if (len>0) {
 		return qtrue;
 	}
-
 	return qfalse;
 }
-
 
 /*
 ==========================
@@ -379,7 +394,6 @@ static qboolean	CG_FindClientModelFile( char *filename, int length, clientInfo_t
 
 	return qfalse;
 }
-
 
 /*
 ==========================
@@ -466,7 +480,6 @@ static qboolean	CG_FindClientHeadFile( char *filename, int length, clientInfo_t 
 	return qfalse;
 }
 
-
 /*
 ==========================
 CG_RegisterClientSkin
@@ -524,7 +537,6 @@ static qboolean	CG_RegisterClientSkin( clientInfo_t *ci, const char *teamName, c
 	}
 	return qtrue;
 }
-
 
 /*
 ==========================
@@ -836,7 +848,6 @@ static void CG_LoadClientInfo( clientInfo_t *ci ) {
 	}
 }
 
-
 /*
 ======================
 CG_CopyClientInfoModel
@@ -861,7 +872,6 @@ static void CG_CopyClientInfoModel( const clientInfo_t *from, clientInfo_t *to )
 	memcpy( to->animations, from->animations, sizeof( to->animations ) );
 	memcpy( to->sounds, from->sounds, sizeof( to->sounds ) );
 }
-
 
 /*
 ======================
@@ -900,7 +910,6 @@ static qboolean CG_ScanForExistingClientInfo( clientInfo_t *ci ) {
 	// nothing matches, so defer the load
 	return qfalse;
 }
-
 
 /*
 ======================
@@ -1190,7 +1199,7 @@ void CG_NewClientInfo( int clientNum ) {
 	configstring = CG_ConfigString( clientNum + CS_PLAYERS );
 	if ( !configstring[0] ) {
 		memset( ci, 0, sizeof( *ci ) );
-		return;	// player just left
+		return;		// player just left
 	}
 
 	if ( cg.snap ) {
@@ -1220,7 +1229,7 @@ void CG_NewClientInfo( int clientNum ) {
 	memset( &newInfo, 0, sizeof( newInfo ) );
 
 	// isolate the player's name
-	v = Info_ValueForKey( configstring, "n" );
+	v = Info_ValueForKey(configstring, "n");
 	Q_strncpyz( newInfo.name, v, sizeof( newInfo.name ) );
 
 	// team
@@ -1299,7 +1308,7 @@ void CG_NewClientInfo( int clientNum ) {
 		forceDefer = trap_MemoryRemaining() < 4000000;
 
 		// if we are defering loads, just have it pick the first valid
-		if ( forceDefer || (can_defer && !cg_buildScript.integer && !cg.loading) )  {
+		if ( forceDefer || (can_defer && !cg_buildScript.integer && !cg.loading ) ) {
 			// keep whatever they had if it won't violate team skins
 			CG_SetDeferredClientInfo( &newInfo );
 			// if we are low on memory, leave them with this model
@@ -1316,6 +1325,7 @@ void CG_NewClientInfo( int clientNum ) {
 	newInfo.infoValid = qtrue;
 	*ci = newInfo;
 }
+
 
 
 /*
@@ -1336,7 +1346,7 @@ void CG_LoadDeferredPlayers( void ) {
 		if ( ci->infoValid && ci->deferred ) {
 			// if we are low on memory, leave it deferred
 			if ( trap_MemoryRemaining() < 4000000 ) {
-				CG_Printf( "Memory is low.  Using deferred model.\n" );
+				CG_Printf( "Memory is low. Using deferred model.\n" );
 				ci->deferred = qfalse;
 				continue;
 			}
@@ -1381,7 +1391,6 @@ static void CG_SetLerpFrameAnimation( clientInfo_t *ci, lerpFrame_t *lf, int new
 		CG_Printf( "Anim: %i\n", newAnimation );
 	}
 }
-
 
 /*
 ===============
@@ -1599,7 +1608,6 @@ static void CG_SwingAngles( float destination, float swingTolerance, float clamp
 	}
 }
 
-
 /*
 =================
 CG_AddPainTwitch
@@ -1789,7 +1797,6 @@ static void CG_HasteTrail( centity_t *cent ) {
 	smoke->leType = LE_SCALE_FADE;
 }
 
-
 #ifdef MISSIONPACK
 /*
 ===============
@@ -1874,8 +1881,8 @@ static void CG_DustTrail( centity_t *cent ) {
 				  0,
 				  cgs.media.dustPuffShader );
 }
-#endif
 
+#endif
 
 /*
 ===============
@@ -2020,7 +2027,7 @@ static void CG_PlayerFlag( centity_t *cent, qhandle_t hSkin, refEntity_t *torso 
 }
 
 
-#ifdef MISSIONPACK // bk001204
+#ifdef MISSIONPACK
 /*
 ===============
 CG_PlayerTokens
@@ -2189,6 +2196,7 @@ static void CG_PlayerFloatSprite( const centity_t *cent, qhandle_t shader ) {
 }
 
 
+
 /*
 ===============
 CG_PlayerSprites
@@ -2250,7 +2258,6 @@ static void CG_PlayerSprites( centity_t *cent ) {
 	}
 }
 
-
 /*
 ===============
 CG_PlayerShadow
@@ -2297,7 +2304,7 @@ static qboolean CG_PlayerShadow( centity_t *cent, float *shadowPlane ) {
 	// fade the shadow out with height
 	alpha = 1.0 - trace.fraction;
 
-	// bk0101022 - hack / FPE - bogus planes?
+	// hack / FPE - bogus planes?
 	//assert( DotProduct( trace.plane.normal, trace.plane.normal ) != 0.0f ) 
 
 	// add the mark as a temporary, so it goes directly to the renderer
@@ -2397,6 +2404,7 @@ static void CG_PlayerSplash( const centity_t *cent ) {
 }
 
 
+
 /*
 ===============
 CG_AddRefEntityWithPowerups
@@ -2443,7 +2451,6 @@ void CG_AddRefEntityWithPowerups( refEntity_t *ent, entityState_t *state, int te
 		}
 	}
 }
-
 
 /*
 =================
@@ -2492,7 +2499,6 @@ int CG_LightVerts( vec3_t normal, int numVerts, polyVert_t *verts )
 	return qtrue;
 }
 
-
 /*
 ===============
 CG_Player
@@ -2522,7 +2528,7 @@ void CG_Player( centity_t *cent ) {
 	// multiple corpses on the level using the same clientinfo
 	clientNum = cent->currentState.clientNum;
 	if ( (unsigned) clientNum >= MAX_CLIENTS ) {
-		CG_Error( "Bad clientNum on player entity" );
+		CG_Error( "Bad clientNum on player entity");
 	}
 	ci = &cgs.clientinfo[ clientNum ];
 
@@ -2929,3 +2935,4 @@ void CG_ResetPlayerEntity( centity_t *cent ) {
 		CG_Printf("%i ResetPlayerEntity yaw=%f\n", cent->currentState.number, cent->pe.torso.yawAngle );
 	}
 }
+

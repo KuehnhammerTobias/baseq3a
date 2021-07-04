@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // cg_effects.c -- these functions generate localentities, usually as a result
 // of event processing
@@ -185,7 +205,6 @@ void CG_SpawnEffect( const vec3_t origin ) {
 	AxisClear( re->axis );
 
 	VectorCopy( origin, re->origin );
-
 #ifdef MISSIONPACK
 	re->origin[2] += 16;
 #else
@@ -219,7 +238,6 @@ void CG_LightningBoltBeam( vec3_t start, vec3_t end ) {
 	beam->reType = RT_LIGHTNING;
 	beam->customShader = cgs.media.lightningShader;
 }
-
 
 /*
 ==================
@@ -381,8 +399,8 @@ void CG_InvulnerabilityJuiced( vec3_t org ) {
 
 	trap_S_StartSound (org, ENTITYNUM_NONE, CHAN_BODY, cgs.media.invulnerabilityJuicedSound );
 }
-#endif
 
+#endif
 
 /*
 ==================
@@ -412,12 +430,13 @@ void CG_ScorePlum( int client, const vec3_t origin, int score ) {
 	le->radius = score;
 	
 	VectorCopy( origin, le->pos.trBase );
-	if ( origin[2] >= lastPos[2] - 20 && origin[2] <= lastPos[2] + 20 ) {
+	if (origin[2] >= lastPos[2] - 20 && origin[2] <= lastPos[2] + 20) {
 		le->pos.trBase[2] -= 20;
 	}
 
 	//CG_Printf( "Plum origin %i %i %i -- %i\n", (int)org[0], (int)org[1], (int)org[2], (int)Distance(org, lastPos));
 	VectorCopy(origin, lastPos);
+
 
 	re = &le->refEntity;
 
@@ -434,7 +453,7 @@ void CG_ScorePlum( int client, const vec3_t origin, int score ) {
 CG_MakeExplosion
 ====================
 */
-localEntity_t *CG_MakeExplosion( const vec3_t origin, const vec3_t dir,
+localEntity_t *CG_MakeExplosion( const vec3_t origin, const vec3_t dir, 
 								qhandle_t hModel, qhandle_t shader,
 								int msec, qboolean isSprite ) {
 	float			ang;

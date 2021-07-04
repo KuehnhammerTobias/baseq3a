@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // cg_snapshot.c -- things that happen on snapshot transition,
 // not necessarily every single rendered frame
@@ -120,7 +140,7 @@ static void CG_TransitionSnapshot( void ) {
 	// execute any server string commands before transitioning entities
 	CG_ExecuteNewServerCommands( cg.nextSnap->serverCommandSequence );
 
-	// if we had a map_restart, set everthing with initial
+	// if we had a map_restart, set everything with initial
 	if ( !cg.snap ) {
 		return;
 	}
@@ -166,6 +186,7 @@ static void CG_TransitionSnapshot( void ) {
 			CG_TransitionPlayerState( ps, ops );
 		}
 	}
+
 }
 
 
@@ -360,6 +381,7 @@ void CG_ProcessSnapshots( void ) {
 
 			CG_SetNextSnap( snap );
 
+
 			// if time went backwards, we have a level restart
 			if ( cg.nextSnap->serverTime < cg.snap->serverTime ) {
 				CG_Error( "CG_ProcessSnapshots: Server time went backwards" );
@@ -386,4 +408,6 @@ void CG_ProcessSnapshots( void ) {
 	if ( cg.nextSnap != NULL && cg.nextSnap->serverTime <= cg.time ) {
 		CG_Error( "CG_ProcessSnapshots: cg.nextSnap->serverTime <= cg.time" );
 	}
+
 }
+

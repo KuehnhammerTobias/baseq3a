@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // g_local.h -- local definitions for game module
 
@@ -59,7 +79,7 @@ struct gentity_s {
 
 	qboolean	inuse;
 
-	const char	*classname;			// set in QuakeEd
+	const char		*classname;			// set in QuakeEd
 	int			spawnflags;			// set in QuakeEd
 
 	qboolean	neverFree;			// if true, FreeEntity will only unlink
@@ -67,8 +87,8 @@ struct gentity_s {
 
 	int			flags;				// FL_* variables
 
-	const char	*model;
-	const char	*model2;
+	const char		*model;
+	const char		*model2;
 	int			freetime;			// level.time when the object was freed
 	
 	int			eventTime;			// events will be cleared EVENT_VALID_MSEC after set
@@ -99,11 +119,11 @@ struct gentity_s {
 	int			timestamp;		// body queue sinking, etc
 
 	float		angle;			// set in editor, -1 = up, -2 = down
-	const char	*target;
-	const char	*targetname;
-	const char	*team;
-	const char	*targetShaderName;
-	const char	*targetShaderNewName;
+	const char		*target;
+	const char		*targetname;
+	const char		*team;
+	const char		*targetShaderName;
+	const char		*targetShaderNewName;
 	gentity_t	*target_ent;
 
 	float		speed;
@@ -417,7 +437,6 @@ typedef struct {
 	int			intermissiontime;		// time the intermission was started
 	qboolean	readyToExit;			// at least one client wants to exit
 	int			exitTime;
-	
 	vec3_t		intermission_origin;	// also used for spectator spawns
 	vec3_t		intermission_angle;
 	qboolean	intermission_spot;
@@ -492,7 +511,7 @@ void SaveRegisteredItems( void );
 //
 // g_utils.c
 //
-int		G_ModelIndex( const char *name );
+int G_ModelIndex( const char *name );
 int		G_SoundIndex( const char *name );
 void	G_TeamCommand( team_t team, const char *cmd );
 void	G_KillBox (gentity_t *ent);
@@ -538,7 +557,7 @@ void TossClientCubes( gentity_t *self );
 
 // damage flags
 #define DAMAGE_RADIUS				0x00000001	// damage was indirect
-#define DAMAGE_NO_ARMOR				0x00000002	// armor does not protect from this damage
+#define DAMAGE_NO_ARMOR				0x00000002	// armour does not protect from this damage
 #define DAMAGE_NO_KNOCKBACK			0x00000004	// do not affect velocity, just view angles
 #define DAMAGE_NO_PROTECTION		0x00000008  // armor, shields, invulnerability, and godmode have no effect
 #ifdef MISSIONPACK
@@ -603,7 +622,7 @@ int TeamConnectedCount( int ignoreClientNum, team_t team );
 int TeamLeader( team_t team );
 team_t PickTeam( int ignoreClientNum );
 void SetClientViewAngle( gentity_t *ent, vec3_t angle );
-gentity_t *SelectSpawnPoint( gentity_t *ent, vec3_t avoidPoint, vec3_t origin, vec3_t angles );
+gentity_t *SelectSpawnPoint (gentity_t *ent, vec3_t avoidPoint, vec3_t origin, vec3_t angles);
 void CopyToBodyQue( gentity_t *ent );
 void respawn (gentity_t *ent);
 void BeginIntermission (void);
@@ -639,7 +658,7 @@ void DeathmatchScoreboardMessage( gentity_t *ent );
 //
 void MoveClientToIntermission( gentity_t *ent );
 void FindIntermissionPoint( void );
-void SetLeader( team_t team, int client );
+void SetLeader(team_t team, int client);
 void CheckTeamLeader( team_t team );
 void G_RunThink (gentity_t *ent);
 void QDECL G_LogPrintf( const char *fmt, ... );
@@ -760,7 +779,7 @@ extern	vmCvar_t	g_mapname;
 extern	vmCvar_t	sv_fps;
 extern	vmCvar_t	g_dedicated;
 extern	vmCvar_t	g_cheats;
-//extern vmCvar_t	g_maxclients;			// allow this many total, including spectators
+//extern	vmCvar_t	g_maxclients;			// allow this many total, including spectators
 extern	vmCvar_t	g_maxGameClients;		// allow this many active
 extern	vmCvar_t	g_restarted;
 
@@ -812,7 +831,7 @@ extern	vmCvar_t	g_proxMineTimeout;
 void	trap_Print( const char *text );
 void	trap_Error( const char *text );
 int		trap_Milliseconds( void );
-int		trap_RealTime( qtime_t *qtime );
+int	trap_RealTime( qtime_t *qtime );
 int		trap_Argc( void );
 void	trap_Argv( int n, char *buffer, int bufferLength );
 void	trap_Args( char *buffer, int bufferLength );
@@ -860,8 +879,8 @@ void	trap_DebugPolygonDelete(int id);
 
 int		trap_BotLibSetup( void );
 int		trap_BotLibShutdown( void );
-int		trap_BotLibVarSet( const char *var_name, const char *value );
-int		trap_BotLibVarGet( const char *var_name, char *value, int size );
+int		trap_BotLibVarSet(const char *var_name, const char *value);
+int		trap_BotLibVarGet(const char *var_name, char *value, int size);
 int		trap_BotLibDefine(char *string);
 int		trap_BotLibStartFrame(float time);
 int		trap_BotLibLoadMap(const char *mapname);

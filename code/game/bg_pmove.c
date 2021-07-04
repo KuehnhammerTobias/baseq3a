@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // bg_pmove.c -- both games player movement code
 // takes a playerstate and a usercmd as input and returns a modifed playerstate
@@ -53,7 +73,6 @@ void PM_AddTouchEnt( int entityNum ) {
 	if ( entityNum == ENTITYNUM_WORLD ) {
 		return;
 	}
-
 	if ( pm->numtouch >= MAXTOUCH ) {
 		return;
 	}
@@ -510,7 +529,7 @@ static void PM_WaterMove( void ) {
 	if ( pml.groundPlane && DotProduct( pm->ps->velocity, pml.groundTrace.plane.normal ) < 0 ) {
 		vel = VectorLength(pm->ps->velocity);
 		// slide along the ground plane
-		PM_ClipVelocity (pm->ps->velocity, pml.groundTrace.plane.normal,
+		PM_ClipVelocity (pm->ps->velocity, pml.groundTrace.plane.normal, 
 			pm->ps->velocity, OVERCLIP );
 
 		VectorNormalize(pm->ps->velocity);
@@ -1321,8 +1340,8 @@ static void PM_Footsteps( void ) {
 	// calculate speed and cycle to be used for
 	// all cyclic walking effects
 	//
-	//xyspeedQ = pm->ps->velocity[0] * pm->ps->velocity[0] 
-	//	+ pm->ps->velocity[1] * pm->ps->velocity[1];
+	//xyspeedQ = pm->ps->velocity[0] * pm->ps->velocity[0]
+	//	+  pm->ps->velocity[1] * pm->ps->velocity[1];
 
 	if ( pm->ps->groundEntityNum == ENTITYNUM_NONE ) {
 
@@ -1692,8 +1711,8 @@ static void PM_Weapon( void ) {
 	else
 	if( bg_itemlist[pm->ps->stats[STAT_PERSISTANT_POWERUP]].giTag == PW_AMMOREGEN ) {
 		addTime /= 1.3;
-  }
-  else
+	}
+	else
 #endif
 	if ( pm->ps->powerups[PW_HASTE] ) {
 		addTime /= 1.3;
@@ -2075,5 +2094,8 @@ void Pmove (pmove_t *pmove) {
 			pmove->cmd.upmove = 20;
 		}
 	}
+
 	//PM_CheckStuck();
+
 }
+

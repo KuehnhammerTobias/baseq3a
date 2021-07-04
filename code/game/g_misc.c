@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // g_misc.c
 
@@ -70,18 +90,16 @@ void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles ) {
 	}
 
 	// unlink to make sure it can't possibly interfere with G_KillBox
-	trap_UnlinkEntity( player );
+	trap_UnlinkEntity (player);
 
-	VectorCopy( origin, player->client->ps.origin );
+	VectorCopy ( origin, player->client->ps.origin );
 	player->client->ps.origin[2] += 1.0f;
-
 	// spit the player out
-	if ( angles )
+	if (angles)
 		AngleVectors( angles, player->client->ps.velocity, NULL, NULL );
 	VectorScale( player->client->ps.velocity, (g_speed.value * 1.25f), player->client->ps.velocity );
-	player->client->ps.pm_time = 160; // hold time
+	player->client->ps.pm_time = 160;		// hold time
 	player->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
-
 	// toggle the teleport bit so the client knows to not lerp
 	player->client->ps.eFlags ^= EF_TELEPORT_BIT;
 
@@ -91,10 +109,9 @@ void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles ) {
 
 	// unlagged
 	G_ResetHistory( player );
-
 	// kill anything at the destination
 	if ( player->client->sess.sessionTeam != TEAM_SPECTATOR ) {
-		G_KillBox( player );
+		G_KillBox (player);
 	}
 
 	// save results of pmove
@@ -104,7 +121,7 @@ void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles ) {
 	VectorCopy( player->client->ps.origin, player->r.currentOrigin );
 
 	if ( player->client->sess.sessionTeam != TEAM_SPECTATOR ) {
-		trap_LinkEntity( player );
+		trap_LinkEntity (player);
 	}
 }
 

@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 #include "../game/q_shared.h"
 #include "tr_types.h"
@@ -299,11 +319,11 @@ typedef struct {
 	int				accuracy;
 	int				impressiveCount;
 	int				excellentCount;
-	int				gauntletCount;
+	int				guantletCount;
 	int				defendCount;
 	int				assistCount;
 	int				captures;
-	qboolean		perfect;
+	qboolean	perfect;
 	team_t			team;
 
 	int				minx, maxx;
@@ -463,7 +483,7 @@ typedef struct {
 // occurs, and they will have visible effects for #define STEP_TIME or whatever msec after
 
 #define MAX_PREDICTED_EVENTS	16
-
+ 
 #define PICKUP_PREDICTION_DELAY 200
 
 #define NUM_SAVED_STATES ( CMD_BACKUP + 2 )
@@ -479,7 +499,7 @@ typedef struct {
 	qboolean	loading;			// don't defer players at initial startup
 	qboolean	intermissionStarted;	// don't play voice rewards, because game will end shortly
 
-	// there are only one or two snapshot_t that are relevent at a time
+	// there are only one or two snapshot_t that are relevant at a time
 	int			latestSnapshotNum;	// the number of snapshots the client system has received
 	int			latestSnapshotTime;	// the time from latestSnapshotNum, so we don't need to read the snapshot yet
 
@@ -615,8 +635,8 @@ typedef struct {
 	qhandle_t	soundBuffer[MAX_SOUNDBUFFER];
 	qhandle_t	soundPlaying;
 
-	// for voice chat buffer
 #ifdef MISSIONPACK
+	// for voice chat buffer
 	int			voiceChatTime;
 	int			voiceChatBufferIn;
 	int			voiceChatBufferOut;
@@ -663,9 +683,10 @@ typedef struct {
 	float		bobfracsin;
 	int			bobcycle;
 	float		xyspeed;
-	int			nextOrbitTime;
+	int     nextOrbitTime;
 
 	//qboolean cameraMode;		// if rendering from a loaded camera
+
 
 	// development tool
 	refEntity_t		testModelEntity;
@@ -700,10 +721,12 @@ typedef struct {
 	qhandle_t	charsetPropB;
 	qhandle_t	whiteShader;
 
+#ifdef MISSIONPACK
 	qhandle_t	redCubeModel;
 	qhandle_t	blueCubeModel;
 	qhandle_t	redCubeIcon;
 	qhandle_t	blueCubeIcon;
+#endif
 	qhandle_t	redFlagModel;
 	qhandle_t	blueFlagModel;
 	qhandle_t	neutralFlagModel;
@@ -1291,9 +1314,9 @@ void CG_UpdateCvars( void );
 int CG_CrosshairPlayer( void );
 int CG_LastAttacker( void );
 void CG_LoadMenus(const char *menuFile);
-void CG_KeyEvent( int key, qboolean down );
-void CG_MouseEvent( int x, int y );
-void CG_EventHandling( cgame_event_t type );
+void CG_KeyEvent(int key, qboolean down);
+void CG_MouseEvent(int x, int y);
+void CG_EventHandling(cgame_event_t type);
 void CG_RankRunFrame( void );
 void CG_SetScoreSelection(void *menu);
 #ifdef MISSIONPACK
@@ -1332,9 +1355,8 @@ void CG_DrawStringExt( int x, int y, const char *string, const float *setColor,
 
 int CG_DrawStrlen( const char *str );
 
-float *CG_FadeColor( int startMsec, int totalMsec );
+float	*CG_FadeColor( int startMsec, int totalMsec );
 float *CG_FadeColorTime( int startMsec, int totalMsec, int fadeMsec );
-
 const float *CG_TeamColor( team_t team );
 void CG_TileClear( void );
 void CG_ColorForHealth( vec4_t hcolor );
@@ -1393,13 +1415,14 @@ void CG_InitTeamChat( void );
 void CG_GetTeamColor(vec4_t *color);
 const char *CG_GetGameStatusText( void );
 const char *CG_GetKillerText( void );
-void CG_Draw3DModel( float x, float y, float w, float h, qhandle_t model, qhandle_t skin, vec3_t origin, vec3_t angles );
+void CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model, qhandle_t skin, vec3_t origin, vec3_t angles);
 void CG_Text_PaintChar(float x, float y, float width, float height, float scale, float s, float t, float s2, float t2, qhandle_t hShader);
 void CG_CheckOrderPending( void );
 const char *CG_GameTypeString( void );
 qboolean CG_YourTeamHasFlag( void );
 qboolean CG_OtherTeamHasFlag( void );
 qhandle_t CG_StatusHandle(int task);
+
 
 void CG_ForceModelChange( void );
 void CG_TrackClientTeamChange( void );
@@ -1429,7 +1452,7 @@ void CG_PlayDroppedEvents( playerState_t *ps, playerState_t *ops );
 // cg_events.c
 //
 void CG_CheckEvents( centity_t *cent );
-const char *CG_PlaceString( int rank );
+const char	*CG_PlaceString( int rank );
 void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum );
 void CG_PainEvent( centity_t *cent, int health );
 
@@ -1440,7 +1463,7 @@ void CG_PainEvent( centity_t *cent, int health );
 void CG_SetEntitySoundPosition( const centity_t *cent );
 void CG_AddPacketEntities( void );
 void CG_Beam( const centity_t *cent );
-void CG_AdjustPositionForMover( const vec3_t in, int moverNum, int fromTime, int toTime, vec3_t out, const vec3_t angles_in, vec3_t angles_out );
+void CG_AdjustPositionForMover(const vec3_t in, int moverNum, int fromTime, int toTime, vec3_t out, const vec3_t angles_in, vec3_t angles_out );
 
 void CG_PositionEntityOnTag( refEntity_t *entity, const refEntity_t *parent, 
 							qhandle_t parentModel, const char *tagName );
@@ -1506,7 +1529,6 @@ localEntity_t *CG_SmokePuff( const vec3_t p,
 				   qhandle_t hShader );
 void CG_BubbleTrail( const vec3_t start, const vec3_t end, float spacing );
 void CG_SpawnEffect( const vec3_t origin );
-
 #ifdef MISSIONPACK
 void CG_KamikazeEffect( vec3_t org );
 void CG_ObeliskExplode( vec3_t org, int entityNum );
@@ -1585,7 +1607,7 @@ void CG_CheckChangedPredictableEvents( playerState_t *ps );
 void		trap_Print( const char *text );
 
 // abort the game
-void		trap_Error( const char *text );
+void		trap_Error(const char *text );
 
 // milliseconds should only be used for performance tuning, never
 // for anything game related.  Get time from the CG_DrawActiveFrame parameter
@@ -1786,7 +1808,7 @@ void	CG_ParticleBulletDebris (vec3_t	org, vec3_t vel, int duration);
 void	CG_ParticleSparks (vec3_t org, vec3_t vel, int duration, float x, float y, float speed);
 void	CG_ParticleDust (centity_t *cent, vec3_t origin, vec3_t dir);
 void	CG_ParticleMisc (qhandle_t pshader, vec3_t origin, int size, int duration, float alpha);
-void	CG_ParticleExplosion( const char *animStr, const vec3_t origin, const vec3_t vel, int duration, int sizeStart, int sizeEnd );
+void	CG_ParticleExplosion (const char *animStr, const vec3_t origin, const vec3_t vel, int duration, int sizeStart, int sizeEnd );
 extern qboolean		initparticles;
 int CG_NewParticleArea ( int num );
 

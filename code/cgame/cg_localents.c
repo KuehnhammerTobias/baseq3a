@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 
 // cg_localents.c -- every frame, generate renderer commands for locally
@@ -334,7 +354,6 @@ static void CG_AddFadeRGB( localEntity_t *le ) {
 		trap_R_AddRefEntityToScene( re );
 }
 
-
 /*
 ==================
 CG_AddMoveScaleFade
@@ -530,6 +549,7 @@ static void CG_AddFallScaleFade( localEntity_t *le ) {
 }
 
 
+
 /*
 ================
 CG_AddExplosion
@@ -542,9 +562,9 @@ static void CG_AddExplosion( localEntity_t *ex ) {
 
 	// add the entity
 	if ( intShaderTime )
-		trap_R_AddRefEntityToScene2( ent );
+		trap_R_AddRefEntityToScene2(ent);
 	else
-		trap_R_AddRefEntityToScene( ent );
+		trap_R_AddRefEntityToScene(ent);
 
 	// add the dlight
 	if ( ex->light ) {
@@ -560,7 +580,6 @@ static void CG_AddExplosion( localEntity_t *ex ) {
 		trap_R_AddLightToScene(ent->origin, light, ex->lightColor[0], ex->lightColor[1], ex->lightColor[2] );
 	}
 }
-
 
 /*
 ================
@@ -769,20 +788,18 @@ void CG_AddInvulnerabilityJuiced( localEntity_t *le ) {
 }
 #endif
 
-
 /*
 ===================
 CG_AddRefEntity
 ===================
 */
 static void CG_AddRefEntity( localEntity_t *le ) {
-	if ( le->endTime < cg.time ) {
+	if (le->endTime < cg.time) {
 		CG_FreeLocalEntity( le );
 		return;
 	}
 	trap_R_AddRefEntityToScene( &le->refEntity );
 }
-
 
 /*
 ===================
@@ -916,19 +933,19 @@ void CG_AddLocalEntities( void ) {
 			CG_AddFragment( le );
 			break;
 
-		case LE_MOVE_SCALE_FADE:	// water bubbles, plasma trails, smoke puff
+		case LE_MOVE_SCALE_FADE:		// water bubbles, plasma trails, smoke puff
 			CG_AddMoveScaleFade( le );
 			break;
 
-		case LE_FADE_RGB:			// teleporters, railtrails
+		case LE_FADE_RGB:				// teleporters, railtrails
 			CG_AddFadeRGB( le );
 			break;
 
-		case LE_FALL_SCALE_FADE:	// gib blood trails
+		case LE_FALL_SCALE_FADE: // gib blood trails
 			CG_AddFallScaleFade( le );
 			break;
 
-		case LE_SCALE_FADE:			// rocket trails
+		case LE_SCALE_FADE:		// rocket trails
 			CG_AddScaleFade( le );
 			break;
 

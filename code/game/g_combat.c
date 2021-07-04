@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // g_combat.c
 
@@ -41,9 +61,8 @@ void AddScore( gentity_t *ent, vec3_t origin, int score ) {
 	ScorePlum(ent, origin, score);
 	//
 	ent->client->ps.persistant[PERS_SCORE] += score;
-	if ( g_gametype.integer == GT_TEAM ) {
-		AddTeamScore( origin, ent->client->ps.persistant[PERS_TEAM], score );
-	}
+	if ( g_gametype.integer == GT_TEAM )
+		AddTeamScore(origin, ent->client->ps.persistant[PERS_TEAM], score);
 	CalculateRanks();
 }
 
@@ -112,8 +131,8 @@ void TossClientItems( gentity_t *self ) {
 	}
 }
 
-
 #ifdef MISSIONPACK
+
 /*
 =================
 TossClientCubes
@@ -241,7 +260,6 @@ void GibEntity( gentity_t *self, int killer ) {
 		}
 	}
 #endif
-
 	G_AddEvent( self, EV_GIB_PLAYER, killer );
 	self->takedamage = qfalse;
 	self->s.eType = ET_INVISIBLE;
@@ -476,7 +494,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	if ( (unsigned)meansOfDeath >= ARRAY_LEN( modNames ) ) {
 		obit = "<bad obituary>";
 	} else {
-		obit = modNames[ meansOfDeath ];
+		obit = modNames[meansOfDeath];
 	}
 
 	G_LogPrintf("Kill: %i %i %i: %s killed %s by %s\n", 
@@ -973,8 +991,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	take = damage;
 
 	// save some from armor
-	asave = CheckArmor( targ, take, dflags );
-
+	asave = CheckArmor (targ, take, dflags);
 	take -= asave;
 
 	if ( g_debugDamage.integer ) {
@@ -1075,17 +1092,17 @@ Returns qtrue if the inflictor can directly damage the target.  Used for
 explosions and melee attacks.
 ============
 */
-qboolean CanDamage( gentity_t *targ, vec3_t origin )
-{
+qboolean CanDamage (gentity_t *targ, vec3_t origin) {
 	//we check if the attacker can damage the target, return qtrue if yes, qfalse if no
 	vec3_t	dest;
 	trace_t	tr;
 	vec3_t	midpoint;
-	vec3_t				size;
+	vec3_t	size;
 
-	// use the midpoint of the bounds instead of the origin, because bmodels may have their origin 0,0,0
+	// use the midpoint of the bounds instead of the origin, because
+	// bmodels may have their origin 0,0,0
 	VectorAdd (targ->r.absmin, targ->r.absmax, midpoint);
-	VectorScale( midpoint, 0.5, dest );
+	VectorScale (midpoint, 0.5, dest);
 
 	trap_Trace ( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID);
 	if (tr.fraction == 1.0 || tr.entityNum == targ->s.number)
@@ -1097,60 +1114,63 @@ qboolean CanDamage( gentity_t *targ, vec3_t origin )
 
 	// - +
 	// - -
-	VectorCopy( targ->r.absmax, dest );
-	trap_Trace ( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID);
+	VectorCopy(targ->r.absmax, dest);
+	trap_Trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID);
 	if (tr.fraction == 1.0)
 		return qtrue;
 
 	// + -
 	// - -
 	dest[0] -= size[0];
-	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	if ( tr.fraction == 1.0 )
+	trap_Trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID);
+	if (tr.fraction == 1.0)
 		return qtrue;
 
 	// - -
 	// + -
 	dest[1] -= size[1];
-	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	if ( tr.fraction == 1.0 )
+	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID);
+	if (tr.fraction == 1.0)
 		return qtrue;
 
 	// - -
 	// - +
 	dest[0] += size[0];
-	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	if ( tr.fraction == 1.0 )
+	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID);
+	if (tr.fraction == 1.0)
 		return qtrue;
 
 	// bottom quad
 
 	// - -
 	// + -
-	VectorCopy( targ->r.absmin, dest );
-	trap_Trace ( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID);
+	VectorCopy(targ->r.absmin, dest );
+	trap_Trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID);
 	if (tr.fraction == 1.0)
 		return qtrue;
 
 	// - -
 	// - +
 	dest[0] += size[0];
-	trap_Trace ( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID);
+	trap_Trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID);
+
 	if (tr.fraction == 1.0)
 		return qtrue;
 
 	// - +
 	// - -
 	dest[1] += size[1];
-	trap_Trace ( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID);
+	trap_Trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID);
+
 	if (tr.fraction == 1.0)
 		return qtrue;
 
 	// + -
 	// - -
 	dest[0] -= size[0];
-	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	if ( tr.fraction == 1.0 )
+	trap_Trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID);
+
+	if (tr.fraction == 1.0)
 		return qtrue;
 
 	return qfalse;

@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // bg_misc.c -- both games misc functions, all completely stateless
 
@@ -1257,7 +1277,6 @@ void BG_EvaluateTrajectoryDelta( const trajectory_t *tr, int atTime, vec3_t resu
 	}
 }
 
-
 const char *eventnames[EV_MAX] = {
 	"EV_NONE",
 
@@ -1347,7 +1366,7 @@ const char *eventnames[EV_MAX] = {
 	"EV_PROXIMITY_MINE_TRIGGER",
 	"EV_KAMIKAZE",			// kamikaze explodes
 	"EV_OBELISKEXPLODE",		// obelisk explodes
-	"EV_OBELISKPAIN",			// obelisk is in pain
+	"EV_OBELISKPAIN",		// obelisk is in pain
 	"EV_INVUL_IMPACT",		// invulnerability sphere impact
 	"EV_JUICED",				// invulnerability juiced effect
 	"EV_LIGHTNINGBOLT",		// lightning bolt bounced of invulnerability sphere
@@ -1393,16 +1412,13 @@ void BG_AddPredictableEventToPlayerstate( entity_event_t newEvent, int eventParm
 		}
 	}
 #endif
-
 #ifdef CGAME
 	CG_StoreEvent( newEvent, eventParm, entityNum );
-#endif
-	
+#endif	
 	ps->events[ps->eventSequence & (MAX_PS_EVENTS-1)] = newEvent;
 	ps->eventParms[ps->eventSequence & (MAX_PS_EVENTS-1)] = eventParm;
 	ps->eventSequence++;
 }
-
 
 /*
 ========================

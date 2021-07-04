@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // cg_playerstate.c -- this file acts on changes in a new playerState_t
 // With normal play, this will be done after local prediction, but when
@@ -60,7 +80,6 @@ void CG_CheckAmmo( void ) {
 		trap_S_StartLocalSound( cgs.media.noAmmoSound, CHAN_LOCAL_SOUND );
 	}
 }
-
 
 /*
 ==============
@@ -175,6 +194,8 @@ void CG_DamageFeedback( int yawByte, int pitchByte, int damage ) {
 }
 
 
+
+
 /*
 ================
 CG_Respawn
@@ -232,7 +253,6 @@ static void CG_CheckPlayerstateEvents( const playerState_t *ps, const playerStat
 				continue;
 			cent->currentState.event = event;
 			cent->currentState.eventParm = ps->eventParms[ i & (MAX_PS_EVENTS-1) ];
-
 			CG_EntityEvent( cent, cent->lerpOrigin, eventParm2[ n++ ] );
 
 			cg.predictableEvents[ i & (MAX_PREDICTED_EVENTS-1) ] = event;
@@ -248,8 +268,8 @@ static void CG_CheckPlayerstateEvents( const playerState_t *ps, const playerStat
 pushReward
 ==================
 */
-static void pushReward( sfxHandle_t sfx, qhandle_t shader, int rewardCount ) {
-	if ( cg.rewardStack < (MAX_REWARDSTACK-1 )) {
+static void pushReward(sfxHandle_t sfx, qhandle_t shader, int rewardCount) {
+	if (cg.rewardStack < (MAX_REWARDSTACK-1)) {
 		cg.rewardStack++;
 		cg.rewardSound[cg.rewardStack] = sfx;
 		cg.rewardShader[cg.rewardStack] = shader;
@@ -257,17 +277,16 @@ static void pushReward( sfxHandle_t sfx, qhandle_t shader, int rewardCount ) {
 	}
 }
 
-
 /*
 ==================
 CG_CheckLocalSounds
 ==================
 */
 void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
+	int			highScore, reward;
 #ifdef MISSIONPACK
-	int health, armor;
+	int			health, armor;
 #endif
-	int	highScore, reward;
 	sfxHandle_t sfx;
 
 	// don't play the sounds if the player just changed teams
@@ -322,6 +341,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 		}
 	}
 
+
 	// if we are going into the intermission, don't start any voices
 	if ( cg.intermissionStarted ) {
 		return;
@@ -374,7 +394,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 #endif
 		pushReward(sfx, cgs.media.medalGauntlet, ps->persistant[PERS_GAUNTLET_FRAG_COUNT]);
 		reward = qtrue;
-		//Com_Printf("guantlet frag\n");
+		//Com_Printf("gauntlet frag\n");
 	}
 	if (ps->persistant[PERS_DEFEND_COUNT] != ops->persistant[PERS_DEFEND_COUNT]) {
 		pushReward(cgs.media.defendSound, cgs.media.medalDefend, ps->persistant[PERS_DEFEND_COUNT]);
@@ -404,7 +424,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	}
 
 	// check for flag pickup
-	if ( cgs.gametype >= GT_TEAM ) {
+	if ( cgs.gametype > GT_TEAM ) {
 		if ((ps->powerups[PW_REDFLAG] != ops->powerups[PW_REDFLAG] && ps->powerups[PW_REDFLAG]) ||
 			(ps->powerups[PW_BLUEFLAG] != ops->powerups[PW_BLUEFLAG] && ps->powerups[PW_BLUEFLAG]) ||
 			(ps->powerups[PW_NEUTRALFLAG] != ops->powerups[PW_NEUTRALFLAG] && ps->powerups[PW_NEUTRALFLAG]) )
@@ -525,3 +545,4 @@ void CG_TransitionPlayerState( playerState_t *ps, playerState_t *ops ) {
 		cg.duckTime = cg.time;
 	}
 }
+

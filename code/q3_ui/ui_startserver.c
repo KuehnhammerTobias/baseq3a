@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 /*
 =============================================================================
@@ -32,7 +52,6 @@ START SERVER MENU *****
 #define MAX_MAPSPERPAGE	4
 
 #define MAX_NAMELENGTH	16
-
 #define ID_GAMETYPE				10
 #define ID_PICTURES				11	// 12, 13, 14
 #define ID_PREVPAGE				15
@@ -77,7 +96,7 @@ static const char *gametype_items[] = {
 	NULL
 };
 
-static int gametype_remap[] = { GT_FFA, GT_TOURNAMENT, GT_TEAM, GT_CTF };
+static int gametype_remap[] = {GT_FFA, GT_TOURNAMENT, GT_TEAM, GT_CTF};
 static int gametype_remap2[] = {0, 1, 0, 2, 3};
 
 // use ui_servers2.c definition
@@ -98,7 +117,7 @@ static int GametypeBits( char *string ) {
 	p = string;
 	while( 1 ) {
 		token = COM_ParseExt( &p, qfalse );
-		if( token[0] == 0 ) {
+		if ( token[0] == 0 ) {
 			break;
 		}
 
@@ -150,7 +169,7 @@ static void StartServer_Update( void ) {
 	{
 		if (top+i >= s_startserver.nummaps)
 			break;
-
+		
 		info = UI_GetArenaInfoByNumber( s_startserver.maplist[ top + i ]);
 		Q_strncpyz( mapname, Info_ValueForKey( info, "map"), MAX_NAMELENGTH );
 		Q_strupr( mapname );
@@ -243,7 +262,7 @@ static void StartServer_GametypeEvent( void* ptr, int event ) {
 	}
 	for( i = 0; i < count; i++ ) {
 		info = UI_GetArenaInfoByNumber( i );
-
+	
 		gamebits = GametypeBits( Info_ValueForKey( info, "type") );
 		if( !( gamebits & matchbits ) ) {
 			continue;
@@ -560,7 +579,7 @@ void StartServer_Cache( void )
 			info = UI_GetArenaInfoByNumber( i );
 			Q_strncpyz( mapname, Info_ValueForKey( info, "map"), MAX_NAMELENGTH );
 			Q_strupr( mapname );
-
+	
 			Com_sprintf( picname, sizeof(picname), "levelshots/%s", mapname );
 			trap_R_RegisterShaderNoMip(picname);
 		}
@@ -1131,7 +1150,7 @@ static void ServerOptions_SetMenuItems( void ) {
 
 	// set the map pic
 	info = UI_GetArenaInfoByNumber( s_startserver.maplist[ s_startserver.currentmap ]);
-	Q_strncpyz( mapname, Info_ValueForKey( info, "map" ), sizeof( mapname ) );
+	Q_strncpyz( mapname, Info_ValueForKey( info, "map"), sizeof( mapname ) );
 	Q_strupr( mapname );
 	Com_sprintf( picname, sizeof( picname ), "levelshots/%s", mapname );
 	s_serveroptions.mappic.generic.name = picname;
@@ -1314,7 +1333,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	y = 80;
 	s_serveroptions.botSkill.generic.type			= MTYPE_SPINCONTROL;
 	s_serveroptions.botSkill.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.botSkill.generic.name			= "Bot Skill:  ";
+	s_serveroptions.botSkill.generic.name			= "Bot Skill:";
 	s_serveroptions.botSkill.generic.x				= 32 + (strlen(s_serveroptions.botSkill.generic.name) + 2 ) * SMALLCHAR_WIDTH;
 	s_serveroptions.botSkill.generic.y				= y;
 	s_serveroptions.botSkill.itemnames				= botSkill_list;

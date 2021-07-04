@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 #include "g_local.h"
 
@@ -210,9 +230,9 @@ void SP_target_speaker( gentity_t *ent ) {
 
 
 	// check for prestarted looping sound
-	if ( ent->spawnflags & 1 )
+	if ( ent->spawnflags & 1 ) {
 		ent->s.loopSound = ent->noise_index;
-	else
+	} else
 		ent->s.loopSound = 0;
 
 	ent->use = Use_Target_Speaker;
@@ -329,7 +349,7 @@ void SP_target_laser (gentity_t *self)
 void target_teleporter_use( gentity_t *self, gentity_t *other, gentity_t *activator ) {
 	gentity_t	*dest;
 
-	if ( !activator || !activator->client )
+	if (!activator || !activator->client)
 		return;
 	dest = 	G_PickTarget( self->target );
 	if (!dest) {
@@ -359,7 +379,6 @@ The activator can be forced to be from a certain team.
 if RANDOM is checked, only one of the targets will be fired, not all of them
 */
 void target_relay_use (gentity_t *self, gentity_t *other, gentity_t *activator) {
-
 	if ( ( self->spawnflags & 1 ) && activator && activator->client 
 		&& activator->client->sess.sessionTeam != TEAM_RED ) {
 		return;

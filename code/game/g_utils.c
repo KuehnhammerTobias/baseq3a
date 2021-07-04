@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // g_utils.c -- misc utility functions for game module
 
@@ -39,7 +59,7 @@ const char *BuildShaderStateConfig(void) {
 	char out[(MAX_QPATH * 2) + 5];
 	int i;
   
-	memset( buff, 0, sizeof( buff ) );
+	memset(buff, 0, sizeof(buff));
 	for (i = 0; i < remapCount; i++) {
 		Com_sprintf(out, (MAX_QPATH * 2) + 5, "%s=%s:%5.2f@", remappedShaders[i].oldShader, remappedShaders[i].newShader, remappedShaders[i].timeOffset);
 		Q_strcat( buff, sizeof( buff ), out);
@@ -148,7 +168,7 @@ gentity_t *G_Find (gentity_t *from, int fieldofs, const char *match)
 
 	to = &g_entities[ level.num_entities ];
 
-	for ( ; from < to ; from++ )
+	for ( ; from < to ; from++)
 	{
 		if (!from->inuse)
 			continue;
@@ -172,7 +192,7 @@ Selects a random entity from among the targets
 */
 #define MAXCHOICES	32
 
-gentity_t *G_PickTarget( const char *targetname )
+gentity_t *G_PickTarget (const char *targetname)
 {
 	gentity_t	*choice[MAXCHOICES];
 	gentity_t	*ent;
@@ -192,7 +212,7 @@ gentity_t *G_PickTarget( const char *targetname )
 		if (!ent)
 			break;
 		choice[num_choices++] = ent;
-		if ( num_choices >= MAXCHOICES )
+		if (num_choices >= MAXCHOICES)
 			break;
 	}
 
@@ -358,7 +378,6 @@ void G_InitGentity( gentity_t *e ) {
 	e->tag = TAG_NONE;
 }
 
-
 /*
 =================
 G_Spawn
@@ -378,13 +397,13 @@ gentity_t *G_Spawn( void ) {
 	int			i, timeout;
 	gentity_t	*e;
 
-	e = NULL; // shut up warning
+	e = NULL;	// shut up warning
 	// try to release oldest items first
 	for ( timeout = 1000 ; timeout >= 0 ; timeout -= 250 ) {
 		// if we go through all entities and can't find one to free,
 		// override the normal minimum times before use
-		e = &g_entities[ MAX_CLIENTS ];
-		for ( i = MAX_CLIENTS ; i < level.num_entities; i++, e++ ) {
+		e = &g_entities[MAX_CLIENTS];
+		for ( i = MAX_CLIENTS ; i<level.num_entities ; i++, e++) {
 			if ( e->inuse ) {
 				continue;
 			}
@@ -399,12 +418,10 @@ gentity_t *G_Spawn( void ) {
 			G_InitGentity( e );
 			return e;
 		}
-
 		if ( level.num_entities < ENTITYNUM_MAX_NORMAL ) {
 			break;
 		}
 	}
-
 	if ( i == ENTITYNUM_MAX_NORMAL ) {
 		for (i = 0; i < MAX_GENTITIES; i++) {
 			G_Printf("%4i: %s\n", i, g_entities[i].classname);
@@ -422,7 +439,6 @@ gentity_t *G_Spawn( void ) {
 	G_InitGentity( e );
 	return e;
 }
-
 
 /*
 =================
@@ -464,7 +480,6 @@ void G_FreeEntity( gentity_t *ed ) {
 	ed->freetime = level.time;
 	ed->inuse = qfalse;
 }
-
 
 /*
 =================

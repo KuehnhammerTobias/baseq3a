@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // ui_players.c
 
@@ -68,13 +88,13 @@ tryagain:
 	}
 
 	if ( weaponNum == WP_MACHINEGUN || weaponNum == WP_GAUNTLET || weaponNum == WP_BFG ) {
-		COM_StripExtension( item->world_model[0], path, sizeof( path ) );
-		Q_strcat( path, sizeof( path ), "_barrel.md3" );
+		COM_StripExtension( item->world_model[0], path, sizeof(path) );
+		Q_strcat( path, sizeof(path), "_barrel.md3" );
 		pi->barrelModel = trap_R_RegisterModel( path );
 	}
 
-	COM_StripExtension( item->world_model[0], path, sizeof( path ) );
-	Q_strcat( path, sizeof( path ), "_flash.md3" );
+	COM_StripExtension( item->world_model[0], path, sizeof(path) );
+	Q_strcat( path, sizeof(path), "_flash.md3" );
 	pi->flashModel = trap_R_RegisterModel( path );
 
 	switch( weaponNum ) {
@@ -774,7 +794,7 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 
 	VectorCopy( origin, torso.lightingOrigin );
 
-	UI_PositionRotatedEntityOnTag( &torso, &legs, pi->legsModel, "tag_torso" );
+	UI_PositionRotatedEntityOnTag( &torso, &legs, pi->legsModel, "tag_torso");
 
 	torso.renderfx = renderfx;
 
@@ -793,7 +813,7 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 
 	VectorCopy( origin, head.lightingOrigin );
 
-	UI_PositionRotatedEntityOnTag( &head, &torso, pi->torsoModel, "tag_head" );
+	UI_PositionRotatedEntityOnTag( &head, &torso, pi->torsoModel, "tag_head");
 
 	head.renderfx = renderfx;
 
@@ -806,7 +826,7 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 		memset( &gun, 0, sizeof(gun) );
 		gun.hModel = pi->weaponModel;
 		VectorCopy( origin, gun.lightingOrigin );
-		UI_PositionEntityOnTag( &gun, &torso, pi->torsoModel, "tag_weapon" );
+		UI_PositionEntityOnTag( &gun, &torso, pi->torsoModel, "tag_weapon");
 		gun.renderfx = renderfx;
 		trap_R_AddRefEntityToScene( &gun );
 	}
@@ -831,7 +851,7 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 		}
 		AnglesToAxis( angles, barrel.axis );
 
-		UI_PositionRotatedEntityOnTag( &barrel, &gun, pi->weaponModel, "tag_barrel" );
+		UI_PositionRotatedEntityOnTag( &barrel, &gun, pi->weaponModel, "tag_barrel");
 
 		trap_R_AddRefEntityToScene( &barrel );
 	}
@@ -844,7 +864,7 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 			memset( &flash, 0, sizeof(flash) );
 			flash.hModel = pi->flashModel;
 			VectorCopy( origin, flash.lightingOrigin );
-			UI_PositionEntityOnTag( &flash, &gun, pi->weaponModel, "tag_flash" );
+			UI_PositionEntityOnTag( &flash, &gun, pi->weaponModel, "tag_flash");
 			flash.renderfx = renderfx;
 			trap_R_AddRefEntityToScene( &flash );
 		}
@@ -936,7 +956,7 @@ static qboolean UI_ParseAnimationFile( const char *filename, animation_t *animat
 		return qfalse;
 	}
 	trap_FS_Read( text, len, f );
-	text[ len ] = '\0';
+	text[len] = '\0';
 	trap_FS_FCloseFile( f );
 
 	// parse the text
@@ -986,7 +1006,7 @@ static qboolean UI_ParseAnimationFile( const char *filename, animation_t *animat
 
 		token = COM_Parse( &text_p );
 		if ( !token[0] ) {
-			if ( i >= TORSO_GETFLAG && i <= TORSO_NEGATIVE ) {
+			if( i >= TORSO_GETFLAG && i <= TORSO_NEGATIVE ) {
 				animations[i].firstFrame = animations[TORSO_GESTURE].firstFrame;
 				animations[i].frameLerp = animations[TORSO_GESTURE].frameLerp;
 				animations[i].initialLerp = animations[TORSO_GESTURE].initialLerp;

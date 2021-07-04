@@ -12,10 +12,10 @@ typedef char *  va_list;
 #define va_arg(ap,t)    ( *(t *)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)) )
 #define va_end(ap)      ( ap = (va_list)0 )
 
-#define CHAR_BIT      8         /* number of bits in a char */
-#define SCHAR_MIN   (-128)      /* minimum signed char value */
-#define SCHAR_MAX     127       /* maximum signed char value */
-#define UCHAR_MAX     0xff      /* maximum unsigned char value */
+#define CHAR_BIT      8             /* number of bits in a char */
+#define SCHAR_MIN   (-128)          /* minimum signed char value */
+#define SCHAR_MAX     127           /* maximum signed char value */
+#define UCHAR_MAX     0xff          /* maximum unsigned char value */
 
 #define SHRT_MIN    (-32768)        /* minimum (signed) short value */
 #define SHRT_MAX      32767         /* maximum (signed) short value */
