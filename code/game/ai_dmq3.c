@@ -55,9 +55,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "match.h"				//string matching types and vars
 
 // for the voice chats
-#ifdef MISSIONPACK
 #include "../../ui/menudef.h" // sos001205 - for q3_ui also
-#endif
 
 // from aasfile.h
 #define AREACONTENTS_MOVER				1024
@@ -488,9 +486,7 @@ void BotRefuseOrder(bot_state_t *bs) {
 	// if the bot was ordered to do something
 	if ( bs->order_time && bs->order_time > FloatTime() - 10 ) {
 		trap_EA_Action(bs->client, ACTION_NEGATIVE);
-#ifdef MISSIONPACK
 		BotVoiceChat(bs, bs->decisionmaker, VOICECHAT_NO);
-#endif
 		bs->order_time = 0;
 	}
 }
@@ -531,9 +527,7 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 				bs->altroutegoal.areanum = 0;
 			}
 			BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_OFFENSE));
-#ifdef MISSIONPACK
 			BotVoiceChat(bs, -1, VOICECHAT_IHAVEFLAG);
-#endif
 		}
 		else if (bs->rushbaseaway_time > FloatTime()) {
 			if (BotTeam(bs) == TEAM_RED) flagstatus = bs->redflagstatus;
@@ -583,9 +577,7 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 					//no arrive message
 					bs->arrive_time = 1;
 					//
-#ifdef MISSIONPACK
 					BotVoiceChat(bs, bs->teammate, VOICECHAT_ONFOLLOW);
-#endif
 					//get the team goal time
 					bs->teamgoal_time = FloatTime() + TEAM_ACCOMPANY_TIME;
 					bs->ltgtype = LTG_TEAMACCOMPANY;
@@ -662,9 +654,7 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 					//no arrive message
 					bs->arrive_time = 1;
 					//
-#ifdef MISSIONPACK
 					BotVoiceChat(bs, bs->teammate, VOICECHAT_ONFOLLOW);
-#endif
 					//get the team goal time
 					bs->teamgoal_time = FloatTime() + TEAM_ACCOMPANY_TIME;
 					bs->ltgtype = LTG_TEAMACCOMPANY;
@@ -830,9 +820,7 @@ void Bot1FCTFSeekGoals(bot_state_t *bs) {
 			BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
 			//
 			BotSetTeamStatus(bs);
-#ifdef MISSIONPACK
 			BotVoiceChat(bs, -1, VOICECHAT_IHAVEFLAG);
-#endif
 		}
 		return;
 	}
@@ -865,9 +853,7 @@ void Bot1FCTFSeekGoals(bot_state_t *bs) {
 					//no arrive message
 					bs->arrive_time = 1;
 					//
-#ifdef MISSIONPACK
 					BotVoiceChat(bs, bs->teammate, VOICECHAT_ONFOLLOW);
-#endif
 					//get the team goal time
 					bs->teamgoal_time = FloatTime() + TEAM_ACCOMPANY_TIME;
 					bs->ltgtype = LTG_TEAMACCOMPANY;
@@ -1264,9 +1250,7 @@ void BotHarvesterSeekGoals(bot_state_t *bs) {
 			//no arrive message
 			bs->arrive_time = 1;
 			//
-#ifdef MISSIONPACK
 			BotVoiceChat(bs, bs->teammate, VOICECHAT_ONFOLLOW);
-#endif
 			//get the team goal time
 			bs->teamgoal_time = FloatTime() + TEAM_ACCOMPANY_TIME;
 			bs->ltgtype = LTG_TEAMACCOMPANY;
@@ -1674,9 +1658,7 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 				// if we have a bot team leader
 				if (BotTeamLeader(bs)) {
 					// tell the leader we want to be on offence
-#ifdef MISSIONPACK
 					BotVoiceChat(bs, leader, VOICECHAT_WANTONOFFENSE);
-#endif
 					//BotAI_BotInitialChat(bs, "wantoffence", NULL);
 					//trap_BotEnterChat(bs->cs, leader, CHAT_TELL);
 				}
@@ -1688,9 +1670,7 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 						if ((gametype != GT_CTF || (bs->redflagstatus == 0 && bs->blueflagstatus == 0)) &&
 							(gametype != GT_1FCTF || bs->neutralflagstatus == 0) ) {
 							// tell the leader we want to be on offence
-#ifdef MISSIONPACK
 							BotVoiceChat(bs, leader, VOICECHAT_WANTONOFFENSE);
-#endif
 							//BotAI_BotInitialChat(bs, "wantoffence", NULL);
 							//trap_BotEnterChat(bs->cs, leader, CHAT_TELL);
 						}
@@ -1705,9 +1685,7 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 				// if we have a bot team leader
 				if (BotTeamLeader(bs)) {
 					// tell the leader we want to be on defense
-#ifdef MISSIONPACK
 					BotVoiceChat(bs, -1, VOICECHAT_WANTONDEFENSE);
-#endif
 					//BotAI_BotInitialChat(bs, "wantdefence", NULL);
 					//trap_BotEnterChat(bs->cs, leader, CHAT_TELL);
 				}
@@ -1717,9 +1695,7 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 						if ((gametype != GT_CTF || (bs->redflagstatus == 0 && bs->blueflagstatus == 0)) &&
 							(gametype != GT_1FCTF || bs->neutralflagstatus == 0) ) {
 							// tell the leader we want to be on defense
-#ifdef MISSIONPACK
 							BotVoiceChat(bs, -1, VOICECHAT_WANTONDEFENSE);
-#endif
 							//BotAI_BotInitialChat(bs, "wantdefence", NULL);
 							//trap_BotEnterChat(bs->cs, leader, CHAT_TELL);
 						}
@@ -2325,6 +2301,10 @@ int BotWantsToRetreat(bot_state_t *bs) {
 		BotEntityInfo(bs->enemy, &entinfo);
 		// if the enemy is carrying a flag
 		if (EntityCarriesFlag(&entinfo)) return qfalse;
+#ifdef MISSIONPACK
+		// if the enemy is carrying cubes
+		if (EntityCarriesCubes(&entinfo)) return qfalse;
+#endif
 	}
 	//if the bot is getting the flag
 	if (bs->ltgtype == LTG_GETFLAG)
@@ -2374,6 +2354,10 @@ int BotWantsToChase(bot_state_t *bs) {
 	else if (gametype == GT_HARVESTER) {
 		//never chase if carrying cubes
 		if (BotHarvesterCarryingCubes(bs)) return qfalse;
+
+		BotEntityInfo(bs->enemy, &entinfo);
+		// always chase if the enemy is carrying cubes
+		if (EntityCarriesCubes(&entinfo)) return qtrue;
 	}
 #endif
 	//if the bot is getting the flag
@@ -3711,26 +3695,38 @@ BotMapScripts
 ==================
 */
 void BotMapScripts(bot_state_t *bs) {
+	char info[1024];
+	char mapname[128];
 	int i, shootbutton;
 	float aim_accuracy;
 	aas_entityinfo_t entinfo;
 	vec3_t dir;
 
-	if (!Q_stricmp(mapname, "q3tourney6")) {
-		vec3_t mins = {700, 204, 672}, maxs = {964, 468, 680};
+	trap_GetServerinfo(info, sizeof(info));
+
+	strncpy(mapname, Info_ValueForKey( info, "mapname" ), sizeof(mapname)-1);
+	mapname[sizeof(mapname)-1] = '\0';
+
+	if (!Q_stricmp(mapname, "q3tourney6") || !Q_stricmp(mapname, "q3tourney6_ctf") || !Q_stricmp(mapname, "mpq3tourney6")) {
+		vec3_t mins = {694, 200, 480}, maxs = {968, 472, 680};
 		vec3_t buttonorg = {304, 352, 920};
 		//NOTE: NEVER use the func_bobbing in q3tourney6
 		bs->tfl &= ~TFL_FUNCBOB;
-		//if the bot is below the bounding box
+		//crush area is higher in mpq3tourney6
+		if (!Q_stricmp(mapname, "mpq3tourney6")) {
+			mins[2] += 64;
+			maxs[2] += 64;
+		}
+		//if the bot is in the bounding box of the crush area
 		if (bs->origin[0] > mins[0] && bs->origin[0] < maxs[0]) {
 			if (bs->origin[1] > mins[1] && bs->origin[1] < maxs[1]) {
-				if (bs->origin[2] < mins[2]) {
+				if (bs->origin[2] > mins[2] && bs->origin[2] < maxs[2]) {
 					return;
 				}
 			}
 		}
 		shootbutton = qfalse;
-		//if an enemy is below this bounding box then shoot the button
+		//if an enemy is in the bounding box then shoot the button
 		for (i = 0; i < level.maxclients; i++) {
 
 			if (i == bs->client) continue;
@@ -3743,13 +3739,13 @@ void BotMapScripts(bot_state_t *bs) {
 			//
 			if (entinfo.origin[0] > mins[0] && entinfo.origin[0] < maxs[0]) {
 				if (entinfo.origin[1] > mins[1] && entinfo.origin[1] < maxs[1]) {
-					if (entinfo.origin[2] < mins[2]) {
+					if (entinfo.origin[2] > mins[2] && entinfo.origin[2] < maxs[2]) {
 						//if there's a team mate below the crusher
 						if (BotSameTeam(bs, i)) {
 							shootbutton = qfalse;
 							break;
 						}
-						else {
+						else if (gametype < GT_CTF || bs->enemy == i) {
 							shootbutton = qtrue;
 						}
 					}
@@ -3860,7 +3856,6 @@ int BotFuncButtonActivateGoal(bot_state_t *bs, int bspent, bot_activategoal_t *a
 	modelindex = atoi(model+1);
 	if (!modelindex)
 		return qfalse;
-	VectorClear(angles);
 	entitynum = BotModelMinsMaxs(modelindex, ET_MOVER, 0, mins, maxs);
 	//get the lip of the button
 	trap_AAS_FloatForBSPEpairKey(bspent, "lip", &lip);

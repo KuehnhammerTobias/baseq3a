@@ -54,10 +54,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "match.h"			//string matching types and vars
 
 // for the voice chats
-#ifdef MISSIONPACK
 #include "../../ui/menudef.h"
 
-#endif
 
 int numnodeswitches;
 char nodeswitch[MAX_NODESWITCHES+1][144];
@@ -347,9 +345,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 		if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
 			BotAI_BotInitialChat(bs, "help_start", EasyClientName(bs->teammate, netname, sizeof(netname)), NULL);
 			trap_BotEnterChat(bs->cs, bs->decisionmaker, CHAT_TELL);
-#ifdef MISSIONPACK
 			BotVoiceChatOnly(bs, bs->decisionmaker, VOICECHAT_YES);
-#endif
 			trap_EA_Action(bs->client, ACTION_AFFIRMATIVE);
 			bs->teammessage_time = 0;
 		}
@@ -394,9 +390,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 		if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
 			BotAI_BotInitialChat(bs, "accompany_start", EasyClientName(bs->teammate, netname, sizeof(netname)), NULL);
 			trap_BotEnterChat(bs->cs, bs->decisionmaker, CHAT_TELL);
-#ifdef MISSIONPACK
 			BotVoiceChatOnly(bs, bs->decisionmaker, VOICECHAT_YES);
-#endif
 			trap_EA_Action(bs->client, ACTION_AFFIRMATIVE);
 			bs->teammessage_time = 0;
 		}
@@ -541,9 +535,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
 			BotAI_BotInitialChat(bs, "defend_start", buf, NULL);
 			trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-#ifdef MISSIONPACK
 			BotVoiceChatOnly(bs, -1, VOICECHAT_ONDEFENSE);
-#endif
 			bs->teammessage_time = 0;
 		}
 		//set the bot goal
@@ -599,9 +591,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
 			BotAI_BotInitialChat(bs, "getitem_start", buf, NULL);
 			trap_BotEnterChat(bs->cs, bs->decisionmaker, CHAT_TELL);
-#ifdef MISSIONPACK
 			BotVoiceChatOnly(bs, bs->decisionmaker, VOICECHAT_YES);
-#endif
 			trap_EA_Action(bs->client, ACTION_AFFIRMATIVE);
 			bs->teammessage_time = 0;
 		}
@@ -633,9 +623,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			if (bs->ltgtype == LTG_CAMPORDER) {
 				BotAI_BotInitialChat(bs, "camp_start", EasyClientName(bs->teammate, netname, sizeof(netname)), NULL);
 				trap_BotEnterChat(bs->cs, bs->decisionmaker, CHAT_TELL);
-#ifdef MISSIONPACK
 				BotVoiceChatOnly(bs, bs->decisionmaker, VOICECHAT_YES);
-#endif
 				trap_EA_Action(bs->client, ACTION_AFFIRMATIVE);
 			}
 			bs->teammessage_time = 0;
@@ -659,9 +647,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 				if (bs->ltgtype == LTG_CAMPORDER) {
 					BotAI_BotInitialChat(bs, "camp_arrive", EasyClientName(bs->teammate, netname, sizeof(netname)), NULL);
 					trap_BotEnterChat(bs->cs, bs->decisionmaker, CHAT_TELL);
-#ifdef MISSIONPACK
 					BotVoiceChatOnly(bs, bs->decisionmaker, VOICECHAT_INPOSITION);
-#endif
 				}
 				bs->arrive_time = FloatTime();
 			}
@@ -717,9 +703,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			}
 			BotAI_BotInitialChat(bs, "patrol_start", buf, NULL);
 			trap_BotEnterChat(bs->cs, bs->decisionmaker, CHAT_TELL);
-#ifdef MISSIONPACK
 			BotVoiceChatOnly(bs, bs->decisionmaker, VOICECHAT_YES);
-#endif
 			trap_EA_Action(bs->client, ACTION_AFFIRMATIVE);
 			bs->teammessage_time = 0;
 		}
@@ -770,9 +754,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
 				BotAI_BotInitialChat(bs, "captureflag_start", NULL);
 				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-#ifdef MISSIONPACK
 				BotVoiceChatOnly(bs, -1, VOICECHAT_ONGETFLAG);
-#endif
 				bs->teammessage_time = 0;
 			}
 			//
@@ -830,9 +812,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
 				BotAI_BotInitialChat(bs, "returnflag_start", NULL);
 				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-#ifdef MISSIONPACK
 				BotVoiceChatOnly(bs, -1, VOICECHAT_ONRETURNFLAG);
-#endif
 				bs->teammessage_time = 0;
 			}
 			//
