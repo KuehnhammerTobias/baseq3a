@@ -1135,7 +1135,7 @@ void BeginIntermission( void ) {
 			continue;
 		// respawn if dead
 		if (client->health <= 0) {
-			respawn(client);
+			ClientRespawn(client);
 		}
 		MoveClientToIntermission( client );
 	}
@@ -1845,7 +1845,6 @@ static void PrintTeam(team_t team, const char *message) {
 		trap_SendServerCommand( i, message );
 	}
 }
-
 
 /*
 ==================

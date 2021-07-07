@@ -240,7 +240,7 @@ char *strchr( const char *string, int c ) {
 		}
 		string++;
 	}
-
+	
 	if(c)
 		return NULL;
 	else

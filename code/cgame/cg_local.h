@@ -227,7 +227,7 @@ typedef struct centity_s {
 //======================================================================
 
 // local entities are created as a result of events or predicted actions,
-// and live independantly from all server transmitted entities
+// and live independently from all server transmitted entities
 
 typedef struct markPoly_s {
 	struct markPoly_s	*prevMark, *nextMark;
@@ -651,7 +651,7 @@ typedef struct {
 	int			itemPickup;
 	int			itemPickupCount;
 	int			itemPickupTime;
-	int			itemPickupBlendTime;	// the pulse around the crosshair is timed seperately
+	int			itemPickupBlendTime;	// the pulse around the crosshair is timed separately
 
 	int			weaponSelectTime;
 	int			weaponAnimation;
@@ -1739,7 +1739,7 @@ void		trap_GetGlconfig( glconfig_t *glconfig );
 void		trap_GetGameState( gameState_t *gamestate );
 
 // cgame will poll each frame to see if a newer snapshot has arrived
-// that it is interested in.  The time is returned seperately so that
+// that it is interested in.  The time is returned separately so that
 // snapshot latency can be calculated.
 void		trap_GetCurrentSnapshotNumber( int *snapshotNumber, int *serverTime );
 

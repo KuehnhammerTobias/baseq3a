@@ -701,7 +701,7 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 	if ( bs->lastgoal_ltgtype ) {
 		bs->teamgoal_time += 60;
 	}
-	// if the bot decided to do something on it's own and has a last ordered goal
+	// if the bot decided to do something on its own and has a last ordered goal
 	if ( !bs->ordered && bs->lastgoal_ltgtype ) {
 		bs->ltgtype = 0;
 	}
@@ -728,7 +728,7 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 	//if the bot is roaming
 	if (bs->ctfroam_time > FloatTime())
 		return;
-	//if the bot has anough aggression to decide what to do
+	//if the bot has enough aggression to decide what to do
 	if (BotAggression(bs) < 50)
 		return;
 	//set the time to send a message to the team mates
@@ -951,7 +951,7 @@ void Bot1FCTFSeekGoals(bot_state_t *bs) {
 	if ( bs->lastgoal_ltgtype ) {
 		bs->teamgoal_time += 60;
 	}
-	// if the bot decided to do something on it's own and has a last ordered goal
+	// if the bot decided to do something on its own and has a last ordered goal
 	if ( !bs->ordered && bs->lastgoal_ltgtype ) {
 		bs->ltgtype = 0;
 	}
@@ -979,7 +979,7 @@ void Bot1FCTFSeekGoals(bot_state_t *bs) {
 	//if the bot is roaming
 	if (bs->ctfroam_time > FloatTime())
 		return;
-	//if the bot has anough aggression to decide what to do
+	//if the bot has enough aggression to decide what to do
 	if (BotAggression(bs) < 50)
 		return;
 	//set the time to send a message to the team mates
@@ -1093,7 +1093,7 @@ void BotObeliskSeekGoals(bot_state_t *bs) {
 	//if the bot is roaming
 	if (bs->ctfroam_time > FloatTime())
 		return;
-	//if the bot has anough aggression to decide what to do
+	//if the bot has enough aggression to decide what to do
 	if (BotAggression(bs) < 50)
 		return;
 	//set the time to send a message to the team mates
@@ -1238,7 +1238,7 @@ void BotHarvesterSeekGoals(bot_state_t *bs) {
 	//if the bot is roaming
 	if (bs->ctfroam_time > FloatTime())
 		return;
-	//if the bot has anough aggression to decide what to do
+	//if the bot has enough aggression to decide what to do
 	if (BotAggression(bs) < 50)
 		return;
 	//set the time to send a message to the team mates
@@ -2776,7 +2776,7 @@ bot_moveresult_t BotAttackMove(bot_state_t *bs, int tfl) {
 		bs->flags ^= BFL_STRAFERIGHT;
 		bs->attackstrafe_time = 0;
 	}
-	//bot couldn't do any usefull movement
+	//bot couldn't do any useful movement
 //	bs->attackchase_time = AAS_Time() + 6;
 	return moveresult;
 }
@@ -4563,7 +4563,7 @@ BotAIPredictObstacles
 
 Predict the route towards the goal and check if the bot
 will be blocked by certain obstacles. When the bot has obstacles
-on it's path the bot should figure out if they can be removed
+on its path the bot should figure out if they can be removed
 by activating certain entities.
 ==================
 */
@@ -4583,7 +4583,7 @@ int BotAIPredictObstacles(bot_state_t *bs, bot_goal_t *goal) {
 	bs->predictobstacles_goalareanum = goal->areanum;
 	bs->predictobstacles_time = FloatTime();
 
-	// predict at most 100 areas or 10 seconds ahead
+	// predict at most 100 areas or 1 second ahead
 	trap_AAS_PredictRoute(&route, bs->areanum, bs->origin,
 							goal->areanum, bs->tfl, 100, 1000,
 							RSE_USETRAVELTYPE|RSE_ENTERCONTENTS,
@@ -4884,7 +4884,7 @@ void BotCheckEvents(bot_state_t *bs, entityState_t *state) {
 			else*/
 #ifdef MISSIONPACK
 			if (!strcmp(buf, "sound/items/kamikazerespawn.wav" )) {
-				//the kamikaze respawned so dont avoid it
+				//the kamikaze respawned so don't avoid it
 				BotDontAvoid(bs, "Kamikaze");
 			}
 			else
@@ -5451,21 +5451,21 @@ void BotSetupDeathmatchAI(void) {
 	}
 	else if (gametype == GT_OBELISK) {
 		if (trap_BotGetLevelItemGoal(-1, "Red Obelisk", &redobelisk) < 0)
-			BotAI_Print(PRT_WARNING, "Obelisk without red obelisk\n");
+			BotAI_Print(PRT_WARNING, "Overload without Red Obelisk\n");
 		BotSetEntityNumForGoal(&redobelisk, "team_redobelisk");
 		if (trap_BotGetLevelItemGoal(-1, "Blue Obelisk", &blueobelisk) < 0)
-			BotAI_Print(PRT_WARNING, "Obelisk without blue obelisk\n");
+			BotAI_Print(PRT_WARNING, "Overload without Blue Obelisk\n");
 		BotSetEntityNumForGoal(&blueobelisk, "team_blueobelisk");
 	}
 	else if (gametype == GT_HARVESTER) {
 		if (trap_BotGetLevelItemGoal(-1, "Red Obelisk", &redobelisk) < 0)
-			BotAI_Print(PRT_WARNING, "Harvester without red obelisk\n");
+			BotAI_Print(PRT_WARNING, "Harvester without Red Obelisk\n");
 		BotSetEntityNumForGoal(&redobelisk, "team_redobelisk");
 		if (trap_BotGetLevelItemGoal(-1, "Blue Obelisk", &blueobelisk) < 0)
-			BotAI_Print(PRT_WARNING, "Harvester without blue obelisk\n");
+			BotAI_Print(PRT_WARNING, "Harvester without Blue Obelisk\n");
 		BotSetEntityNumForGoal(&blueobelisk, "team_blueobelisk");
 		if (trap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
-			BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
+			BotAI_Print(PRT_WARNING, "Harvester without Neutral Obelisk\n");
 		BotSetEntityNumForGoal(&neutralobelisk, "team_neutralobelisk");
 	}
 #endif

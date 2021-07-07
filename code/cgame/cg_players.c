@@ -741,7 +741,6 @@ static const char *CG_GetTeamColors( const char *color, team_t team ) {
 	return str;
 }
 
-
 /*
 ===================
 CG_LoadClientInfo
@@ -897,7 +896,7 @@ static qboolean CG_ScanForExistingClientInfo( clientInfo_t *ci ) {
 			//&& !Q_stricmp( ci->blueTeam, match->blueTeam ) 
 			//&& !Q_stricmp( ci->redTeam, match->redTeam )
 			&& (cgs.gametype < GT_TEAM || ci->team == match->team) ) {
-			// this clientinfo is identical, so use it's handles
+			// this clientinfo is identical, so use its handles
 
 			ci->deferred = qfalse;
 
@@ -1636,7 +1635,7 @@ static void CG_AddPainTwitch( centity_t *cent, vec3_t torsoAngles ) {
 ===============
 CG_PlayerAngles
 
-Handles seperate torso motion
+Handles separate torso motion
 
   legs pivot based on direction of movement
 

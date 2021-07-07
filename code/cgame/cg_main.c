@@ -418,7 +418,7 @@ void CG_UpdateCvars( void ) {
 
 	// check for modications here
 
-	// If team overlay is on, ask for updates from the server.  If its off,
+	// If team overlay is on, ask for updates from the server.  If it's off,
 	// let the server know so we don't receive it
 	if ( drawTeamOverlayModificationCount != cg_drawTeamOverlay.modificationCount ) {
 		drawTeamOverlayModificationCount = cg_drawTeamOverlay.modificationCount;
@@ -434,7 +434,7 @@ void CG_UpdateCvars( void ) {
 	}
 
 	// if model changed
-	if ( forceModelModificationCount != cg_forceModel.modificationCount 
+	if ( forceModelModificationCount != cg_forceModel.modificationCount
 		|| enemyModelModificationCount != cg_enemyModel.modificationCount
 		|| enemyColorsModificationCount != cg_enemyColors.modificationCount
 		|| teamModelModificationCount != cg_teamModel.modificationCount
@@ -549,7 +549,7 @@ static void CG_RegisterItemSounds( int itemNum ) {
 		trap_S_RegisterSound( item->pickup_sound, qfalse );
 	}
 
-	// parse the space seperated precache string for other media
+	// parse the space separated precache string for other media
 	s = item->sounds;
 	if (!s || !s[0])
 		return;

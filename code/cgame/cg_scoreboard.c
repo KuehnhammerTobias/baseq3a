@@ -175,11 +175,14 @@ static void CG_DrawClientScore( int y, score_t *score, float *color, float fade,
 #endif
 	// draw the score line
 	if ( score->ping == -1 ) {
-		BG_sprintf( string," connecting" );
+		BG_sprintf( string,
+			" connecting" );
 	} else if ( ci->team == TEAM_SPECTATOR ) {
-		BG_sprintf( string," SPECT %3i %4i", score->ping, score->time );
+		BG_sprintf( string,
+			" SPECT %3i %4i", score->ping, score->time );
 	} else {
-		BG_sprintf( string,"%5i %4i %4i", score->score, score->ping, score->time );
+		BG_sprintf( string,
+			"%5i %4i %4i", score->score, score->ping, score->time );
 	}
 
 	// highlight your position

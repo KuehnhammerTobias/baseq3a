@@ -329,7 +329,7 @@ int BotGetItemLongTermGoal(bot_state_t *bs, int tfl, bot_goal_t *goal) {
 ==================
 BotGetLongTermGoal
 
-we could also create a seperate AI node for every long term goal type
+we could also create a separate AI node for every long term goal type
 however this saves us a lot of code
 ==================
 */
@@ -1375,7 +1375,7 @@ void BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult) {
 				moveresult->flags |= MOVERESULT_MOVEMENTWEAPON | MOVERESULT_MOVEMENTVIEW;
 				// if holding the right weapon
 				if (bs->cur_ps.weapon == moveresult->weapon) {
-					// if the bot is pretty close with it's aim
+					// if the bot is pretty close with its aim
 					if (InFieldOfVision(bs->viewangles, 20, moveresult->ideal_viewangles)) {
 						//
 						BotAI_Trace(&bsptrace, bs->eye, NULL, NULL, target, bs->entitynum, MASK_SHOT);
@@ -1432,7 +1432,7 @@ void BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult) {
 				moveresult->flags |= MOVERESULT_MOVEMENTWEAPON | MOVERESULT_MOVEMENTVIEW;
 				// if holding the right weapon
 				if (bs->cur_ps.weapon == moveresult->weapon) {
-					// if the bot is pretty close with it's aim
+					// if the bot is pretty close with its aim
 					if (InFieldOfVision(bs->viewangles, 20, moveresult->ideal_viewangles)) {
 						//
 						BotAI_Trace(&bsptrace, bs->eye, NULL, NULL, target, bs->entitynum, MASK_SHOT);
@@ -1518,7 +1518,7 @@ int AINode_Seek_ActivateEntity(bot_state_t *bs) {
 			if (bs->cur_ps.weapon == bs->activatestack->weapon) {
 				VectorSubtract(bs->activatestack->target, bs->eye, dir);
 				vectoangles(dir, ideal_viewangles);
-				// if the bot is pretty close with it's aim
+				// if the bot is pretty close with its aim
 				if (InFieldOfVision(bs->viewangles, 20, ideal_viewangles)) {
 					trap_EA_Attack(bs->client);
 				}
