@@ -284,7 +284,7 @@ void InitBodyQue (void) {
 =============
 BodySink
 
-After sitting around for five seconds, fall into the ground and dissapear
+After sitting around for five seconds, fall into the ground and disappear
 =============
 */
 void BodySink( gentity_t *ent ) {
@@ -434,10 +434,10 @@ void SetClientViewAngle( gentity_t *ent, vec3_t angle ) {
 
 /*
 ================
-respawn
+ClientRespawn
 ================
 */
-void respawn( gentity_t *ent ) {
+void ClientRespawn( gentity_t *ent ) {
 	gentity_t	*tent;
 
 	if ( ent->health <= 0 )
@@ -832,7 +832,7 @@ const char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	}
 	ent->inuse = qtrue;
 
-	// get and distribute relevant paramters
+	// get and distribute relevant parameters
 	G_LogPrintf( "ClientConnect: %i\n", clientNum );
 
 	client->pers.connected = CON_CONNECTING;

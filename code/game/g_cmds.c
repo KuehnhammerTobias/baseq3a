@@ -967,7 +967,7 @@ static void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chat
 		G_Printf( "%s%s\n", name, text);
 	}
 
-	// send it to all the apropriate clients
+	// send it to all the appropriate clients
 	for (j = 0; j < level.maxclients; j++) {
 		other = &g_entities[j];
 		G_SayTo( ent, other, mode, color, name, text );
@@ -1094,7 +1094,7 @@ void G_Voice( gentity_t *ent, gentity_t *target, int mode, const char *id, qbool
 		G_Printf( "voice: %s %s\n", ent->client->pers.netname, id);
 	}
 
-	// send it to all the apropriate clients
+	// send it to all the appropriate clients
 	for (j = 0; j < level.maxclients; j++) {
 		other = &g_entities[j];
 		G_VoiceTo( ent, other, mode, id, voiceonly );
@@ -1422,7 +1422,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		s = Q_stradd( s, cmd );
 	}
 
-	// split by ';' seperators
+	// split by ';' separators
 	n = Com_Split( arg, argn, ARRAY_LEN( argn ), ';' );
 	if ( n == 0 || *argn[0] == '\0' ) 
 		return; // empty callvote command?

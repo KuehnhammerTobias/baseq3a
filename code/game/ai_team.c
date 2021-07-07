@@ -461,7 +461,7 @@ void BotCTFOrders_FlagNotAtBase(bot_state_t *bs) {
 			case 1: break;
 			case 2:
 			{
-				//both will go for the enemy flag
+				// keep one near the base for when the flag is returned
 				ClientName(teammates[0], name, sizeof(name));
 				BotAI_BotInitialChat(bs, "cmd_defendbase", name, NULL);
 				BotSayTeamOrder(bs, teammates[0]);
@@ -1089,7 +1089,7 @@ void Bot1FCTFOrders_FlagAtCenter(bot_state_t *bs) {
 			}
 		}
 	}
-	else { //agressive
+	else { //aggressive
 		//different orders based on the number of team mates
 		switch(numteammates) {
 			case 1: break;
@@ -1275,7 +1275,7 @@ void Bot1FCTFOrders_TeamHasFlag(bot_state_t *bs) {
 			}
 		}
 	}
-	else { //agressive
+	else { //aggressive
 		//different orders based on the number of team mates
 		switch(numteammates) {
 			case 1: break;
@@ -1439,7 +1439,7 @@ void Bot1FCTFOrders_EnemyHasFlag(bot_state_t *bs) {
 			}
 		}
 	}
-	else { //agressive
+	else { //aggressive
 		//different orders based on the number of team mates
 		switch(numteammates) {
 			case 1: break;
@@ -1586,7 +1586,7 @@ void Bot1FCTFOrders_EnemyDroppedFlag(bot_state_t *bs) {
 			}
 		}
 	}
-	else { //agressive
+	else { //aggressive
 		//different orders based on the number of team mates
 		switch(numteammates) {
 			case 1: break;

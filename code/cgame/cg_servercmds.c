@@ -1,7 +1,7 @@
 // Copyright (C) 1999-2000 Id Software, Inc.
 //
 // cg_servercmds.c -- reliably sequenced text commands sent by the server
-// these are processed at snapshot transition time, so there will definately
+// these are processed at snapshot transition time, so there will definitely
 // be a valid snapshot this frame
 
 #include "cg_local.h"
@@ -567,7 +567,7 @@ int CG_ParseVoiceChats( const char *filename, voiceChatList_t *voiceChatList, in
 		return qfalse;
 	}
 	if ( len >= MAX_VOICEFILESIZE ) {
-		trap_Print( va( S_COLOR_RED "voice chat file too large: %s is %i, max allowed is %i", filename, len, MAX_VOICEFILESIZE ) );
+		trap_Print( va( S_COLOR_RED "voice chat file too large: %s is %i, max allowed is %i\n", filename, len, MAX_VOICEFILESIZE ) );
 		trap_FS_FCloseFile( f );
 		return qfalse;
 	}
@@ -680,7 +680,7 @@ int CG_HeadModelVoiceChats( char *filename ) {
 		return -1;
 	}
 	if ( len >= MAX_VOICEFILESIZE ) {
-		trap_Print( va( S_COLOR_RED "voice chat file too large: %s is %i, max allowed is %i", filename, len, MAX_VOICEFILESIZE ) );
+		trap_Print( va( S_COLOR_RED "voice chat file too large: %s is %i, max allowed is %i\n", filename, len, MAX_VOICEFILESIZE ) );
 		trap_FS_FCloseFile( f );
 		return -1;
 	}
