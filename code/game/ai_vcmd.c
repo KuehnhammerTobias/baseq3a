@@ -35,15 +35,13 @@
 #include "match.h"				//string matching types and vars
 
 // for the voice chats
-#ifdef MISSIONPACK
 #include "../../ui/menudef.h"
 
 typedef struct voiceCommand_s
 {
 	char *cmd;
-	void(*func)(bot_state_t *bs, int client, int mode);
+	void (*func)(bot_state_t *bs, int client, int mode);
 } voiceCommand_t;
-#endif
 
 /*
 ==================
@@ -222,9 +220,7 @@ void BotVoiceChat_Patrol(bot_state_t *bs, int client, int mode) {
 	//
 	BotAI_BotInitialChat(bs, "dismissed", NULL);
 	trap_BotEnterChat(bs->cs, client, CHAT_TELL);
-#ifdef MISSIONPACK
 	BotVoiceChatOnly(bs, -1, VOICECHAT_ONPATROL);
-#endif
 	//
 	BotSetTeamStatus(bs);
 #ifdef DEBUG
@@ -428,9 +424,7 @@ void BotVoiceChat_WhoIsLeader(bot_state_t *bs, int client, int mode) {
 	if (!Q_stricmp(netname, bs->teamleader)) {
 		BotAI_BotInitialChat(bs, "iamteamleader", NULL);
 		trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-#ifdef MISSIONPACK
 		BotVoiceChatOnly(bs, -1, VOICECHAT_STARTLEADER);
-#endif
 	}
 }
 
@@ -451,9 +445,7 @@ void BotVoiceChat_WantOnDefense(bot_state_t *bs, int client, int mode) {
 	EasyClientName(client, netname, sizeof(netname));
 	BotAI_BotInitialChat(bs, "keepinmind", netname, NULL);
 	trap_BotEnterChat(bs->cs, client, CHAT_TELL);
-#ifdef MISSIONPACK
 	BotVoiceChatOnly(bs, client, VOICECHAT_YES);
-#endif
 	trap_EA_Action(bs->client, ACTION_AFFIRMATIVE);
 }
 
@@ -474,16 +466,13 @@ void BotVoiceChat_WantOnOffense(bot_state_t *bs, int client, int mode) {
 	EasyClientName(client, netname, sizeof(netname));
 	BotAI_BotInitialChat(bs, "keepinmind", netname, NULL);
 	trap_BotEnterChat(bs->cs, client, CHAT_TELL);
-#ifdef MISSIONPACK
 	BotVoiceChatOnly(bs, client, VOICECHAT_YES);
-#endif
 	trap_EA_Action(bs->client, ACTION_AFFIRMATIVE);
 }
 
 void BotVoiceChat_Dummy(bot_state_t *bs, int client, int mode) {
 }
 
-#ifdef MISSIONPACK
 voiceCommand_t voiceCommands[] = {
 	{VOICECHAT_GETFLAG, BotVoiceChat_GetFlag},
 	{VOICECHAT_OFFENSE, BotVoiceChat_Offense },
@@ -501,11 +490,10 @@ voiceCommand_t voiceCommands[] = {
 	{VOICECHAT_WANTONOFFENSE, BotVoiceChat_WantOnOffense },
 	{NULL, BotVoiceChat_Dummy}
 };
-#endif
 
 int BotVoiceChatCommand(bot_state_t *bs, int mode, char *voiceChat) {
-#ifdef MISSIONPACK
-	int i, voiceOnly, clientNum, color;
+	int i, clientNum;
+	//int voiceOnly, color;
 	char *ptr, buf[MAX_MESSAGE_SIZE], *cmd;
 
 	if (!TeamPlayIsOn()) {
@@ -538,6 +526,5 @@ int BotVoiceChatCommand(bot_state_t *bs, int mode, char *voiceChat) {
 			return qtrue;
 		}
 	}
-#endif
 	return qfalse;
 }
