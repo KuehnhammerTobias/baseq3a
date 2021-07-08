@@ -1271,6 +1271,7 @@ void LogExit( const char *string ) {
 	gclient_t		*cl;
 #ifdef MISSIONPACK
 	qboolean won = qtrue;
+	team_t team = TEAM_RED;
 #endif
 	G_LogPrintf( "Exit: %s\n", string );
 
@@ -1307,7 +1308,10 @@ void LogExit( const char *string ) {
 
 		G_LogPrintf( "score: %i  ping: %i  client: %i %s\n", cl->ps.persistant[PERS_SCORE], ping, level.sortedClients[i],	cl->pers.netname );
 #ifdef MISSIONPACK
-		if (g_singlePlayer.integer && g_gametype.integer == GT_TOURNAMENT) {
+		if (g_singlePlayer.integer && !(g_entities[cl - level.clients].r.svFlags & SVF_BOT)) {
+			team = cl->sess.sessionTeam;
+		}
+		if (g_singlePlayer.integer && g_gametype.integer < GT_TEAM) {
 			if (g_entities[cl - level.clients].r.svFlags & SVF_BOT && cl->ps.persistant[PERS_RANK] == 0) {
 				won = qfalse;
 			}
@@ -1318,8 +1322,12 @@ void LogExit( const char *string ) {
 
 #ifdef MISSIONPACK
 	if (g_singlePlayer.integer) {
-		if (g_gametype.integer >= GT_CTF) {
-			won = level.teamScores[TEAM_RED] > level.teamScores[TEAM_BLUE];
+		if (g_gametype.integer >= GT_TEAM) {
+			if (team == TEAM_BLUE) {
+				won = level.teamScores[TEAM_BLUE] > level.teamScores[TEAM_RED];
+			} else {
+				won = level.teamScores[TEAM_RED] > level.teamScores[TEAM_BLUE];
+			}
 		}
 		trap_SendConsoleCommand( EXEC_APPEND, (won) ? "spWin\n" : "spLose\n" );
 	}
@@ -1486,6 +1494,12 @@ static void CheckExitRules( void ) {
 		return;
 	}
 
+	if ( g_timelimit.integer < 0 || g_timelimit.integer > INT_MAX / 60000 ) {
+		G_Printf( "timelimit %i is out of range, defaulting to 0\n", g_timelimit.integer );
+		trap_Cvar_Set( "timelimit", "0" );
+		trap_Cvar_Update( &g_timelimit );
+	}
+
 	if ( g_timelimit.integer && !level.warmupTime ) {
 		if ( level.time - level.startTime >= g_timelimit.integer*60000 ) {
 			G_BroadcastServerCommand( -1, "print \"Timelimit hit.\n\"");
@@ -1496,6 +1510,12 @@ static void CheckExitRules( void ) {
 
 	if ( level.numPlayingClients < 2 ) {
 		return;
+	}
+
+	if ( g_fraglimit.integer < 0 ) {
+		G_Printf( "fraglimit %i is out of range, defaulting to 0\n", g_fraglimit.integer );
+		trap_Cvar_Set( "fraglimit", "0" );
+		trap_Cvar_Update( &g_fraglimit );
 	}
 
 	if ( g_gametype.integer < GT_CTF && g_fraglimit.integer ) {
@@ -1527,6 +1547,12 @@ static void CheckExitRules( void ) {
 				return;
 			}
 		}
+	}
+
+	if ( g_capturelimit.integer < 0 ) {
+		G_Printf( "capturelimit %i is out of range, defaulting to 0\n", g_capturelimit.integer );
+		trap_Cvar_Set( "capturelimit", "0" );
+		trap_Cvar_Update( &g_capturelimit );
 	}
 
 	if ( g_gametype.integer >= GT_CTF && g_capturelimit.integer ) {
@@ -1726,8 +1752,9 @@ static void CheckTournament( void ) {
 		// if all players have arrived, start the countdown
 		if ( level.warmupTime < 0 ) {
 			if ( level.numPlayingClients == 2 ) {
-				if ( g_warmup.integer > 0 ) {
-					level.warmupTime = level.time + g_warmup.integer * 1000;
+				// fudge by -1 to account for extra delays
+				if ( g_warmup.integer > 1 ) {
+					level.warmupTime = level.time + ( g_warmup.integer - 1 ) * 1000;
 				} else {
 					level.warmupTime = 0;
 				}
