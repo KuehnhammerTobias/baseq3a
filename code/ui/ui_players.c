@@ -1,4 +1,24 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 //
 // ui_players.c
 
@@ -69,13 +89,13 @@ tryagain:
 	}
 
 	if ( weaponNum == WP_MACHINEGUN || weaponNum == WP_GAUNTLET || weaponNum == WP_BFG ) {
-		COM_StripExtension( item->world_model[0], path, sizeof( path ) );
-		Q_strcat( path, sizeof( path ), "_barrel.md3" );
+		COM_StripExtension( item->world_model[0], path, sizeof(path) );
+		Q_strcat( path, sizeof(path), "_barrel.md3" );
 		pi->barrelModel = trap_R_RegisterModel( path );
 	}
 
-	COM_StripExtension( item->world_model[0], path, sizeof( path ) );
-	Q_strcat( path, sizeof( path ), "_flash.md3" );
+	COM_StripExtension( item->world_model[0], path, sizeof(path) );
+	Q_strcat( path, sizeof(path), "_flash.md3" );
 	pi->flashModel = trap_R_RegisterModel( path );
 
 	switch( weaponNum ) {
@@ -726,7 +746,7 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 	refdef.fov_y *= ( 360 / (float)M_PI );
 
 	// calculate distance so the player nearly fills the box
-	len = 0.7 * ( maxs[2] - mins[2] );		
+	len = 0.7 * ( maxs[2] - mins[2] );
 	origin[0] = len / tan( DEG2RAD(refdef.fov_x) * 0.5 );
 	origin[1] = 0.5 * ( mins[1] + maxs[1] );
 	origin[2] = -0.5 * ( mins[2] + maxs[2] );
@@ -885,7 +905,7 @@ UI_FileExists
 static qboolean	UI_FileExists(const char *filename) {
 	int len;
 
-	len = trap_FS_FOpenFile( filename, 0, FS_READ );
+	len = trap_FS_FOpenFile( filename, NULL, FS_READ );
 	if (len>0) {
 		return qtrue;
 	}
@@ -1065,7 +1085,7 @@ static qboolean UI_ParseAnimationFile( const char *filename, animation_t *animat
 			break;
 		}
 
-		Com_Printf( "unknown token '%s' is %s\n", token, filename );
+		Com_Printf( "unknown token '%s' in %s\n", token, filename );
 	}
 
 	// read information for each frame
@@ -1109,7 +1129,7 @@ static qboolean UI_ParseAnimationFile( const char *filename, animation_t *animat
 	}
 
 	if ( i != MAX_ANIMATIONS ) {
-		Com_Printf( "Error parsing animation file: %s", filename );
+		Com_Printf( "Error parsing animation file: %s\n", filename );
 		return qfalse;
 	}
 
