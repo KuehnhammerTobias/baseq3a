@@ -419,7 +419,7 @@ void CG_DrawFlagModel( float x, float y, float w, float h, int team, qboolean fo
 		len = 0.5 * ( maxs[2] - mins[2] );		
 		origin[0] = len / 0.268;	// len / tan( fov/2 )
 
-		angles[YAW] = 60 * sin( ( cg.time % TMOD_2000 ) / 2000.0 );;
+		angles[YAW] = 60 * sin( ( cg.time % TMOD_2000 ) / 2000.0 );
 
 		if( team == TEAM_RED ) {
 			handle = cgs.media.redFlagModel;
