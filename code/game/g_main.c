@@ -1754,7 +1754,7 @@ static void CheckTournament( void ) {
 			if ( level.numPlayingClients == 2 ) {
 				// fudge by -1 to account for extra delays
 				if ( g_warmup.integer > 1 ) {
-					level.warmupTime = level.time + ( g_warmup.integer - 1 ) * 1000;
+					level.warmupTime = level.time + (g_warmup.integer - 1) * 1000;
 				} else {
 					level.warmupTime = 0;
 				}

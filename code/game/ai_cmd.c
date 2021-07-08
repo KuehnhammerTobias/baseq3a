@@ -1265,8 +1265,8 @@ void BotMatch_Suicide(bot_state_t *bs, bot_match_t *match) {
 	trap_EA_Command(bs->client, "kill");
 	//
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
-	client = ClientFromName(netname);
 	//
+	client = ClientFromName(netname);
 	BotVoiceChat(bs, client, VOICECHAT_TAUNT);
 	trap_EA_Action(bs->client, ACTION_AFFIRMATIVE);
 }

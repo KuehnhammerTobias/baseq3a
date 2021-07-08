@@ -187,7 +187,7 @@ qboolean EntityIsDead(aas_entityinfo_t *entinfo) {
 
 	if (entinfo->number >= 0 && entinfo->number < MAX_CLIENTS) {
 		//retrieve the current client state
-		if (!BotAI_GetClientState(entinfo->number, &ps)) {
+		if (!BotAI_GetClientState( entinfo->number, &ps )) {
 			return qfalse;
 		}
 
