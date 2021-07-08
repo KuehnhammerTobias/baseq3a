@@ -465,7 +465,7 @@ void BotCTFOrders_FlagNotAtBase(bot_state_t *bs) {
 				BotAI_BotInitialChat(bs, "cmd_getflag", name, NULL);
 				BotSayTeamOrder(bs, teammates[1]);
 				BotSayVoiceTeamOrder(bs, teammates[1], VOICECHAT_GETFLAG);
-				//
+      			//
 				ClientName(teammates[2], name, sizeof(name));
 				BotAI_BotInitialChat(bs, "cmd_getflag", name, NULL);
 				BotSayTeamOrder(bs, teammates[2]);
@@ -1940,7 +1940,7 @@ void BotTeamAI(bot_state_t *bs) {
 				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
 				BotSayVoiceTeamOrder(bs, -1, VOICECHAT_STARTLEADER);
 				ClientName(bs->client, netname, sizeof(netname));
-				Q_strncpyz( bs->teamleader, netname, sizeof(bs->teamleader));
+				Q_strncpyz( bs->teamleader, netname, sizeof( bs->teamleader ) );
 				bs->becometeamleader_time = 0;
 			}
 			return;

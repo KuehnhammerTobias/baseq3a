@@ -965,7 +965,7 @@ int BotAI(int client, float thinktime) {
 	}
 
 	//retrieve the current client state
-	if (!BotAI_GetClientState(client, &bs->cur_ps)) {
+	if (!BotAI_GetClientState( client, &bs->cur_ps )) {
 		BotAI_Print(PRT_FATAL, "BotAI: failed to get player state for player %d\n", client);
 		return qfalse;
 	}
@@ -1148,7 +1148,7 @@ void BotReadSessionData(bot_state_t *bs) {
 BotAISetupClient
 ==============
 */
-qboolean BotAISetupClient(int client, struct bot_settings_s *settings, qboolean restart) {
+qboolean BotAISetupClient( int client, struct bot_settings_s *settings, qboolean restart ) {
 	char filename[144], name[144], gender[144];
 	bot_state_t *bs;
 	int errnum;
@@ -1580,8 +1580,8 @@ int BotInitLibrary( void ) {
 	char buf[MAX_CVAR_VALUE_STRING];
 
 	//set the maxclients and maxentities library variables before calling BotSetupLibrary
-	Com_sprintf(buf, sizeof(buf), "%d", level.maxclients);
-	trap_BotLibVarSet("maxclients", buf);
+	Com_sprintf(buf, sizeof( buf ), "%d", level.maxclients);
+	trap_BotLibVarSet( "maxclients", buf );
 
 	Com_sprintf(buf, sizeof(buf), "%d", MAX_GENTITIES);
 	trap_BotLibVarSet("maxentities", buf);

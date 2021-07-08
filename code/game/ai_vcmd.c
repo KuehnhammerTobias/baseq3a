@@ -40,7 +40,7 @@
 typedef struct voiceCommand_s
 {
 	char *cmd;
-	void (*func)(bot_state_t *bs, int client, int mode);
+	void(*func)(bot_state_t *bs, int client, int mode);
 } voiceCommand_t;
 
 /*
