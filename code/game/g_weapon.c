@@ -177,12 +177,13 @@ void SnapVectorTowards( vec3_t v, vec3_t to ) {
 
 #ifdef MISSIONPACK
 #define CHAINGUN_SPREAD		600
+#define CHAINGUN_DAMAGE		7
 #endif
 #define MACHINEGUN_SPREAD	200
 #define	MACHINEGUN_DAMAGE	7
 #define	MACHINEGUN_TEAM_DAMAGE	5		// wimpier MG in teamplay
 
-static void Bullet_Fire (gentity_t *ent, float spread, int damage) {
+static void Bullet_Fire (gentity_t *ent, float spread, int damage, int mod) {
 	trace_t		tr;
 	vec3_t		end;
 #ifdef MISSIONPACK
@@ -254,7 +255,7 @@ static void Bullet_Fire (gentity_t *ent, float spread, int damage) {
 			else {
 #endif
 				G_Damage( traceEnt, ent, ent, forward, tr.endpos,
-					damage, 0, MOD_MACHINEGUN );
+					damage, 0, mod );
 #ifdef MISSIONPACK
 			}
 #endif
@@ -333,13 +334,12 @@ static qboolean ShotgunPellet( const vec3_t start, const vec3_t end, gentity_t *
 				}
 				continue;
 			}
-#else
+#endif
 			if( LogAccuracyHit( traceEnt, ent ) ) {
 				hitClient = qtrue;
 			}
 			G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, 0, MOD_SHOTGUN);
 			return hitClient;
-#endif
 		}
 		return qfalse;
 	}
@@ -699,12 +699,11 @@ void Weapon_LightningFire( gentity_t *ent ) {
 				}
 				continue;
 			}
-#else
+#endif
 			if( LogAccuracyHit( traceEnt, ent ) ) {
 				ent->client->accuracy_hits++;
 			}
 			G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, 0, MOD_LIGHTNING);
-#endif
 		}
 
 		if ( traceEnt->takedamage && traceEnt->client ) {
@@ -853,9 +852,9 @@ void FireWeapon( gentity_t *ent ) {
 		break;
 	case WP_MACHINEGUN:
 		if ( g_gametype.integer != GT_TEAM ) {
-			Bullet_Fire( ent, MACHINEGUN_SPREAD, MACHINEGUN_DAMAGE );
+			Bullet_Fire( ent, MACHINEGUN_SPREAD, MACHINEGUN_DAMAGE, MOD_MACHINEGUN );
 		} else {
-			Bullet_Fire( ent, MACHINEGUN_SPREAD, MACHINEGUN_TEAM_DAMAGE );
+			Bullet_Fire( ent, MACHINEGUN_SPREAD, MACHINEGUN_TEAM_DAMAGE, MOD_MACHINEGUN );
 		}
 		break;
 	case WP_GRENADE_LAUNCHER:
@@ -884,7 +883,7 @@ void FireWeapon( gentity_t *ent ) {
 		weapon_proxlauncher_fire( ent );
 		break;
 	case WP_CHAINGUN:
-		Bullet_Fire( ent, CHAINGUN_SPREAD, MACHINEGUN_DAMAGE );
+		Bullet_Fire( ent, CHAINGUN_SPREAD, CHAINGUN_DAMAGE, MOD_CHAINGUN );
 		break;
 #endif
 	default:
