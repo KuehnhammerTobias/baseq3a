@@ -676,14 +676,14 @@ void GraphicsOptions_MenuInit( void )
 		"Fast",
 		"Fastest",
 		"Custom",
-		0
+		NULL
 	};
 
 	static const char *lighting_names[] =
 	{
 		"Lightmap",
 		"Vertex",
-		0
+		NULL
 	};
 
 	static const char *colordepth_names[] =
@@ -691,7 +691,7 @@ void GraphicsOptions_MenuInit( void )
 		"Default",
 		"16 bit",
 		"32 bit",
-		0
+		NULL
 	};
 
 	static const char *resolutions[] = 
@@ -708,7 +708,7 @@ void GraphicsOptions_MenuInit( void )
 		"1600x1200",
 		"2048x1536",
 		"856x480 wide screen",
-		0
+		NULL
 	};
 	static const char *filter_names[] =
 	{
