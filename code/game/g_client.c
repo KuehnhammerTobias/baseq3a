@@ -662,7 +662,7 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 	client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
 
 #ifdef MISSIONPACK
-	if (g_gametype.integer >= GT_TEAM) {
+	if (g_gametype.integer >= GT_TEAM && !(ent->r.svFlags & SVF_BOT)) {
 		client->pers.teamInfo = qtrue;
 	} else {
 		s = Info_ValueForKey( userinfo, "teamoverlay" );
@@ -801,6 +801,12 @@ const char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		}
 	}
 
+	// if a player reconnects quickly after a disconnect, the client disconnect may never be called, thus flag can get lost in the ether
+	if (ent->inuse) {
+		G_LogPrintf("Forcing disconnect on active client: %i\n", clientNum);
+		// so lets just fix up anything that should happen on a disconnect
+		ClientDisconnect(clientNum);
+	}
 	// they can connect
 	ent->client = level.clients + clientNum;
 	client = ent->client;
@@ -1157,8 +1163,11 @@ void ClientSpawn(gentity_t *ent) {
 	BG_PlayerStateToEntityState( &client->ps, &ent->s, qtrue );
 	VectorCopy( client->ps.origin, ent->r.currentOrigin );
 
-	// run the presend to set anything else
-	ClientEndFrame( ent );
+	// run the presend to set anything else, follow spectators wait
+	// until all clients have been reconnected after map_restart
+	if ( ent->client->sess.spectatorState != SPECTATOR_FOLLOW ) {
+		ClientEndFrame( ent );
+	}
 
 	// clear entity state values
 	BG_PlayerStateToEntityState( &client->ps, &ent->s, qtrue );
@@ -1228,6 +1237,16 @@ void ClientDisconnect( int clientNum ) {
 		&& !level.warmupTime && level.sortedClients[1] == clientNum ) {
 		level.clients[ level.sortedClients[0] ].sess.wins++;
 		ClientUserinfoChanged( level.sortedClients[0] );
+	}
+
+	if( g_gametype.integer == GT_TOURNAMENT &&
+		ent->client->sess.sessionTeam == TEAM_FREE &&
+		level.intermissiontime ) {
+
+		trap_SendConsoleCommand( EXEC_APPEND, "map_restart 0\n" );
+		level.restarted = qtrue;
+		level.changemap = NULL;
+		level.intermissiontime = 0;
 	}
 
 	trap_UnlinkEntity( ent );

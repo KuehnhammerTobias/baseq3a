@@ -415,6 +415,7 @@ typedef struct {
 										// frag can be watched.  Disable future
 										// kills during this delay
 	int			intermissiontime;		// time the intermission was started
+	char		*changemap;
 	qboolean	readyToExit;			// at least one client wants to exit
 	int			exitTime;
 	

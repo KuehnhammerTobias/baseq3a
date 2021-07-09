@@ -367,6 +367,7 @@ static void CG_Item( centity_t *cent ) {
 
 		trap_R_AddRefEntityToScene( &barrel );
 	}
+#endif
 
 	// accompanying rings / spheres for powerups
 	if ( !cg_simpleItems.integer ) 
