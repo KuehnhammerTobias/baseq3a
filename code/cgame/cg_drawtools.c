@@ -105,7 +105,7 @@ void CG_DrawRect( float x, float y, float width, float height, float size, const
 	trap_R_SetColor( color );
 
   CG_DrawTopBottom(x, y, width, height, size);
-  CG_DrawSides(x, y, width, height, size);
+  CG_DrawSides(x, y + size, width, height - size * 2, size);
 
 	trap_R_SetColor( NULL );
 }
@@ -1161,7 +1161,7 @@ static void UI_DrawBannerString2( int x, int y, const char* str, vec4_t color )
 			fwidth = (float)propMapB[ch][2] / 256.0f;
 			fheight = (float)PROPB_HEIGHT / 256.0f;
 			aw = (float)propMapB[ch][2] * cgs.screenXScale;
-			ah = (float)PROPB_HEIGHT * cgs.screenXScale;
+			ah = (float)PROPB_HEIGHT * cgs.screenYScale;
 			trap_R_DrawStretchPic( ax, ay, aw, ah, fcol, frow, fcol+fwidth, frow+fheight, cgs.media.charsetPropB );
 			ax += (aw + (float)PROPB_GAP_WIDTH * cgs.screenXScale);
 		}
@@ -1269,7 +1269,7 @@ static void UI_DrawProportionalString2( int x, int y, const char* str, vec4_t co
 			fwidth = (float)propMap[ch][2] / 256.0f;
 			fheight = (float)PROP_HEIGHT / 256.0f;
 			aw = (float)propMap[ch][2] * cgs.screenXScale * sizeScale;
-			ah = (float)PROP_HEIGHT * cgs.screenXScale * sizeScale;
+			ah = (float)PROP_HEIGHT * cgs.screenYScale * sizeScale;
 			trap_R_DrawStretchPic( ax, ay, aw, ah, fcol, frow, fcol+fwidth, frow+fheight, charset );
 		} else {
 			aw = 0;

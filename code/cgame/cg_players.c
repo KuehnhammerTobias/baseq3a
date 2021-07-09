@@ -111,6 +111,7 @@ static qboolean	CG_ParseAnimationFile( const char *filename, clientInfo_t *ci ) 
 	}
 	if ( len >= sizeof( text ) - 1 ) {
 		CG_Printf( "File %s too long\n", filename );
+		trap_FS_FCloseFile( f );
 		return qfalse;
 	}
 	trap_FS_Read( text, len, f );
@@ -2038,6 +2039,9 @@ static void CG_PlayerTokens( centity_t *cent, int renderfx ) {
 	refEntity_t	ent;
 	vec3_t		dir, origin;
 	skulltrail_t *trail;
+	if ( cent->currentState.number >= ARRAY_LEN(cg.skulltrails) ) {
+		return;
+	}
 	trail = &cg.skulltrails[cent->currentState.number];
 	tokens = cent->currentState.generic1;
 	if ( !tokens ) {
@@ -2802,6 +2806,8 @@ void CG_Player( centity_t *cent ) {
 
 		memcpy(&powerup, &torso, sizeof(torso));
 		powerup.hModel = cgs.media.invulnerabilityPowerupModel;
+		powerup.frame = 0;
+		powerup.oldframe = 0;
 		powerup.customSkin = 0;
 		// always draw
 		powerup.renderfx &= ~RF_THIRD_PERSON;
@@ -2826,6 +2832,8 @@ void CG_Player( centity_t *cent ) {
 	if ( ci->medkitUsageTime && t < 500 ) {
 		memcpy(&powerup, &torso, sizeof(torso));
 		powerup.hModel = cgs.media.medkitUsageModel;
+		powerup.frame = 0;
+		powerup.oldframe = 0;
 		powerup.customSkin = 0;
 		// always draw
 		powerup.renderfx &= ~RF_THIRD_PERSON;

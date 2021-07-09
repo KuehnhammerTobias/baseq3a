@@ -41,7 +41,7 @@ static void CG_TargetCommand_f( void ) {
 	}
 
 	trap_Argv( 1, cmd, sizeof( cmd ) );
-	trap_SendConsoleCommand( va( "gc %i %i", targetNum, atoi( cmd ) ) );
+	trap_SendClientCommand( va( "gc %i %i", targetNum, atoi( cmd ) ) );
 }
 
 
@@ -575,8 +575,11 @@ void CG_InitConsoleCommands( void ) {
 	trap_AddCommand ("god");
 	trap_AddCommand ("notarget");
 	trap_AddCommand ("noclip");
+	trap_AddCommand ("where");
 	trap_AddCommand ("team");
 	trap_AddCommand ("follow");
+	trap_AddCommand ("follownext");
+	trap_AddCommand ("followprev");
 	trap_AddCommand ("levelshot");
 	trap_AddCommand ("addbot");
 	trap_AddCommand ("setviewpos");

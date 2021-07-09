@@ -1350,7 +1350,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	}
 
 	// make sure we aren't looking at cg.predictedPlayerEntity for LG
-	nonPredictedCent = &cg_entities[cent->currentState.clientNum];
+	nonPredictedCent = &cg_entities[cent->currentState.number];
 
 	// if the index of the nonPredictedCent is not the same as the clientNum
 	// then this is a fake player (like on the single player podiums), so
@@ -1888,9 +1888,6 @@ void CG_MissileHitWall( weapon_t weapon, int clientNum, vec3_t origin, vec3_t di
 	vec3_t			sprOrg;
 	vec3_t			sprVel;
 
-	mark = 0;
-	radius = 32;
-	sfx = 0;
 	mod = 0;
 	shader = 0;
 	light = 0;

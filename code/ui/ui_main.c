@@ -296,7 +296,7 @@ int Text_Width(const char *text, float scale, int limit) {
 				s += 2;
 				continue;
 			} else {
-				glyph = &font->glyphs[(int)*s];
+				glyph = &font->glyphs[*s & 255];
 				out += glyph->xSkip;
 				s++;
 				count++;
@@ -311,7 +311,7 @@ int Text_Height(const char *text, float scale, int limit) {
 	float max;
 	glyphInfo_t *glyph;
 	float useScale;
-	const char *s = text; // bk001206 - unsigned
+	const char *s = text;
 	fontInfo_t *font = &uiInfo.uiDC.Assets.textFont;
 	if (scale <= ui_smallFont.value) {
 		font = &uiInfo.uiDC.Assets.smallFont;
@@ -331,7 +331,7 @@ int Text_Height(const char *text, float scale, int limit) {
 				s += 2;
 				continue;
 			} else {
-				glyph = &font->glyphs[(int)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
+				glyph = &font->glyphs[*s & 255];
 	      if (max < glyph->height) {
 		      max = glyph->height;
 			  }
@@ -364,7 +364,7 @@ void Text_Paint(float x, float y, float scale, vec4_t color, const char *text, f
 	}
 	useScale = scale * font->glyphScale;
   if (text) {
-    const char *s = text; // bk001206 - unsigned
+    const char *s = text;
 		trap_R_SetColor( color );
 		memcpy(&newColor[0], &color[0], sizeof(vec4_t));
     len = strlen(text);
@@ -373,7 +373,7 @@ void Text_Paint(float x, float y, float scale, vec4_t color, const char *text, f
 		}
 		count = 0;
 		while (s && *s && count < len) {
-			glyph = &font->glyphs[(int)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
+			glyph = &font->glyphs[*s & 255];
       //int yadj = Assets.textFont.glyphs[text[i]].bottom + Assets.textFont.glyphs[text[i]].top;
       //float yadj = scale * (Assets.textFont.glyphs[text[i]].imageHeight - Assets.textFont.glyphs[text[i]].height);
 			if ( Q_IsColorString( s ) ) {
@@ -433,7 +433,7 @@ void Text_PaintWithCursor(float x, float y, float scale, vec4_t color, const cha
 	}
 	useScale = scale * font->glyphScale;
   if (text) {
-    const char *s = text; // bk001206 - unsigned
+    const char *s = text;
 		trap_R_SetColor( color );
 		memcpy(&newColor[0], &color[0], sizeof(vec4_t));
     len = strlen(text);
@@ -441,9 +441,9 @@ void Text_PaintWithCursor(float x, float y, float scale, vec4_t color, const cha
 			len = limit;
 		}
 		count = 0;
-		glyph2 = &font->glyphs[ (int) cursor]; // bk001206 - possible signed char
+		glyph2 = &font->glyphs[cursor & 255];
 		while (s && *s && count < len) {
-			glyph = &font->glyphs[(int)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
+			glyph = &font->glyphs[*s & 255];
       //int yadj = Assets.textFont.glyphs[text[i]].bottom + Assets.textFont.glyphs[text[i]].top;
       //float yadj = scale * (Assets.textFont.glyphs[text[i]].imageHeight - Assets.textFont.glyphs[text[i]].height);
 			if ( Q_IsColorString( s ) ) {
@@ -523,7 +523,7 @@ static void Text_Paint_Limit(float *maxX, float x, float y, float scale, vec4_t 
 	vec4_t newColor;
 	glyphInfo_t *glyph;
   if (text) {
-    const char *s = text; // bk001206 - unsigned
+    const char *s = text;
 		float max = *maxX;
 		float useScale;
 		fontInfo_t *font = &uiInfo.uiDC.Assets.textFont;
@@ -540,7 +540,7 @@ static void Text_Paint_Limit(float *maxX, float x, float y, float scale, vec4_t 
 		}
 		count = 0;
 		while (s && *s && count < len) {
-			glyph = &font->glyphs[(int)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
+			glyph = &font->glyphs[*s & 255];
 			if ( Q_IsColorString( s ) ) {
 				memcpy( newColor, g_color_table[ColorIndex(*(s+1))], sizeof( newColor ) );
 				newColor[3] = color[3];
@@ -4475,7 +4475,7 @@ static qboolean Team_Parse(char **p) {
       return qtrue;
     }
 
-    if ( !token || token[0] == 0 ) {
+    if (!token[0]) {
       return qfalse;
     }
 
@@ -4534,7 +4534,7 @@ static qboolean Character_Parse(char **p) {
       return qtrue;
     }
 
-    if ( !token || token[0] == 0 ) {
+    if (!token[0]) {
       return qfalse;
     }
 
@@ -4589,7 +4589,7 @@ static qboolean Alias_Parse(char **p) {
       return qtrue;
     }
 
-    if ( !token || token[0] == 0 ) {
+    if (!token[0]) {
       return qfalse;
     }
 
@@ -4637,7 +4637,7 @@ static void UI_ParseTeamInfo(const char *teamFile) {
 
 	while ( 1 ) {
 		token = COM_ParseExt( &p, qtrue );
-		if( !token || token[0] == 0 || token[0] == '}') {
+		if (!token[0] || token[0] == '}') {
 			break;
 		}
 
@@ -4689,12 +4689,12 @@ static qboolean GameType_Parse(char **p, qboolean join) {
 			return qtrue;
 		}
 
-		if ( !token || token[0] == 0 ) {
+		if (!token[0]) {
 			return qfalse;
 		}
 
 		if (token[0] == '{') {
-			// two tokens per line, character name and sex
+			// two tokens per line, gametype name and number
 			if (join) {
 				if (!String_Parse(p, &uiInfo.joinGameTypes[uiInfo.numJoinGameTypes].gameType) || !Int_Parse(p, &uiInfo.joinGameTypes[uiInfo.numJoinGameTypes].gtEnum)) {
 					return qfalse;
@@ -4746,7 +4746,7 @@ static qboolean MapList_Parse(char **p) {
 			return qtrue;
 		}
 
-		if ( !token || token[0] == 0 ) {
+		if (!token[0]) {
 			return qfalse;
 		}
 
@@ -4807,7 +4807,7 @@ static void UI_ParseGameInfo(const char *teamFile) {
 
 	while ( 1 ) {
 		token = COM_ParseExt( &p, qtrue );
-		if( !token || token[0] == 0 || token[0] == '}') {
+		if (!token[0] || token[0] == '}') {
 			break;
 		}
 
