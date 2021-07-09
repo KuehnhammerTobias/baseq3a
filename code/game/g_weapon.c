@@ -183,7 +183,7 @@ void SnapVectorTowards( vec3_t v, vec3_t to ) {
 #define	MACHINEGUN_DAMAGE	7
 #define	MACHINEGUN_TEAM_DAMAGE	5		// wimpier MG in teamplay
 
-static void Bullet_Fire (gentity_t *ent, float spread, int damage, int mod) {
+static void Bullet_Fire (gentity_t *ent, float spread, int damage, int mod ) {
 	trace_t		tr;
 	vec3_t		end;
 #ifdef MISSIONPACK
@@ -255,7 +255,7 @@ static void Bullet_Fire (gentity_t *ent, float spread, int damage, int mod) {
 			else {
 #endif
 				G_Damage( traceEnt, ent, ent, forward, tr.endpos,
-					damage, 0, mod );
+					damage, 0, mod);
 #ifdef MISSIONPACK
 			}
 #endif
@@ -522,14 +522,17 @@ void weapon_railgun_fire (gentity_t *ent) {
 					passent = ENTITYNUM_NONE;
 				}
 			}
-			else
-#else
-			{
+			else {
 				if( LogAccuracyHit( traceEnt, ent ) ) {
 					hits++;
 				}
 				G_Damage (traceEnt, ent, ent, forward, trace.endpos, damage, 0, MOD_RAILGUN);
 			}
+#else
+				if( LogAccuracyHit( traceEnt, ent ) ) {
+					hits++;
+				}
+				G_Damage (traceEnt, ent, ent, forward, trace.endpos, damage, 0, MOD_RAILGUN);
 #endif
 		}
 		if ( trace.contents & CONTENTS_SOLID ) {

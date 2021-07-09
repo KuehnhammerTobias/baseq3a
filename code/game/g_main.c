@@ -68,8 +68,8 @@ vmCvar_t	g_synchronousClients;
 vmCvar_t	g_warmup;
 vmCvar_t	g_predictPVS;
 vmCvar_t	g_restarted;
-vmCvar_t	g_log;
-vmCvar_t	g_logSync;
+vmCvar_t	g_logfile;
+vmCvar_t	g_logfileSync;
 vmCvar_t	g_blood;
 vmCvar_t	g_podiumDist;
 vmCvar_t	g_podiumDrop;
@@ -129,8 +129,8 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_teamForceBalance, "g_teamForceBalance", "0", CVAR_ARCHIVE  },
 
 	{ &g_warmup, "g_warmup", "20", CVAR_ARCHIVE, 0, qtrue  },
-	{ &g_log, "g_log", "games.log", CVAR_ARCHIVE, 0, qfalse  },
-	{ &g_logSync, "g_logSync", "0", CVAR_ARCHIVE, 0, qfalse  },
+	{ &g_logfile, "g_log", "games.log", CVAR_ARCHIVE, 0, qfalse  },
+	{ &g_logfileSync, "g_logsync", "0", CVAR_ARCHIVE, 0, qfalse  },
 
 	{ &g_password, "g_password", "", CVAR_USERINFO, 0, qfalse  },
 
@@ -547,14 +547,14 @@ static void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	level.msec = FRAMETIME;
 	level.snd_fry = G_SoundIndex("sound/player/fry.wav");	// FIXME standing in lava / slime
 
-	if ( g_gametype.integer != GT_SINGLE_PLAYER && g_log.string[0] ) {
-		if ( g_logSync.integer ) {
-			trap_FS_FOpenFile( g_log.string, &level.logFile, FS_APPEND_SYNC );
+	if ( g_gametype.integer != GT_SINGLE_PLAYER && g_logfile.string[0] ) {
+		if ( g_logfileSync.integer ) {
+			trap_FS_FOpenFile( g_logfile.string, &level.logFile, FS_APPEND_SYNC );
 		} else {
-			trap_FS_FOpenFile( g_log.string, &level.logFile, FS_APPEND );
+			trap_FS_FOpenFile( g_logfile.string, &level.logFile, FS_APPEND );
 		}
 		if ( level.logFile == FS_INVALID_HANDLE ) {
-			G_Printf( "WARNING: Couldn't open logfile: %s\n", g_log.string );
+			G_Printf( "WARNING: Couldn't open logfile: %s\n", g_logfile.string );
 		} else {
 			char	serverinfo[MAX_INFO_STRING];
 
@@ -1361,7 +1361,7 @@ wait 10 seconds before going on.
 =================
 */
 void CheckIntermissionExit( void ) {
-	int			ready, notReady;
+	int			ready, notReady, playerCount;
 	int			i;
 	gclient_t	*cl;
 	int			readyMask;
@@ -1374,6 +1374,7 @@ void CheckIntermissionExit( void ) {
 	ready = 0;
 	notReady = 0;
 	readyMask = 0;
+	playerCount = 0;
 	for (i=0 ; i< level.maxclients ; i++) {
 		cl = level.clients + i;
 		if ( cl->pers.connected != CON_CONNECTED ) {
@@ -1383,6 +1384,7 @@ void CheckIntermissionExit( void ) {
 			cl->readyToExit = qtrue;
 		} 
 
+		playerCount++;
 		if ( cl->readyToExit ) {
 			ready++;
 			if ( i < 16 ) {
@@ -1414,16 +1416,19 @@ void CheckIntermissionExit( void ) {
 		return;
 	}
 
-	// if nobody wants to go, clear timer
-	if ( !ready && notReady ) {
-		level.readyToExit = qfalse;
-		return;
-	}
+	// only test ready status when there are real players present
+	if ( playerCount > 0 ) {
+		// if nobody wants to go, clear timer
+		if ( !ready ) {
+			level.readyToExit = qfalse;
+			return;
+		}
 
-	// if everyone wants to go, go now
-	if ( !notReady ) {
-		ExitLevel();
-		return;
+		// if everyone wants to go, go now
+		if ( !notReady ) {
+			ExitLevel();
+			return;
+		}
 	}
 
 	// the first person to ready starts the ten second timeout

@@ -69,7 +69,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 int OtherTeam(team_t team);
 const char *TeamName(team_t team);
-const char *OtherTeamName(team_t team);
 const char *TeamColorString(team_t team);
 
 void Team_DroppedFlagThink(gentity_t *ent);
