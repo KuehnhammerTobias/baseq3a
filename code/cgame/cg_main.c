@@ -973,6 +973,7 @@ static void CG_RegisterGraphics( void ) {
 	}
 
 	if ( cgs.gametype == GT_OBELISK || cg_buildScript.integer ) {
+		cgs.media.rocketExplosionShader = trap_R_RegisterShader("rocketExplosion");
 		cgs.media.overloadBaseModel = trap_R_RegisterModel( "models/powerups/overload_base.md3" );
 		cgs.media.overloadTargetModel = trap_R_RegisterModel( "models/powerups/overload_target.md3" );
 		cgs.media.overloadLightsModel = trap_R_RegisterModel( "models/powerups/overload_lights.md3" );
