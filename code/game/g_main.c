@@ -1169,6 +1169,8 @@ or moved to a new level based on the "nextmap" cvar
 void ExitLevel (void) {
 	int		i;
 	gclient_t *cl;
+	char nextmap[MAX_STRING_CHARS];
+	char d1[MAX_STRING_CHARS];
 
 	//bot interbreeding
 	BotInterbreedEndMatch();
@@ -1180,11 +1182,23 @@ void ExitLevel (void) {
 			RemoveTournamentLoser();
 			trap_SendConsoleCommand( EXEC_APPEND, "map_restart 0\n" );
 			level.restarted = qtrue;
+			level.changemap = NULL;
 			level.intermissiontime = 0;
 		}
 		return;	
 	}
 
+	trap_Cvar_VariableStringBuffer( "nextmap", nextmap, sizeof(nextmap) );
+	trap_Cvar_VariableStringBuffer( "d1", d1, sizeof(d1) );
+
+	if( !Q_stricmp( nextmap, "map_restart 0" ) && Q_stricmp( d1, "" ) ) {
+		trap_Cvar_Set( "nextmap", "vstr d2" );
+		trap_SendConsoleCommand( EXEC_APPEND, "vstr d1\n" );
+	} else {
+		trap_SendConsoleCommand( EXEC_APPEND, "vstr nextmap\n" );
+	}
+
+	level.changemap = NULL;
 	level.intermissiontime = 0;
 
 	// reset all the scores so we don't enter the intermission again
@@ -1504,10 +1518,6 @@ static void CheckExitRules( void ) {
 		}
 	}
 
-	if ( level.numPlayingClients < 2 ) {
-		return;
-	}
-
 	if ( g_fraglimit.integer < 0 ) {
 		G_Printf( "fraglimit %i is out of range, defaulting to 0\n", g_fraglimit.integer );
 		trap_Cvar_Set( "fraglimit", "0" );
@@ -1800,8 +1810,9 @@ static void CheckTournament( void ) {
 
 		// if all players have arrived, start the countdown
 		if ( level.warmupTime < 0 ) {
-			if ( g_warmup.integer > 0 ) {
-				level.warmupTime = level.time + g_warmup.integer * 1000;
+			// fudge by -1 to account for extra delays
+			if ( g_warmup.integer > 1 ) {
+				level.warmupTime = level.time + ( g_warmup.integer - 1 ) * 1000;
 			} else {
 				level.warmupTime = 0;
 			}

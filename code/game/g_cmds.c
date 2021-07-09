@@ -423,20 +423,21 @@ hide the scoreboard, and take a special screenshot
 */
 void Cmd_LevelShot_f(gentity_t *ent)
 {
+	if(!ent->client->pers.localClient)
+	{
+		trap_SendServerCommand(ent-g_entities,
+			"print \"The levelshot command must be executed by a local client\n\"");
+		return;
+	}
+
 	if(!CheatsOk(ent))
 		return;
 
 	// doesn't work in single player
-	if(g_gametype.integer == GT_SINGLE_PLAYER) {
-		trap_SendServerCommand( ent-g_entities, 
-			"print \"Must be in g_gametype 0 for levelshot\n\"" );
-		return;
-	}
-
-	if ( !ent->client->pers.localClient )
+	if(g_gametype.integer == GT_SINGLE_PLAYER)
 	{
 		trap_SendServerCommand(ent-g_entities,
-			"print \"The levelshot command must be executed by a local client\n\"" );
+			"print \"Must not be in singleplayer mode for levelshot\n\"" );
 		return;
 	}
 
@@ -860,6 +861,16 @@ void Cmd_FollowCycle_f( gentity_t *ent, int dir ) {
 
 	if ( dir != 1 && dir != -1 ) {
 		G_Error( "Cmd_FollowCycle_f: bad dir %i", dir );
+	}
+
+	// if dedicated follow client, just switch between the two auto clients
+	if (client->sess.spectatorClient < 0) {
+		if (client->sess.spectatorClient == -1) {
+			client->sess.spectatorClient = -2;
+		} else if (client->sess.spectatorClient == -2) {
+			client->sess.spectatorClient = -1;
+		}
+		return;
 	}
 
 	clientnum = client->sess.spectatorClient;
@@ -1288,7 +1299,7 @@ Cmd_Where_f
 ==================
 */
 void Cmd_Where_f( gentity_t *ent ) {
-	trap_SendServerCommand( ent-g_entities, va("print \"%s\n\"", vtos( ent->s.origin ) ) );
+	trap_SendServerCommand( ent-g_entities, va("print \"%s\n\"", vtos( ent->r.currentOrigin ) ) );
 }
 
 static const char *voteCommands[] = {
