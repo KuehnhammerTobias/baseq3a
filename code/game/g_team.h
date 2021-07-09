@@ -49,7 +49,6 @@
 
 int OtherTeam( team_t team );
 const char *TeamName( team_t team );
-const char *OtherTeamName( team_t team );
 const char *TeamColorString( team_t team );
 
 void Team_DroppedFlagThink(gentity_t *ent);

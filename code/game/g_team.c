@@ -64,17 +64,6 @@ const char *TeamName( team_t team ) {
 }
 
 
-const char *OtherTeamName( team_t team ) {
-	if ( team == TEAM_RED )
-		return "BLUE";
-	else if ( team == TEAM_BLUE )
-		return "RED";
-	else if ( team == TEAM_SPECTATOR )
-		return "SPECTATOR";
-	return "FREE";
-}
-
-
 const char *TeamColorString( team_t team ) {
 	if ( team == TEAM_RED )
 		return S_COLOR_RED;

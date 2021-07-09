@@ -508,6 +508,12 @@ void weapon_railgun_fire( gentity_t *ent ) {
 					passent = ENTITYNUM_NONE;
 				}
 			} else
+			{
+				if( LogAccuracyHit( traceEnt, ent ) ) {
+					hits++;
+				}
+				G_Damage (traceEnt, ent, ent, forward, trace.endpos, damage, 0, MOD_RAILGUN);
+			}
 #else
 			{
 				if ( LogAccuracyHit( traceEnt, ent ) ) {
