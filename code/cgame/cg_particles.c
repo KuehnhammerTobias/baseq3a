@@ -1,7 +1,30 @@
+/*
+===========================================================================
+Copyright (C) 1999-2005 Id Software, Inc.
+
+This file is part of Quake III Arena source code.
+
+Quake III Arena source code is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Quake III Arena source code is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Quake III Arena source code; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
 // Rafael particles
 // cg_particles.c  
 
 #include "cg_local.h"
+
+//#define WOLF_PARTICLES
 
 #define BLOODRED	2
 #define EMISIVEFADE	3
@@ -70,6 +93,21 @@ typedef enum
 #define	MAX_SHADER_ANIMS		32
 #define	MAX_SHADER_ANIM_FRAMES	64
 
+#ifndef WOLF_PARTICLES
+static char *shaderAnimNames[MAX_SHADER_ANIMS] = {
+	"explode1",
+	NULL
+};
+static qhandle_t shaderAnims[MAX_SHADER_ANIMS][MAX_SHADER_ANIM_FRAMES];
+static int	shaderAnimCounts[MAX_SHADER_ANIMS] = {
+	23
+};
+static float	shaderAnimSTRatio[MAX_SHADER_ANIMS] = {
+	1.0f
+};
+static int	numShaderAnims;
+// done.
+#else
 static char *shaderAnimNames[MAX_SHADER_ANIMS] = {
 	"explode1",
 	"blacksmokeanim",
@@ -96,11 +134,15 @@ static float	shaderAnimSTRatio[MAX_SHADER_ANIMS] = {
 	1.0f,
 	1.0f,
 };
-static int	numShaderAnims;
-// done.
+#endif
 
 #define		PARTICLE_GRAVITY	40
+
+#ifdef WOLF_PARTICLES
 #define		MAX_PARTICLES	1024 * 8
+#else
+#define		MAX_PARTICLES 1024
+#endif
 
 cparticle_t	*active_particles, *free_particles;
 cparticle_t	particles[MAX_PARTICLES];
@@ -310,7 +352,11 @@ void CG_AddParticleToScene (cparticle_t *p, vec3_t org, float alpha)
 		vec3_t	rr, ru;
 		vec3_t	rotate_ang;
 
+#ifdef WOLF_PARTICLES
 		VectorSet (color, 1.0, 1.0, 1.0);
+#else
+		VectorSet (color, 1.0, 1.0, 0.5);
+#endif
 		time = cg.time - p->time;
 		time2 = p->endtime - p->time;
 		ratio = time / time2;
@@ -590,7 +636,6 @@ void CG_AddParticleToScene (cparticle_t *p, vec3_t org, float alpha)
 	}
 	else if (p->type == P_FLAT_SCALEUP)
 	{
-		float width, height;
 		float sinR, cosR;
 
 		if (p->color == BLOODRED)
@@ -812,9 +857,7 @@ void CG_AddParticles (void)
 	float			alpha;
 	float			time, time2;
 	vec3_t			org;
-	int				color;
 	cparticle_t		*active, *tail;
-	int				type;
 	vec3_t			rotate_ang;
 
 	if (!initparticles)
@@ -919,15 +962,11 @@ void CG_AddParticles (void)
 		if (alpha > 1.0)
 			alpha = 1;
 
-		color = p->color;
-
 		time2 = time*time;
 
 		org[0] = p->org[0] + p->vel[0]*time + p->accel[0]*time2;
 		org[1] = p->org[1] + p->vel[1]*time + p->accel[1]*time2;
 		org[2] = p->org[2] + p->vel[2]*time + p->accel[2]*time2;
-
-		type = p->type;
 
 		CG_AddParticleToScene (p, org, alpha);
 	}
@@ -987,10 +1026,6 @@ void CG_ParticleSnowFlurry (qhandle_t pshader, centity_t *cent)
 		p->vel[2] = -10;
 	
 	VectorCopy(cent->currentState.origin, p->org);
-
-	p->org[0] = p->org[0];
-	p->org[1] = p->org[1];
-	p->org[2] = p->org[2];
 
 	p->vel[0] = p->vel[1] = 0;
 	
@@ -1221,7 +1256,7 @@ CG_ParticleExplosion
 ======================
 */
 
-void CG_ParticleExplosion (char *animStr, vec3_t origin, vec3_t vel, int duration, int sizeStart, int sizeEnd)
+void CG_ParticleExplosion (const char *animStr, const vec3_t origin, const vec3_t vel, int duration, int sizeStart, int sizeEnd)
 {
 	cparticle_t	*p;
 	int anim;
@@ -1231,7 +1266,7 @@ void CG_ParticleExplosion (char *animStr, vec3_t origin, vec3_t vel, int duratio
 
 	// find the animation string
 	for (anim=0; shaderAnimNames[anim]; anim++) {
-		if (!stricmp( animStr, shaderAnimNames[anim] ))
+		if (!Q_stricmp( animStr, shaderAnimNames[anim] ))
 			break;
 	}
 	if (!shaderAnimNames[anim]) {
@@ -1246,7 +1281,11 @@ void CG_ParticleExplosion (char *animStr, vec3_t origin, vec3_t vel, int duratio
 	p->next = active_particles;
 	active_particles = p;
 	p->time = cg.time;
+#ifdef WOLF_PARTICLES
 	p->alpha = 1.0;
+#else
+	p->alpha = 0.5;
+#endif
 	p->alphavel = 0;
 
 	if (duration < 0) {
@@ -1277,7 +1316,6 @@ void CG_ParticleExplosion (char *animStr, vec3_t origin, vec3_t vel, int duratio
 // Rafael Shrapnel
 void CG_AddParticleShrapnel (localEntity_t *le)
 {
-	return;
 }
 // done.
 

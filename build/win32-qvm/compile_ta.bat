@@ -51,6 +51,8 @@ cd vm\cgame
 @if errorlevel 1 goto quit
 %cc1% %cgamedir%\cg_marks.c
 @if errorlevel 1 goto quit
+%cc1% %cgamedir%\cg_particles.c
+@if errorlevel 1 goto quit
 %cc1% %cgamedir%\cg_players.c
 @if errorlevel 1 goto quit
 %cc1% %cgamedir%\cg_playerstate.c
