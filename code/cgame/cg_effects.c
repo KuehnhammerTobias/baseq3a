@@ -453,7 +453,7 @@ void CG_ScorePlum( int client, const vec3_t origin, int score ) {
 CG_MakeExplosion
 ====================
 */
-localEntity_t *CG_MakeExplosion( const vec3_t origin, const vec3_t dir,  
+localEntity_t *CG_MakeExplosion( const vec3_t origin, const vec3_t dir, 
 								qhandle_t hModel, qhandle_t shader,
 								int msec, qboolean isSprite ) {
 	float			ang;
