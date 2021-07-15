@@ -177,8 +177,8 @@ static void CG_TransitionSnapshot( void ) {
 
 		// if we are not doing client side movement prediction for any
 		// reason, then the client events and view changes will be issued now
-		if ( cg.demoPlayback || (cg.snap->ps.pm_flags & PMF_FOLLOW)
-			|| cg_nopredict.integer || cgs.synchronousClients ) {
+		if ( cg.demoPlayback || (cg.snap->ps.pm_flags & PMF_FOLLOW) || cg_nopredict.integer ||
+			cgs.synchronousClients ) {
 			CG_TransitionPlayerState( ps, ops );
 		}
 	}
@@ -265,8 +265,8 @@ static snapshot_t *CG_ReadNextSnapshot( void ) {
 	snapshot_t	*dest;
 
 	if ( cg.latestSnapshotNum > cgs.processedSnapshotNum + 1000 ) {
-		CG_Printf( "WARNING: CG_ReadNextSnapshot: way out of range, %i > %i\n", 
-			cg.latestSnapshotNum, cgs.processedSnapshotNum );
+		CG_Printf( "WARNING: CG_ReadNextSnapshot: way out of range, %i > %i\n",  cg.latestSnapshotNum,
+				  cgs.processedSnapshotNum );
 	}
 
 	while ( cgs.processedSnapshotNum < cg.latestSnapshotNum ) {

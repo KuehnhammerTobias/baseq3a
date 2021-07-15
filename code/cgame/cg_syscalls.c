@@ -151,37 +151,32 @@ int		trap_CM_TransformedPointContents( const vec3_t p, clipHandle_t model, const
 	return syscall( CG_CM_TRANSFORMEDPOINTCONTENTS, p, model, origin, angles );
 }
 
-void	trap_CM_BoxTrace( trace_t *results, const vec3_t start, const vec3_t end,
-						  const vec3_t mins, const vec3_t maxs,
+void	trap_CM_BoxTrace( trace_t *results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs,
 						  clipHandle_t model, int brushmask ) {
 	syscall( CG_CM_BOXTRACE, results, start, end, mins, maxs, model, brushmask );
 }
 
-void	trap_CM_CapsuleTrace( trace_t *results, const vec3_t start, const vec3_t end,
-						  const vec3_t mins, const vec3_t maxs,
+void	trap_CM_CapsuleTrace( trace_t *results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs,
 						  clipHandle_t model, int brushmask ) {
 	syscall( CG_CM_CAPSULETRACE, results, start, end, mins, maxs, model, brushmask );
 }
 
-void	trap_CM_TransformedBoxTrace( trace_t *results, const vec3_t start, const vec3_t end,
-						  const vec3_t mins, const vec3_t maxs,
-						  clipHandle_t model, int brushmask,
-						  const vec3_t origin, const vec3_t angles ) {
+void	trap_CM_TransformedBoxTrace( trace_t *results, const vec3_t start, const vec3_t end, const vec3_t mins,
+								 const vec3_t maxs, clipHandle_t model, int brushmask, const vec3_t origin,
+								 const vec3_t angles ) {
 	syscall( CG_CM_TRANSFORMEDBOXTRACE, results, start, end, mins, maxs, model, brushmask, origin, angles );
 }
 
-void	trap_CM_TransformedCapsuleTrace( trace_t *results, const vec3_t start, const vec3_t end,
-						  const vec3_t mins, const vec3_t maxs,
-						  clipHandle_t model, int brushmask,
-						  const vec3_t origin, const vec3_t angles ) {
+void	trap_CM_TransformedCapsuleTrace( trace_t *results, const vec3_t start, const vec3_t end, const vec3_t mins,
+								 const vec3_t maxs, clipHandle_t model, int brushmask, const vec3_t origin,
+								 const vec3_t angles ) {
 	syscall( CG_CM_TRANSFORMEDCAPSULETRACE, results, start, end, mins, maxs, model, brushmask, origin, angles );
 }
 
-int		trap_CM_MarkFragments( int numPoints, const vec3_t *points, 
-				const vec3_t projection,
-				int maxPoints, vec3_t pointBuffer,
-				int maxFragments, markFragment_t *fragmentBuffer ) {
-	return syscall( CG_CM_MARKFRAGMENTS, numPoints, points, projection, maxPoints, pointBuffer, maxFragments, fragmentBuffer );
+int		trap_CM_MarkFragments( int numPoints, const vec3_t *points,  const vec3_t projection, int maxPoints,
+								 vec3_t pointBuffer, int maxFragments, markFragment_t *fragmentBuffer ) {
+	return syscall( CG_CM_MARKFRAGMENTS, numPoints, points, projection, maxPoints, pointBuffer, maxFragments,
+								 fragmentBuffer );
 }
 
 void	trap_S_StartSound( const vec3_t origin, int entityNum, int entchannel, sfxHandle_t sfx ) {
@@ -284,17 +279,18 @@ void	trap_R_SetColor( const float *rgba ) {
 	syscall( CG_R_SETCOLOR, rgba );
 }
 
-void	trap_R_DrawStretchPic( float x, float y, float w, float h, 
-							   float s1, float t1, float s2, float t2, qhandle_t hShader ) {
-	syscall( CG_R_DRAWSTRETCHPIC, PASSFLOAT(x), PASSFLOAT(y), PASSFLOAT(w), PASSFLOAT(h), PASSFLOAT(s1), PASSFLOAT(t1), PASSFLOAT(s2), PASSFLOAT(t2), hShader );
+void	trap_R_DrawStretchPic( float x, float y, float w, float h,  float s1, float t1, float s2, float t2,
+								 qhandle_t hShader ) {
+	syscall( CG_R_DRAWSTRETCHPIC, PASSFLOAT(x), PASSFLOAT(y), PASSFLOAT(w), PASSFLOAT(h), PASSFLOAT(s1), PASSFLOAT(t1),
+								 PASSFLOAT(s2), PASSFLOAT(t2), hShader );
 }
 
 void	trap_R_ModelBounds( clipHandle_t model, vec3_t mins, vec3_t maxs ) {
 	syscall( CG_R_MODELBOUNDS, model, mins, maxs );
 }
 
-int		trap_R_LerpTag( orientation_t *tag, clipHandle_t mod, int startFrame, int endFrame, 
-					   float frac, const char *tagName ) {
+int		trap_R_LerpTag( orientation_t *tag, clipHandle_t mod, int startFrame, int endFrame,  float frac,
+								 const char *tagName ) {
 	return syscall( CG_R_LERPTAG, tag, mod, startFrame, endFrame, PASSFLOAT(frac), tagName );
 }
 
@@ -406,7 +402,8 @@ e_status trap_CIN_StopCinematic(int handle) {
 }
 
 
-// will run a frame of the cinematic but will not draw it.  Will return FMV_EOF if the end of the cinematic has been reached.
+// will run a frame of the cinematic but will not draw it.  Will return FMV_EOF if the end of the cinematic has been
+// reached.
 e_status trap_CIN_RunCinematic (int handle) {
   return syscall(CG_CIN_RUNCINEMATIC, handle);
 }

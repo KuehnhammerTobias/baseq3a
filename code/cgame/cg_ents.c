@@ -33,14 +33,12 @@ Modifies the entities position and axis by the given
 tag location
 ======================
 */
-void CG_PositionEntityOnTag( refEntity_t *entity, const refEntity_t *parent, 
-							qhandle_t parentModel, const char *tagName ) {
+void CG_PositionEntityOnTag( refEntity_t *entity, const refEntity_t *parent, qhandle_t parentModel, const char *tagName ) {
 	int				i;
 	orientation_t	lerped;
 	
 	// lerp the tag
-	trap_R_LerpTag( &lerped, parentModel, parent->oldframe, parent->frame,
-		1.0 - parent->backlerp, tagName );
+	trap_R_LerpTag( &lerped, parentModel, parent->oldframe, parent->frame, 1.0 - parent->backlerp, tagName );
 
 	// FIXME: allow origin offsets along tag?
 	VectorCopy( parent->origin, entity->origin );
@@ -62,16 +60,15 @@ Modifies the entities position and axis by the given
 tag location
 ======================
 */
-void CG_PositionRotatedEntityOnTag( refEntity_t *entity, const refEntity_t *parent, 
-							qhandle_t parentModel, const char *tagName ) {
+void CG_PositionRotatedEntityOnTag( refEntity_t *entity, const refEntity_t *parent, qhandle_t parentModel,
+								   const char *tagName ) {
 	int				i;
 	orientation_t	lerped;
 	vec3_t			tempAxis[3];
 
 //AxisClear( entity->axis );
 	// lerp the tag
-	trap_R_LerpTag( &lerped, parentModel, parent->oldframe, parent->frame,
-		1.0 - parent->backlerp, tagName );
+	trap_R_LerpTag( &lerped, parentModel, parent->oldframe, parent->frame, 1.0 - parent->backlerp, tagName );
 
 	// FIXME: allow origin offsets along tag?
 	VectorCopy( parent->origin, entity->origin );
@@ -139,8 +136,7 @@ static void CG_EntityEffects( const centity_t *cent ) {
 
 
 	// constant light glow
-	if(cent->currentState.constantLight)
-	{
+	if(cent->currentState.constantLight) {
 		int		cl;
 		float		i, r, g, b;
 
@@ -290,17 +286,11 @@ static void CG_Item( centity_t *cent ) {
 	// eccentricly
 	if ( item->giType == IT_WEAPON ) {
 		wi = &cg_weapons[item->giTag];
-		cent->lerpOrigin[0] -= 
-			wi->weaponMidpoint[0] * ent.axis[0][0] +
-			wi->weaponMidpoint[1] * ent.axis[1][0] +
+		cent->lerpOrigin[0] -= wi->weaponMidpoint[0] * ent.axis[0][0] + wi->weaponMidpoint[1] * ent.axis[1][0] +
 			wi->weaponMidpoint[2] * ent.axis[2][0];
-		cent->lerpOrigin[1] -= 
-			wi->weaponMidpoint[0] * ent.axis[0][1] +
-			wi->weaponMidpoint[1] * ent.axis[1][1] +
+		cent->lerpOrigin[1] -= wi->weaponMidpoint[0] * ent.axis[0][1] + wi->weaponMidpoint[1] * ent.axis[1][1] +
 			wi->weaponMidpoint[2] * ent.axis[2][1];
-		cent->lerpOrigin[2] -= 
-			wi->weaponMidpoint[0] * ent.axis[0][2] +
-			wi->weaponMidpoint[1] * ent.axis[1][2] +
+		cent->lerpOrigin[2] -=  wi->weaponMidpoint[0] * ent.axis[0][2] + wi->weaponMidpoint[1] * ent.axis[1][2] +
 			wi->weaponMidpoint[2] * ent.axis[2][2];
 
 		cent->lerpOrigin[2] += 8;	// an extra height boost
@@ -327,8 +317,7 @@ static void CG_Item( centity_t *cent ) {
 
 	// items without glow textures need to keep a minimum light value
 	// so they are always visible
-	if ( ( item->giType == IT_WEAPON ) ||
-		 ( item->giType == IT_ARMOR ) ) {
+	if ( ( item->giType == IT_WEAPON ) || ( item->giType == IT_ARMOR ) ) {
 		ent.renderfx |= RF_MINLIGHT;
 	}
 
@@ -388,18 +377,14 @@ static void CG_Item( centity_t *cent ) {
 	}
 
 	// accompanying rings / spheres for powerups
-	if ( !cg_simpleItems.integer ) 
-	{
+	if ( !cg_simpleItems.integer )  {
 		vec3_t spinAngles;
 
 		VectorClear( spinAngles );
 
-		if ( item->giType == IT_HEALTH || item->giType == IT_POWERUP )
-		{
-			if ( ( ent.hModel = cg_items[es->modelindex].models[1] ) != 0 )
-			{
-				if ( item->giType == IT_POWERUP )
-				{
+		if ( item->giType == IT_HEALTH || item->giType == IT_POWERUP ) {
+			if ( ( ent.hModel = cg_items[es->modelindex].models[1] ) != 0 ) {
+				if ( item->giType == IT_POWERUP ) {
 					ent.origin[2] += 12;
 					spinAngles[1] = ( cg.time & 1023 ) * 360 / -1024.0f;
 				}
@@ -465,8 +450,8 @@ static void CG_Missile( centity_t *cent ) {
 */
 	// add dynamic light
 	if ( weapon->missileDlight ) {
-		trap_R_AddLightToScene(cent->lerpOrigin, weapon->missileDlight, 
-			weapon->missileDlightColor[0], weapon->missileDlightColor[1], weapon->missileDlightColor[2] );
+		trap_R_AddLightToScene(cent->lerpOrigin, weapon->missileDlight, weapon->missileDlightColor[0],
+							   weapon->missileDlightColor[1], weapon->missileDlightColor[2] );
 	}
 
 	// add missile sound
@@ -693,7 +678,7 @@ static void CG_Portal( const centity_t *cent ) {
 CG_CreateRotationMatrix
 ================
 */
-void CG_CreateRotationMatrix(vec3_t angles, vec3_t matrix[3]) {
+static void CG_CreateRotationMatrix(const vec3_t angles, vec3_t matrix[3]) {
 	AngleVectors(angles, matrix[0], matrix[1], matrix[2]);
 	VectorInverse(matrix[1]);
 }
@@ -703,7 +688,7 @@ void CG_CreateRotationMatrix(vec3_t angles, vec3_t matrix[3]) {
 CG_TransposeMatrix
 ================
 */
-void CG_TransposeMatrix(vec3_t matrix[3], vec3_t transpose[3]) {
+static void CG_TransposeMatrix(vec3_t matrix[3], vec3_t transpose[3]) {
 	int i, j;
 	for (i = 0; i < 3; i++) {
 		for (j = 0; j < 3; j++) {
@@ -717,7 +702,7 @@ void CG_TransposeMatrix(vec3_t matrix[3], vec3_t transpose[3]) {
 CG_RotatePoint
 ================
 */
-void CG_RotatePoint(vec3_t point, vec3_t matrix[3]) {
+static void CG_RotatePoint(vec3_t point, vec3_t matrix[3]) {
 	vec3_t tvec;
 
 	VectorCopy(point, tvec);
@@ -848,8 +833,8 @@ static void CG_CalcEntityLerpPositions( centity_t *cent ) {
 	// adjust for riding a mover if it wasn't rolled into the predicted
 	// player state
 	if ( cent != &cg.predictedPlayerEntity ) {
-		CG_AdjustPositionForMover( cent->lerpOrigin, cent->currentState.groundEntityNum, 
-		cg.snap->serverTime, cg.time, cent->lerpOrigin, cent->lerpAngles, cent->lerpAngles);
+		CG_AdjustPositionForMover( cent->lerpOrigin, cent->currentState.groundEntityNum,  cg.snap->serverTime, cg.time,
+								  cent->lerpOrigin, cent->lerpAngles, cent->lerpAngles);
 	}
 }
 
@@ -877,11 +862,9 @@ static void CG_TeamBase( const centity_t *cent ) {
 		AnglesToAxis( cent->currentState.angles, model.axis );
 		if ( cent->currentState.modelindex == TEAM_RED ) {
 			model.hModel = cgs.media.redFlagBaseModel;
-		}
-		else if ( cent->currentState.modelindex == TEAM_BLUE ) {
+		} else if ( cent->currentState.modelindex == TEAM_BLUE ) {
 			model.hModel = cgs.media.blueFlagBaseModel;
-		}
-		else {
+		} else {
 			model.hModel = cgs.media.neutralFlagBaseModel;
 		}
 		trap_R_AddRefEntityToScene( &model );

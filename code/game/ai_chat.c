@@ -65,7 +65,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 BotNumActivePlayers
 ==================
 */
-int BotNumActivePlayers(void) {
+static int BotNumActivePlayers(void) {
 	int i, num;
 	char buf[MAX_INFO_STRING];
 
@@ -73,9 +73,11 @@ int BotNumActivePlayers(void) {
 	for (i = 0; i < level.maxclients; i++) {
 		trap_GetConfigstring(CS_PLAYERS+i, buf, sizeof(buf));
 		//if no config string or no name
-		if (!buf[0] || !*Info_ValueForKey(buf, "n")) continue;
+		if (!buf[0] || !*Info_ValueForKey(buf, "n"))
+			continue;
 		//skip spectators
-		if (atoi(Info_ValueForKey(buf, "t")) == TEAM_SPECTATOR) continue;
+		if (atoi(Info_ValueForKey(buf, "t")) == TEAM_SPECTATOR)
+			continue;
 		//
 		num++;
 	}
@@ -87,7 +89,7 @@ int BotNumActivePlayers(void) {
 BotIsFirstInRankings
 ==================
 */
-int BotIsFirstInRankings(bot_state_t *bs) {
+static int BotIsFirstInRankings(bot_state_t *bs) {
 	int i, score;
 	char buf[MAX_INFO_STRING];
 	playerState_t ps;
@@ -96,11 +98,14 @@ int BotIsFirstInRankings(bot_state_t *bs) {
 	for (i = 0; i < level.maxclients; i++) {
 		trap_GetConfigstring(CS_PLAYERS+i, buf, sizeof(buf));
 		//if no config string or no name
-		if (!buf[0] || !*Info_ValueForKey(buf, "n")) continue;
+		if (!buf[0] || !*Info_ValueForKey(buf, "n"))
+			continue;
 		//skip spectators
-		if (atoi(Info_ValueForKey(buf, "t")) == TEAM_SPECTATOR) continue;
+		if (atoi(Info_ValueForKey(buf, "t")) == TEAM_SPECTATOR)
+			continue;
 		//
-		if (BotAI_GetClientState(i, &ps) && score < ps.persistant[PERS_SCORE]) return qfalse;
+		if (BotAI_GetClientState(i, &ps) && score < ps.persistant[PERS_SCORE])
+			return qfalse;
 	}
 	return qtrue;
 }
@@ -110,7 +115,7 @@ int BotIsFirstInRankings(bot_state_t *bs) {
 BotIsLastInRankings
 ==================
 */
-int BotIsLastInRankings(bot_state_t *bs) {
+static int BotIsLastInRankings(bot_state_t *bs) {
 	int i, score;
 	char buf[MAX_INFO_STRING];
 	playerState_t ps;
@@ -119,11 +124,14 @@ int BotIsLastInRankings(bot_state_t *bs) {
 	for (i = 0; i < level.maxclients; i++) {
 		trap_GetConfigstring(CS_PLAYERS+i, buf, sizeof(buf));
 		//if no config string or no name
-		if (!buf[0] || !*Info_ValueForKey(buf, "n")) continue;
+		if (!buf[0] || !*Info_ValueForKey(buf, "n"))
+			continue;
 		//skip spectators
-		if (atoi(Info_ValueForKey(buf, "t")) == TEAM_SPECTATOR) continue;
+		if (atoi(Info_ValueForKey(buf, "t")) == TEAM_SPECTATOR)
+			continue;
 		//
-		if (BotAI_GetClientState(i, &ps) && score > ps.persistant[PERS_SCORE]) return qfalse;
+		if (BotAI_GetClientState(i, &ps) && score > ps.persistant[PERS_SCORE])
+			return qfalse;
 	}
 	return qtrue;
 }
@@ -133,7 +141,7 @@ int BotIsLastInRankings(bot_state_t *bs) {
 BotFirstClientInRankings
 ==================
 */
-char *BotFirstClientInRankings(void) {
+static char *BotFirstClientInRankings(void) {
 	int i, bestscore, bestclient;
 	char buf[MAX_INFO_STRING];
 	static char name[32];
@@ -144,10 +152,11 @@ char *BotFirstClientInRankings(void) {
 	for (i = 0; i < level.maxclients; i++) {
 		trap_GetConfigstring(CS_PLAYERS+i, buf, sizeof(buf));
 		//if no config string or no name
-		if (!buf[0] || !*Info_ValueForKey(buf, "n")) continue;
+		if (!buf[0] || !*Info_ValueForKey(buf, "n"))
+			continue;
 		//skip spectators
-		if (atoi(Info_ValueForKey(buf, "t")) == TEAM_SPECTATOR) continue;
-		//
+		if (atoi(Info_ValueForKey(buf, "t")) == TEAM_SPECTATOR)
+			continue;
 		if (BotAI_GetClientState(i, &ps) && ps.persistant[PERS_SCORE] > bestscore) {
 			bestscore = ps.persistant[PERS_SCORE];
 			bestclient = i;
@@ -162,7 +171,7 @@ char *BotFirstClientInRankings(void) {
 BotLastClientInRankings
 ==================
 */
-char *BotLastClientInRankings(void) {
+static char *BotLastClientInRankings(void) {
 	int i, worstscore, bestclient;
 	char buf[MAX_INFO_STRING];
 	static char name[32];
@@ -173,10 +182,12 @@ char *BotLastClientInRankings(void) {
 	for (i = 0; i < level.maxclients; i++) {
 		trap_GetConfigstring(CS_PLAYERS+i, buf, sizeof(buf));
 		//if no config string or no name
-		if (!buf[0] || !*Info_ValueForKey(buf, "n")) continue;
+		if (!buf[0] || !*Info_ValueForKey(buf, "n"))
+			continue;
 		//skip spectators
-		if (atoi(Info_ValueForKey(buf, "t")) == TEAM_SPECTATOR) continue;
-		//
+		if (atoi(Info_ValueForKey(buf, "t")) == TEAM_SPECTATOR)
+			continue;
+
 		if (BotAI_GetClientState(i, &ps) && ps.persistant[PERS_SCORE] < worstscore) {
 			worstscore = ps.persistant[PERS_SCORE];
 			bestclient = i;
@@ -191,7 +202,7 @@ char *BotLastClientInRankings(void) {
 BotRandomOpponentName
 ==================
 */
-char *BotRandomOpponentName(bot_state_t *bs) {
+static char *BotRandomOpponentName(bot_state_t *bs) {
 	int i, count;
 	char buf[MAX_INFO_STRING];
 	int opponents[MAX_CLIENTS], numopponents;
@@ -200,16 +211,18 @@ char *BotRandomOpponentName(bot_state_t *bs) {
 	numopponents = 0;
 	opponents[0] = 0;
 	for (i = 0; i < level.maxclients; i++) {
-		if (i == bs->client) continue;
-		//
+		if (i == bs->client)
+			continue;
 		trap_GetConfigstring(CS_PLAYERS+i, buf, sizeof(buf));
 		//if no config string or no name
-		if (!buf[0] || !*Info_ValueForKey(buf, "n")) continue;
+		if (!buf[0] || !*Info_ValueForKey(buf, "n"))
+			continue;
 		//skip spectators
-		if (atoi(Info_ValueForKey(buf, "t")) == TEAM_SPECTATOR) continue;
+		if (atoi(Info_ValueForKey(buf, "t")) == TEAM_SPECTATOR)
+			continue;
 		//skip team mates
-		if (BotSameTeam(bs, i)) continue;
-		//
+		if (BotSameTeam(bs, i))
+			continue;
 		opponents[numopponents] = i;
 		numopponents++;
 	}
@@ -240,7 +253,6 @@ static const char *BotMapTitle(void) {
 BotWeaponNameForMeansOfDeath
 ==================
 */
-
 char *BotWeaponNameForMeansOfDeath(int mod) {
 	switch(mod) {
 		case MOD_SHOTGUN: return "Shotgun";
@@ -304,29 +316,33 @@ char *BotRandomWeaponName(void) {
 BotVisibleEnemies
 ==================
 */
-int BotVisibleEnemies(bot_state_t *bs) {
+static int BotVisibleEnemies(bot_state_t *bs) {
 	float vis;
 	int i;
 	aas_entityinfo_t entinfo;
 
 	for (i = 0; i < MAX_CLIENTS; i++) {
 
-		if (i == bs->client) continue;
-		//
+		if (i == bs->client)
+			continue;
 		BotEntityInfo(i, &entinfo);
-		//
-		if (!entinfo.valid) continue;
+
+		if (!entinfo.valid)
+			continue;
 		//if the enemy isn't dead and the enemy isn't the bot self
-		if (EntityIsDead(&entinfo) || entinfo.number == bs->entitynum) continue;
+		if (EntityIsDead(&entinfo) || entinfo.number == bs->entitynum)
+			continue;
 		//if the enemy is invisible and not shooting
 		if (EntityIsInvisible(&entinfo) && !EntityIsShooting(&entinfo)) {
 			continue;
 		}
 		//if on the same team
-		if (BotSameTeam(bs, i)) continue;
+		if (BotSameTeam(bs, i))
+			continue;
 		//check if the enemy is visible
 		vis = BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, i);
-		if (vis > 0) return qtrue;
+		if (vis > 0)
+			return qtrue;
 	}
 	return qfalse;
 }
@@ -354,11 +370,13 @@ int BotValidChatPosition(bot_state_t *bs) {
 	//do not chat if in lava or slime
 	VectorCopy(bs->origin, point);
 	point[2] -= 24;
-	if (trap_PointContents(point,bs->entitynum) & (CONTENTS_LAVA|CONTENTS_SLIME)) return qfalse;
+	if (trap_PointContents(point,bs->entitynum) & (CONTENTS_LAVA|CONTENTS_SLIME))
+			return qfalse;
 	//do not chat if under water
 	VectorCopy(bs->origin, point);
 	point[2] += 32;
-	if (trap_PointContents(point,bs->entitynum) & MASK_WATER) return qfalse;
+	if (trap_PointContents(point,bs->entitynum) & MASK_WATER)
+			return qfalse;
 	//must be standing on the world entity
 	VectorCopy(bs->origin, start);
 	VectorCopy(bs->origin, end);
@@ -366,7 +384,8 @@ int BotValidChatPosition(bot_state_t *bs) {
 	end[2] -= 10;
 	trap_AAS_PresenceTypeBoundingBox(PRESENCE_CROUCH, mins, maxs);
 	BotAI_Trace(&trace, start, mins, maxs, end, bs->client, MASK_SOLID);
-	if (trace.entityNum != ENTITYNUM_WORLD) return qfalse;
+	if (trace.entityNum != ENTITYNUM_WORLD)
+			return qfalse;
 	//the bot is in a position where it can chat
 	return qtrue;
 }
@@ -380,20 +399,25 @@ int BotChat_EnterGame(bot_state_t *bs) {
 	char name[32];
 	float rnd;
 
-	if (bot_nochat.integer) return qfalse;
-	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
+	if (bot_nochat.integer)
+			return qfalse;
+	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING)
+			return qfalse;
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) return qfalse;
+	if (TeamPlayIsOn())
+			return qfalse;
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_TOURNAMENT)
+			return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_ENTEREXITGAME, 0, 1);
 	if (!bot_fastchat.integer) {
-		if (random() > rnd) return qfalse;
+		if (random() > rnd)
+			return qfalse;
 	}
 	if (BotNumActivePlayers() <= 1) return qfalse;
 	if (!BotValidChatPosition(bs)) return qfalse;
 	BotAI_BotInitialChat(bs, "game_enter",
-				EasyClientName(bs->client, name, 32),	// 0
+				EasyClientName(bs->client, name, sizeof(name)),	// 0
 				BotRandomOpponentName(bs),				// 1
 				"[invalid var]",						// 2
 				"[invalid var]",						// 3
@@ -413,20 +437,26 @@ int BotChat_ExitGame(bot_state_t *bs) {
 	char name[32];
 	float rnd;
 
-	if (bot_nochat.integer) return qfalse;
-	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
+	if (bot_nochat.integer)
+			return qfalse;
+	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING)
+			return qfalse;
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) return qfalse;
+	if (TeamPlayIsOn())
+			return qfalse;
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_TOURNAMENT)
+			return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_ENTEREXITGAME, 0, 1);
 	if (!bot_fastchat.integer) {
-		if (random() > rnd) return qfalse;
+		if (random() > rnd)
+			return qfalse;
 	}
-	if (BotNumActivePlayers() <= 1) return qfalse;
+	if (BotNumActivePlayers() <= 1)
+			return qfalse;
 	//
 	BotAI_BotInitialChat(bs, "game_exit",
-				EasyClientName(bs->client, name, 32),	// 0
+				EasyClientName(bs->client, name, sizeof(name)),	// 0
 				BotRandomOpponentName(bs),				// 1
 				"[invalid var]",						// 2
 				"[invalid var]",						// 3
@@ -446,9 +476,12 @@ int BotChat_StartLevel(bot_state_t *bs) {
 	char name[32];
 	float rnd;
 
-	if (bot_nochat.integer) return qfalse;
-	if (BotIsObserver(bs)) return qfalse;
-	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
+	if (bot_nochat.integer)
+			return qfalse;
+	if (BotIsObserver(bs))
+			return qfalse;
+	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING)
+			return qfalse;
 	//don't chat in teamplay
 	if (TeamPlayIsOn()) {
 #ifdef MISSIONPACK
@@ -457,14 +490,17 @@ int BotChat_StartLevel(bot_state_t *bs) {
 	    return qfalse;
 	}
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_TOURNAMENT)
+			return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_STARTENDLEVEL, 0, 1);
 	if (!bot_fastchat.integer) {
-		if (random() > rnd) return qfalse;
+		if (random() > rnd)
+			return qfalse;
 	}
-	if (BotNumActivePlayers() <= 1) return qfalse;
+	if (BotNumActivePlayers() <= 1)
+			return qfalse;
 	BotAI_BotInitialChat(bs, "level_start",
-				EasyClientName(bs->client, name, 32),	// 0
+				EasyClientName(bs->client, name, sizeof(name)),	// 0
 				NULL);
 	bs->lastchat_time = FloatTime();
 	bs->chatto = CHAT_ALL;
@@ -479,13 +515,16 @@ BotChat_EndLevel
 int BotChat_EndLevel(bot_state_t *bs) {
 	char name[32];
 	float rnd;
+	const char *clientName;
 
-	if (bot_nochat.integer) return qfalse;
-	if (BotIsObserver(bs)) return qfalse;
-	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
+	if (bot_nochat.integer)
+			return qfalse;
+	if (BotIsObserver(bs))
+			return qfalse;
+	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING)
+			return qfalse;
 	// teamplay
-	if (TeamPlayIsOn()) 
-	{
+	if (TeamPlayIsOn()) {
 #ifdef MISSIONPACK
 		if (BotIsFirstInRankings(bs)) {
 			trap_EA_Command(bs->client, "vtaunt");
@@ -494,16 +533,20 @@ int BotChat_EndLevel(bot_state_t *bs) {
 		return qtrue;
 	}
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_TOURNAMENT)
+			return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_STARTENDLEVEL, 0, 1);
 	if (!bot_fastchat.integer) {
-		if (random() > rnd) return qfalse;
+		if (random() > rnd)
+			return qfalse;
 	}
-	if (BotNumActivePlayers() <= 1) return qfalse;
-	//
+	if (BotNumActivePlayers() <= 1)
+			return qfalse;
+
+	clientName = EasyClientName(bs->client, name, sizeof(name));
 	if (BotIsFirstInRankings(bs)) {
 		BotAI_BotInitialChat(bs, "level_end_victory",
-				EasyClientName(bs->client, name, 32),	// 0
+				clientName,	// 0
 				BotRandomOpponentName(bs),				// 1
 				"[invalid var]",						// 2
 				BotLastClientInRankings(),				// 3
@@ -512,7 +555,7 @@ int BotChat_EndLevel(bot_state_t *bs) {
 	}
 	else if (BotIsLastInRankings(bs)) {
 		BotAI_BotInitialChat(bs, "level_end_lose",
-				EasyClientName(bs->client, name, 32),	// 0
+				clientName,	// 0
 				BotRandomOpponentName(bs),				// 1
 				BotFirstClientInRankings(),				// 2
 				"[invalid var]",						// 3
@@ -521,7 +564,7 @@ int BotChat_EndLevel(bot_state_t *bs) {
 	}
 	else {
 		BotAI_BotInitialChat(bs, "level_end",
-				EasyClientName(bs->client, name, 32),	// 0
+				clientName,	// 0
 				BotRandomOpponentName(bs),				// 1
 				BotFirstClientInRankings(),				// 2
 				BotLastClientInRankings(),				// 3
@@ -542,29 +585,33 @@ int BotChat_Death(bot_state_t *bs) {
 	char name[32];
 	float rnd;
 
-	if (bot_nochat.integer) return qfalse;
-	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
+	if (bot_nochat.integer)
+			return qfalse;
+	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING)
+			return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_DEATH, 0, 1);
 	// don't chat in tournament mode
-	if (gametype == GT_TOURNAMENT) return qfalse;
+	if (gametype == GT_TOURNAMENT)
+			return qfalse;
 	//if fast chatting is off
 	if (!bot_fastchat.integer) {
-		if (random() > rnd) return qfalse;
+		if (random() > rnd)
+			return qfalse;
 	}
-	if (BotNumActivePlayers() <= 1) return qfalse;
-	//
+	if (BotNumActivePlayers() <= 1)
+			return qfalse;
+
 	if (bs->lastkilledby >= 0 && bs->lastkilledby < MAX_CLIENTS)
-		EasyClientName(bs->lastkilledby, name, 32);
+		EasyClientName(bs->lastkilledby, name, sizeof(name));
 	else
 		strcpy(name, "[world]");
-	//
+
 	if (TeamPlayIsOn() && BotSameTeam(bs, bs->lastkilledby)) {
-		if (bs->lastkilledby == bs->client) return qfalse;
+		if (bs->lastkilledby == bs->client)
+			return qfalse;
 		BotAI_BotInitialChat(bs, "death_teammate", name, NULL);
 		bs->chatto = CHAT_TEAM;
-	}
-	else
-	{
+	} else {
 		//teamplay
 		if (TeamPlayIsOn()) {
 #ifdef MISSIONPACK
@@ -572,7 +619,7 @@ int BotChat_Death(bot_state_t *bs) {
 #endif
 			return qtrue;
 		}
-		//
+
 		if (bs->botdeathtype == MOD_WATER)
 			BotAI_BotInitialChat(bs, "death_drown", BotRandomOpponentName(bs), NULL);
 		else if (bs->botdeathtype == MOD_SLIME)
@@ -582,10 +629,8 @@ int BotChat_Death(bot_state_t *bs) {
 		else if (bs->botdeathtype == MOD_FALLING)
 			BotAI_BotInitialChat(bs, "death_cratered", BotRandomOpponentName(bs), NULL);
 		else if (bs->botsuicide || //all other suicides by own weapon
-				bs->botdeathtype == MOD_CRUSH ||
-				bs->botdeathtype == MOD_SUICIDE ||
-				bs->botdeathtype == MOD_TARGET_LASER ||
-				bs->botdeathtype == MOD_TRIGGER_HURT ||
+				bs->botdeathtype == MOD_CRUSH || bs->botdeathtype == MOD_SUICIDE ||
+				bs->botdeathtype == MOD_TARGET_LASER || bs->botdeathtype == MOD_TRIGGER_HURT ||
 				bs->botdeathtype == MOD_UNKNOWN)
 			BotAI_BotInitialChat(bs, "death_suicide", BotRandomOpponentName(bs), NULL);
 		else if (bs->botdeathtype == MOD_TELEFRAG)
@@ -660,7 +705,7 @@ int BotChat_Kill(bot_state_t *bs) {
 	//
 	if (BotVisibleEnemies(bs)) return qfalse;
 	//
-	EasyClientName(bs->lastkilledplayer, name, 32);
+	EasyClientName(bs->lastkilledplayer, name, sizeof(name));
 	//
 	bs->chatto = CHAT_ALL;
 	if (TeamPlayIsOn() && BotSameTeam(bs, bs->lastkilledplayer)) {
@@ -728,7 +773,7 @@ int BotChat_EnemySuicide(bot_state_t *bs) {
 	//
 	if (BotVisibleEnemies(bs)) return qfalse;
 	//
-	if (bs->enemy >= 0) EasyClientName(bs->enemy, name, 32);
+	if (bs->enemy >= 0) EasyClientName(bs->enemy, name, sizeof(name));
 	else strcpy(name, "");
 	BotAI_BotInitialChat(bs, "enemy_suicide", name, NULL);
 	bs->lastchat_time = FloatTime();
@@ -950,12 +995,13 @@ void BotChatTest(bot_state_t *bs) {
 	char name[32];
 	char *weap;
 	int num, i;
+	const char *clientName = EasyClientName(bs->client, name, sizeof(name));
 
 	num = trap_BotNumInitialChats(bs->cs, "game_enter");
 	for (i = 0; i < num; i++)
 	{
 		BotAI_BotInitialChat(bs, "game_enter",
-					EasyClientName(bs->client, name, 32),	// 0
+					clientName,	// 0
 					BotRandomOpponentName(bs),				// 1
 					"[invalid var]",						// 2
 					"[invalid var]",						// 3
@@ -967,7 +1013,7 @@ void BotChatTest(bot_state_t *bs) {
 	for (i = 0; i < num; i++)
 	{
 		BotAI_BotInitialChat(bs, "game_exit",
-					EasyClientName(bs->client, name, 32),	// 0
+					clientName,	// 0
 					BotRandomOpponentName(bs),				// 1
 					"[invalid var]",						// 2
 					"[invalid var]",						// 3
@@ -979,7 +1025,7 @@ void BotChatTest(bot_state_t *bs) {
 	for (i = 0; i < num; i++)
 	{
 		BotAI_BotInitialChat(bs, "level_start",
-					EasyClientName(bs->client, name, 32),	// 0
+					clientName,	// 0
 					NULL);
 		trap_BotEnterChat(bs->cs, 0, CHAT_ALL);
 	}
@@ -987,7 +1033,7 @@ void BotChatTest(bot_state_t *bs) {
 	for (i = 0; i < num; i++)
 	{
 		BotAI_BotInitialChat(bs, "level_end_victory",
-				EasyClientName(bs->client, name, 32),	// 0
+				clientName,	// 0
 				BotRandomOpponentName(bs),				// 1
 				BotFirstClientInRankings(),				// 2
 				BotLastClientInRankings(),				// 3
@@ -999,7 +1045,7 @@ void BotChatTest(bot_state_t *bs) {
 	for (i = 0; i < num; i++)
 	{
 		BotAI_BotInitialChat(bs, "level_end_lose",
-				EasyClientName(bs->client, name, 32),	// 0
+				clientName,	// 0
 				BotRandomOpponentName(bs),				// 1
 				BotFirstClientInRankings(),				// 2
 				BotLastClientInRankings(),				// 3
@@ -1011,7 +1057,7 @@ void BotChatTest(bot_state_t *bs) {
 	for (i = 0; i < num; i++)
 	{
 		BotAI_BotInitialChat(bs, "level_end",
-				EasyClientName(bs->client, name, 32),	// 0
+				clientName,	// 0
 				BotRandomOpponentName(bs),				// 1
 				BotFirstClientInRankings(),				// 2
 				BotLastClientInRankings(),				// 3
@@ -1103,7 +1149,7 @@ void BotChatTest(bot_state_t *bs) {
 		trap_BotEnterChat(bs->cs, 0, CHAT_ALL);
 	}
 	//
-	EasyClientName(bs->lastkilledplayer, name, 32);
+	EasyClientName(bs->lastkilledplayer, name, sizeof(name));
 	//
 	num = trap_BotNumInitialChats(bs->cs, "kill_gauntlet");
 	for (i = 0; i < num; i++)

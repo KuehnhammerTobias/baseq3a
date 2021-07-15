@@ -154,14 +154,11 @@ static void CG_DrawChar( int x, int y, int width, int height, int ch ) {
 	row = ch>>4;
 	col = ch&15;
 
-	frow = row*0.0625;
-	fcol = col*0.0625;
-	size = 0.0625;
+	frow = row*0.0625f;
+	fcol = col*0.0625f;
+	size = 0.0625f;
 
-	trap_R_DrawStretchPic( ax, ay, aw, ah,
-					   fcol, frow, 
-					   fcol + size, frow + size, 
-					   cgs.media.charsetShader );
+	trap_R_DrawStretchPic( ax, ay, aw, ah, fcol, frow, fcol + size, frow + size, cgs.media.charsetShader );
 }
 
 
@@ -175,8 +172,8 @@ to a fixed color.
 Coordinates are at 640 by 480 virtual resolution
 ==================
 */
-void CG_DrawStringExt( int x, int y, const char *string, const float *setColor, 
-		qboolean forceColor, qboolean shadow, int charWidth, int charHeight, int maxChars ) {
+void CG_DrawStringExt( int x, int y, const char *string, const float *setColor, qboolean forceColor, qboolean shadow,
+					  int charWidth, int charHeight, int maxChars ) {
 	vec4_t		color;
 	const char	*s;
 	int			xx;
@@ -777,10 +774,10 @@ refresh window.
 static void CG_TileClearBox( int x, int y, int w, int h, qhandle_t hShader ) {
 	float	s1, t1, s2, t2;
 
-	s1 = x/64.0;
-	t1 = y/64.0;
-	s2 = (x+w)/64.0;
-	t2 = (y+h)/64.0;
+	s1 = x/64.0f;
+	t1 = y/64.0f;
+	s2 = (x+w)/64.0f;
+	t2 = (y+h)/64.0f;
 	trap_R_DrawStretchPic( x, y, w, h, s1, t1, s2, t2, hShader );
 }
 
@@ -800,8 +797,7 @@ void CG_TileClear( void ) {
 	w = cgs.glconfig.vidWidth;
 	h = cgs.glconfig.vidHeight;
 
-	if ( cg.refdef.x == 0 && cg.refdef.y == 0 && 
-		cg.refdef.width == w && cg.refdef.height == h ) {
+	if ( cg.refdef.x == 0 && cg.refdef.y == 0 && cg.refdef.width == w && cg.refdef.height == h ) {
 		return;		// full screen rendering
 	}
 
@@ -893,10 +889,10 @@ CG_TeamColor
 ================
 */
 const float *CG_TeamColor( team_t team ) {
-	static vec4_t	red = {1, 0.2f, 0.2f, 1};
-	static vec4_t	blue = {0.2f, 0.2f, 1, 1};
-	static vec4_t	other = {1, 1, 1, 1};
-	static vec4_t	spectator = {0.7f, 0.7f, 0.7f, 1};
+	static vec4_t	red = {1.0f, 0.2f, 0.2f, 1.0f};
+	static vec4_t	blue = {0.2f, 0.2f, 1.0f, 1.0f};
+	static vec4_t	other = {1.0f, 1.0f, 1.0f, 1.0f};
+	static vec4_t	spectator = {0.7f, 0.7f, 0.7f, 1.0f};
 
 	switch ( team ) {
 	case TEAM_RED:
@@ -962,8 +958,7 @@ CG_ColorForHealth
 */
 void CG_ColorForHealth( vec4_t hcolor ) {
 
-	CG_GetColorForHealth( cg.snap->ps.stats[STAT_HEALTH], 
-		cg.snap->ps.stats[STAT_ARMOR], hcolor );
+	CG_GetColorForHealth( cg.snap->ps.stats[STAT_HEALTH], cg.snap->ps.stats[STAT_ARMOR], hcolor );
 }
 
 
@@ -1238,8 +1233,8 @@ int UI_ProportionalStringWidth( const char* str ) {
 	return width;
 }
 
-static void UI_DrawProportionalString2( int x, int y, const char* str, vec4_t color, float sizeScale, qhandle_t charset )
-{
+static void UI_DrawProportionalString2( int x, int y, const char *str, const vec4_t color, float sizeScale,
+									   qhandle_t charset ) {
 	const char* s;
 	unsigned char	ch; // bk001204 - unsigned
 	float	ax;
@@ -1258,8 +1253,7 @@ static void UI_DrawProportionalString2( int x, int y, const char* str, vec4_t co
 	ay = y * cgs.screenYScale + cgs.screenYBias;
 
 	s = str;
-	while ( *s )
-	{
+	while ( *s ) {
 		ch = *s & 127;
 		if ( ch == ' ' ) {
 			aw = (float)PROP_SPACE_WIDTH * cgs.screenXScale * sizeScale;
@@ -1287,12 +1281,12 @@ static void UI_DrawProportionalString2( int x, int y, const char* str, vec4_t co
 UI_ProportionalSizeScale
 =================
 */
-float UI_ProportionalSizeScale( int style ) {
+static float UI_ProportionalSizeScale( int style ) {
 	if(  style & UI_SMALLFONT ) {
-		return 0.75;
+		return 0.75f;
 	}
 
-	return 1.00;
+	return 1.0f;
 }
 
 
@@ -1301,7 +1295,7 @@ float UI_ProportionalSizeScale( int style ) {
 UI_DrawProportionalString
 =================
 */
-void UI_DrawProportionalString( int x, int y, const char* str, int style, vec4_t color ) {
+void UI_DrawProportionalString( int x, int y, const char *str, int style, const vec4_t color ) {
 	vec4_t	drawcolor;
 	int		width;
 	float	sizeScale;
@@ -1340,16 +1334,16 @@ void UI_DrawProportionalString( int x, int y, const char* str, int style, vec4_t
 	}
 
 	if ( style & UI_PULSE ) {
-		drawcolor[0] = color[0] * 0.8;
-		drawcolor[1] = color[1] * 0.8;
-		drawcolor[2] = color[2] * 0.8;
+		drawcolor[0] = color[0] * 0.8f;
+		drawcolor[1] = color[1] * 0.8f;
+		drawcolor[2] = color[2] * 0.8f;
 		drawcolor[3] = color[3];
 		UI_DrawProportionalString2( x, y, str, color, sizeScale, cgs.media.charsetProp );
 
 		drawcolor[0] = color[0];
 		drawcolor[1] = color[1];
 		drawcolor[2] = color[2];
-		drawcolor[3] = 0.5 + 0.5 * sin( ( cg.time % TMOD_075 ) / PULSE_DIVISOR );
+		drawcolor[3] = 0.5f + 0.5f * sin( ( cg.time % TMOD_075 ) / PULSE_DIVISOR );
 		UI_DrawProportionalString2( x, y, str, drawcolor, sizeScale, cgs.media.charsetPropGlow );
 		return;
 	}

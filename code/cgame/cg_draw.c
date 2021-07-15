@@ -446,7 +446,7 @@ void CG_DrawFlagModel( float x, float y, float w, float h, int team, qboolean fo
 		}
 		CG_Draw3DModel( x, y, w, h, handle, 0, origin, angles );
 	} else if ( cg_drawIcons.integer ) {
-		gitem_t *item;
+		const gitem_t *item;
 
 		if( team == TEAM_RED ) {
 			item = BG_FindItemForPowerup( PW_REDFLAG );
@@ -541,8 +541,7 @@ CG_DrawTeamBackground
 
 ================
 */
-void CG_DrawTeamBackground( int x, int y, int w, int h, float alpha, int team )
-{
+void CG_DrawTeamBackground( int x, int y, int w, int h, float alpha, int team ) {
 	vec4_t		hcolor;
 
 	hcolor[3] = alpha;
@@ -1330,7 +1329,7 @@ static float CG_DrawPowerups( float y ) {
 	int		active;
 	playerState_t	*ps;
 	int		t;
-	gitem_t	*item;
+	const gitem_t	*item;
 	int		x;
 	int		color;
 	float	size;
@@ -1407,7 +1406,7 @@ static float CG_DrawPowerups( float y ) {
 
 		  if ( cg.powerupActive == sorted[i] && 
 			  cg.time - cg.powerupTime < PULSE_TIME ) {
-			  f = 1.0 - ( (float)( cg.time - cg.powerupTime ) / PULSE_TIME );
+			  f = 1.0f - ( (float)( cg.time - cg.powerupTime ) / PULSE_TIME );
 			  size = ICON_SIZE * ( 1.0 + ( PULSE_SCALE - 1.0 ) * f );
 		  } else {
 			  size = ICON_SIZE;
@@ -1713,7 +1712,7 @@ typedef struct {
 	int		snapshotCount;
 } lagometer_t;
 
-lagometer_t		lagometer;
+static lagometer_t		lagometer;
 
 /*
 ==============
@@ -2107,8 +2106,7 @@ static void CG_ScanForCrosshairEntity( void ) {
 	VectorCopy( cg.refdef.vieworg, start );
 	VectorMA( start, 131072, cg.refdef.viewaxis[0], end );
 
-	CG_Trace( &trace, start, vec3_origin, vec3_origin, end, 
-		cg.snap->ps.clientNum, CONTENTS_SOLID|CONTENTS_BODY );
+	CG_Trace( &trace, start, vec3_origin, vec3_origin, end,  cg.snap->ps.clientNum, CONTENTS_SOLID|CONTENTS_BODY );
 	if ( trace.entityNum >= MAX_CLIENTS ) {
 		return;
 	}
@@ -2905,8 +2903,7 @@ void CG_DrawActive( stereoFrame_t stereoView ) {
 	}
 
 	// optionally draw the tournement scoreboard instead
-	if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR &&
-		( cg.snap->ps.pm_flags & PMF_SCOREBOARD ) ) {
+	if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR && ( cg.snap->ps.pm_flags & PMF_SCOREBOARD ) ) {
 		CG_DrawTourneyScoreboard();
 		return;
 	}

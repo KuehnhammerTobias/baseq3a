@@ -302,8 +302,7 @@ static void CG_StepOffset( void ) {
 	// smooth out stair climbing
 	timeDelta = cg.time - cg.stepTime;
 	if ( timeDelta < STEP_TIME ) {
-		cg.refdef.vieworg[2] -= cg.stepChange 
-			* (STEP_TIME - timeDelta) / STEP_TIME;
+		cg.refdef.vieworg[2] -= cg.stepChange * (STEP_TIME - timeDelta) / STEP_TIME;
 	}
 }
 
@@ -397,8 +396,7 @@ static void CG_OffsetFirstPersonView( void ) {
 	// smooth out duck height changes
 	timeDelta = cg.time - cg.duckTime;
 	if ( timeDelta < DUCK_TIME) {
-		cg.refdef.vieworg[2] -= cg.duckChange 
-			* (DUCK_TIME - timeDelta) / DUCK_TIME;
+		cg.refdef.vieworg[2] -= cg.duckChange * (DUCK_TIME - timeDelta) / DUCK_TIME;
 	}
 
 	// add bob height
@@ -537,8 +535,7 @@ static int CG_CalcFov( void ) {
 		fov_x += v;
 		fov_y -= v;
 		inwater = qtrue;
-	}
-	else {
+	} else {
 		inwater = qfalse;
 	}
 
@@ -655,8 +652,7 @@ static int CG_CalcViewValues( void ) {
 
 	cg.bobcycle = ( ps->bobCycle & 128 ) >> 7;
 	cg.bobfracsin = fabs( sin( ( ps->bobCycle & 127 ) / 127.0 * M_PI ) );
-	cg.xyspeed = sqrt( ps->velocity[0] * ps->velocity[0] +
-		ps->velocity[1] * ps->velocity[1] );
+	cg.xyspeed = sqrt( ps->velocity[0] * ps->velocity[0] + ps->velocity[1] * ps->velocity[1] );
 
 
 	VectorCopy( ps->origin, cg.refdef.vieworg );
@@ -911,8 +907,7 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 			cg_timescale.value += cg_timescaleFadeSpeed.value * ((float)cg.frametime) / 1000;
 			if (cg_timescale.value > cg_timescaleFadeEnd.value)
 				cg_timescale.value = cg_timescaleFadeEnd.value;
-		}
-		else {
+		} else {
 			cg_timescale.value -= cg_timescaleFadeSpeed.value * ((float)cg.frametime) / 1000;
 			if (cg_timescale.value < cg_timescaleFadeEnd.value)
 				cg_timescale.value = cg_timescaleFadeEnd.value;

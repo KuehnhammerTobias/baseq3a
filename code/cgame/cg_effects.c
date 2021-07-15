@@ -62,7 +62,7 @@ void CG_BubbleTrail( const vec3_t start, const vec3_t end, float spacing ) {
 		le->leType = LE_MOVE_SCALE_FADE;
 		le->startTime = cg.time;
 		le->endTime = cg.time + 1000 + random() * 250;
-		le->lifeRate = 1.0 / ( le->endTime - le->startTime );
+		le->lifeRate = 1.0f / ( le->endTime - le->startTime );
 
 		re = &le->refEntity;
 		if ( intShaderTime )
@@ -79,7 +79,7 @@ void CG_BubbleTrail( const vec3_t start, const vec3_t end, float spacing ) {
 		re->shaderRGBA[2] = 0xff;
 		re->shaderRGBA[3] = 0xff;
 
-		le->color[3] = 1.0;
+		le->color[3] = 1.0f;
 
 		le->pos.trType = TR_LINEAR;
 		le->pos.trTime = cg.time;
@@ -99,14 +99,8 @@ CG_SmokePuff
 Adds a smoke puff or blood trail localEntity.
 =====================
 */
-localEntity_t *CG_SmokePuff( const vec3_t p, const vec3_t vel, 
-				   float radius,
-				   float r, float g, float b, float a,
-				   float duration,
-				   int startTime,
-				   int fadeInTime,
-				   int leFlags,
-				   qhandle_t hShader ) {
+localEntity_t *CG_SmokePuff( const vec3_t p, const vec3_t vel, float radius, float r, float g, float b, float a,
+				   float duration, int startTime, int fadeInTime, int leFlags, qhandle_t hShader ) {
 	static int	seed = 0x92;
 	localEntity_t	*le;
 	refEntity_t		*re;
@@ -130,10 +124,9 @@ localEntity_t *CG_SmokePuff( const vec3_t p, const vec3_t vel,
 	le->fadeInTime = fadeInTime;
 	le->endTime = startTime + duration;
 	if ( fadeInTime > startTime ) {
-		le->lifeRate = 1.0 / ( le->endTime - le->fadeInTime );
-	}
-	else {
-		le->lifeRate = 1.0 / ( le->endTime - le->startTime );
+		le->lifeRate = 1.0f / ( le->endTime - le->fadeInTime );
+	} else {
+		le->lifeRate = 1.0f / ( le->endTime - le->startTime );
 	}
 	le->color[0] = r;
 	le->color[1] = g; 
@@ -423,10 +416,10 @@ void CG_ScorePlum( int client, const vec3_t origin, int score ) {
 	le->leType = LE_SCOREPLUM;
 	le->startTime = cg.time;
 	le->endTime = cg.time + 4000;
-	le->lifeRate = 1.0 / ( le->endTime - le->startTime );
+	le->lifeRate = 1.0f / ( le->endTime - le->startTime );
 
 	
-	le->color[0] = le->color[1] = le->color[2] = le->color[3] = 1.0;
+	le->color[0] = le->color[1] = le->color[2] = le->color[3] = 1.0f;
 	le->radius = score;
 	
 	VectorCopy( origin, le->pos.trBase );
@@ -436,7 +429,6 @@ void CG_ScorePlum( int client, const vec3_t origin, int score ) {
 
 	//CG_Printf( "Plum origin %i %i %i -- %i\n", (int)org[0], (int)org[1], (int)org[2], (int)Distance(org, lastPos));
 	VectorCopy(origin, lastPos);
-
 
 	re = &le->refEntity;
 
@@ -453,9 +445,8 @@ void CG_ScorePlum( int client, const vec3_t origin, int score ) {
 CG_MakeExplosion
 ====================
 */
-localEntity_t *CG_MakeExplosion( const vec3_t origin, const vec3_t dir, 
-								qhandle_t hModel, qhandle_t shader,
-								int msec, qboolean isSprite ) {
+localEntity_t *CG_MakeExplosion( const vec3_t origin, const vec3_t dir, qhandle_t hModel, qhandle_t shader, int msec,
+								qboolean isSprite ) {
 	float			ang;
 	localEntity_t	*ex;
 	int				offset;

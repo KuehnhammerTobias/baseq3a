@@ -127,9 +127,8 @@ passed to the renderer.
 #define	MAX_MARK_FRAGMENTS	128
 #define	MAX_MARK_POINTS		384
 
-void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir, 
-				   float orientation, float red, float green, float blue, float alpha,
-				   qboolean alphaFade, float radius, qboolean temporary ) {
+void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir, float orientation, float red,
+				   float green, float blue, float alpha, qboolean alphaFade, float radius, qboolean temporary ) {
 	vec3_t			axis[3];
 	float			texCoordScale;
 	vec3_t			originalPoints[4];
@@ -158,10 +157,10 @@ void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 	RotatePointAroundVector( axis[2], axis[0], axis[1], orientation );
 	CrossProduct( axis[0], axis[2], axis[1] );
 
-	texCoordScale = 0.5 * 1.0 / radius;
+	texCoordScale = 0.5f * 1.0f / radius;
 
 	// create the full polygon
-	for ( i = 0 ; i < 3 ; i++ ) {
+	for ( i = 0 ; i < 3 ; i++) {
 		originalPoints[0][i] = origin[i] - radius * axis[1][i] - radius * axis[2][i];
 		originalPoints[1][i] = origin[i] + radius * axis[1][i] - radius * axis[2][i];
 		originalPoints[2][i] = origin[i] + radius * axis[1][i] + radius * axis[2][i];
@@ -170,8 +169,7 @@ void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 
 	// get the fragments
 	VectorScale( dir, -20, projection );
-	numFragments = trap_CM_MarkFragments( 4, (void *)originalPoints,
-					projection, MAX_MARK_POINTS, markPoints[0],
+	numFragments = trap_CM_MarkFragments( 4, (void *)originalPoints, projection, MAX_MARK_POINTS, markPoints[0],
 					MAX_MARK_FRAGMENTS, markFragments );
 
 	colors[0] = red * 255;

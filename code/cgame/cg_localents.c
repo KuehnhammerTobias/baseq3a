@@ -153,7 +153,7 @@ void CG_BloodTrail( localEntity_t *le ) {
 CG_FragmentBounceMark
 ================
 */
-void CG_FragmentBounceMark( localEntity_t *le, trace_t *trace ) {
+static void CG_FragmentBounceMark( localEntity_t *le, trace_t *trace ) {
 	int			radius;
 
 	if ( le->leMarkType == LEMT_BLOOD ) {
@@ -179,7 +179,7 @@ void CG_FragmentBounceMark( localEntity_t *le, trace_t *trace ) {
 CG_FragmentBounceSound
 ================
 */
-void CG_FragmentBounceSound( localEntity_t *le, trace_t *trace ) {
+static void CG_FragmentBounceSound( localEntity_t *le, trace_t *trace ) {
 	if ( le->leBounceSoundType == LEBS_BLOOD ) {
 		// half the gibs will make splat sounds
 		if ( rand() & 1 ) {
@@ -210,7 +210,7 @@ void CG_FragmentBounceSound( localEntity_t *le, trace_t *trace ) {
 CG_ReflectVelocity
 ================
 */
-void CG_ReflectVelocity( localEntity_t *le, trace_t *trace ) {
+static void CG_ReflectVelocity( localEntity_t *le, trace_t *trace ) {
 	vec3_t	velocity;
 	float	dot;
 	int		hitTime;
@@ -228,8 +228,7 @@ void CG_ReflectVelocity( localEntity_t *le, trace_t *trace ) {
 
 
 	// check for stop, making sure that even on low FPS systems it doesn't bobble
-	if ( trace->allsolid || 
-		( trace->plane.normal[2] > 0 && 
+	if ( trace->allsolid ||  ( trace->plane.normal[2] > 0 && 
 		( le->pos.trDelta[2] < 40 || le->pos.trDelta[2] < -cg.frametime * le->pos.trDelta[2] ) ) ) {
 		le->pos.trType = TR_STATIONARY;
 	} else {
@@ -370,8 +369,7 @@ static void CG_AddMoveScaleFade( localEntity_t *le ) {
 	if ( le->fadeInTime > le->startTime && cg.time < le->fadeInTime ) {
 		// fade / grow time
 		c = 1.0 - (float) ( le->fadeInTime - cg.time ) / ( le->fadeInTime - le->startTime );
-	}
-	else {
+	} else {
 		// fade / grow time
 		c = ( le->endTime - cg.time ) * le->lifeRate;
 	}
@@ -561,9 +559,9 @@ static void CG_AddExplosion( localEntity_t *ex ) {
 	ent = &ex->refEntity;
 
 	// add the entity
-	if ( intShaderTime )
+	if ( intShaderTime ) {
 		trap_R_AddRefEntityToScene2(ent);
-	else
+	} else
 		trap_R_AddRefEntityToScene(ent);
 
 	// add the dlight
@@ -820,8 +818,7 @@ void CG_AddScorePlum( localEntity_t *le ) {
 		re->shaderRGBA[0] = 0xff;
 		re->shaderRGBA[1] = 0x11;
 		re->shaderRGBA[2] = 0x11;
-	}
-	else {
+	} else {
 		re->shaderRGBA[0] = 0xff;
 		re->shaderRGBA[1] = 0xff;
 		re->shaderRGBA[2] = 0xff;

@@ -122,8 +122,7 @@ static void CG_ClipMoveToEntities ( const vec3_t start, const vec3_t mins, const
 		}
 
 
-		trap_CM_TransformedBoxTrace ( &trace, start, end,
-			mins, maxs, cmodel,  mask, origin, angles);
+		trap_CM_TransformedBoxTrace ( &trace, start, end, mins, maxs, cmodel,  mask, origin, angles);
 
 		if (trace.allsolid || trace.fraction < tr->fraction) {
 			trace.entityNum = ent->number;
@@ -249,11 +248,9 @@ static void CG_InterpolatePlayerState( qboolean grabAngles ) {
 	for ( i = 0 ; i < 3 ; i++ ) {
 		out->origin[i] = prev->ps.origin[i] + f * (next->ps.origin[i] - prev->ps.origin[i] );
 		if ( !grabAngles ) {
-			out->viewangles[i] = LerpAngle( 
-				prev->ps.viewangles[i], next->ps.viewangles[i], f );
+			out->viewangles[i] = LerpAngle(  prev->ps.viewangles[i], next->ps.viewangles[i], f );
 		}
-		out->velocity[i] = prev->ps.velocity[i] + 
-			f * (next->ps.velocity[i] - prev->ps.velocity[i] );
+		out->velocity[i] = prev->ps.velocity[i] +  f * (next->ps.velocity[i] - prev->ps.velocity[i] );
 	}
 
 }
@@ -935,8 +932,7 @@ void CG_PredictPlayerState( void ) {
 	cg_pmove.pointcontents = CG_PointContents;
 	if ( cg_pmove.ps->pm_type == PM_DEAD ) {
 		cg_pmove.tracemask = MASK_PLAYERSOLID & ~CONTENTS_BODY;
-	}
-	else {
+	} else {
 		cg_pmove.tracemask = MASK_PLAYERSOLID;
 	}
 	if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR ) {
@@ -953,8 +949,8 @@ void CG_PredictPlayerState( void ) {
 	// the last good position we had
 	cmdNum = current - CMD_BACKUP + 1;
 	trap_GetUserCmd( cmdNum, &oldestCmd );
-	if ( oldestCmd.serverTime > cg.snap->ps.commandTime 
-		&& oldestCmd.serverTime < cg.time ) {	// special check for map_restart
+	if ( oldestCmd.serverTime > cg.snap->ps.commandTime &&
+		oldestCmd.serverTime < cg.time ) {	// special check for map_restart
 		if ( cg_showmiss.integer ) {
 			CG_Printf ("exceeded PACKET_BACKUP on commands\n");
 		}
@@ -1203,9 +1199,8 @@ void CG_PredictPlayerState( void ) {
 	}
 
 	// adjust for the movement of the groundentity
-	CG_AdjustPositionForMover( cg.predictedPlayerState.origin, 
-		cg.predictedPlayerState.groundEntityNum, 
-		cg.physicsTime, cg.time, cg.predictedPlayerState.origin, cg.predictedPlayerState.viewangles, cg.predictedPlayerState.viewangles);
+	CG_AdjustPositionForMover( cg.predictedPlayerState.origin, cg.predictedPlayerState.groundEntityNum, cg.physicsTime,
+							  cg.time, cg.predictedPlayerState.origin, cg.predictedPlayerState.viewangles, cg.predictedPlayerState.viewangles);
 
 	if ( cg_showmiss.integer ) {
 		if (cg.predictedPlayerState.eventSequence > oldPlayerState.eventSequence + MAX_PS_EVENTS) {

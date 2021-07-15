@@ -192,8 +192,7 @@ static void CG_DrawClientScore( int y, score_t *score, float *color, float fade,
 
 		localClient = qtrue;
 
-		if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR 
-			|| cgs.gametype >= GT_TEAM ) {
+		if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR || cgs.gametype >= GT_TEAM ) {
 			rank = -1;
 		} else {
 			rank = cg.snap->ps.persistant[PERS_RANK] & ~RANK_TIED_FLAG;
@@ -347,7 +346,7 @@ qboolean CG_DrawOldScoreboard( void ) {
 
 	if ( cg.showScores || cg.predictedPlayerState.pm_type == PM_DEAD ||
 		 cg.predictedPlayerState.pm_type == PM_INTERMISSION ) {
-		fade = 1.0;
+		fade = 1.0f;
 		fadeColor = colorWhite;
 	} else {
 		fadeColor = CG_FadeColor( cg.scoreFadeTime, FADE_TIME );
@@ -391,10 +390,10 @@ qboolean CG_DrawOldScoreboard( void ) {
 	// scoreboard
 	y = SB_HEADER;
 
-	CG_DrawPic( SB_SCORE_X + (SB_RATING_WIDTH / 2), y, 64, 32, cgs.media.scoreboardScore );
-	CG_DrawPic( SB_PING_X - (SB_RATING_WIDTH / 2), y, 64, 32, cgs.media.scoreboardPing );
-	CG_DrawPic( SB_TIME_X - (SB_RATING_WIDTH / 2), y, 64, 32, cgs.media.scoreboardTime );
-	CG_DrawPic( SB_NAME_X - (SB_RATING_WIDTH / 2), y, 64, 32, cgs.media.scoreboardName );
+	CG_DrawPic((SB_SCORE_X + (SB_RATING_WIDTH / 2)), y, 64, 32, cgs.media.scoreboardScore );
+	CG_DrawPic((SB_PING_X - (SB_RATING_WIDTH / 2)), y, 64, 32, cgs.media.scoreboardPing );
+	CG_DrawPic((SB_TIME_X - (SB_RATING_WIDTH / 2)), y, 64, 32, cgs.media.scoreboardTime );
+	CG_DrawPic((SB_NAME_X - (SB_RATING_WIDTH / 2)), y, 64, 32, cgs.media.scoreboardName );
 
 	y = SB_TOP;
 

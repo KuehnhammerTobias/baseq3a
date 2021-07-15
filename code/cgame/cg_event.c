@@ -226,8 +226,7 @@ static void CG_Obituary( entityState_t *ent ) {
 
 		if ( cgs.gametype < GT_TEAM ) {
 			s = va("You fragged %s\n%s place with %i", targetName, 
-				CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ),
-				cg.snap->ps.persistant[PERS_SCORE] );
+				CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ), cg.snap->ps.persistant[PERS_SCORE] );
 		} else {
 			s = va("You fragged %s", targetName );
 		}
@@ -369,7 +368,7 @@ CG_UseItem
 static void CG_UseItem( centity_t *cent ) {
 	clientInfo_t *ci;
 	int			itemNum, clientNum;
-	gitem_t		*item;
+	const gitem_t		*item;
 	entityState_t *es;
 
 	es = &cent->currentState;
@@ -460,7 +459,7 @@ CG_WaterLevel
 Returns waterlevel for entity origin
 ================
 */
-int CG_WaterLevel(centity_t *cent) {
+static int CG_WaterLevel(centity_t *cent) {
 	vec3_t point;
 	int contents, sample1, sample2, anim, waterlevel;
 	int viewheight;
@@ -598,32 +597,27 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 	//
 	case EV_FOOTSTEP:
 		if (cg_footsteps.integer) {
-			trap_S_StartSound (NULL, es->number, CHAN_BODY, 
-				cgs.media.footsteps[ ci->footsteps ][rand()&3] );
+			trap_S_StartSound (NULL, es->number, CHAN_BODY, cgs.media.footsteps[ ci->footsteps ][rand()&3] );
 		}
 		break;
 	case EV_FOOTSTEP_METAL:
 		if (cg_footsteps.integer) {
-			trap_S_StartSound (NULL, es->number, CHAN_BODY, 
-				cgs.media.footsteps[ FOOTSTEP_METAL ][rand()&3] );
+			trap_S_StartSound (NULL, es->number, CHAN_BODY, cgs.media.footsteps[ FOOTSTEP_METAL ][rand()&3] );
 		}
 		break;
 	case EV_FOOTSPLASH:
 		if (cg_footsteps.integer) {
-			trap_S_StartSound (NULL, es->number, CHAN_BODY, 
-				cgs.media.footsteps[ FOOTSTEP_SPLASH ][rand()&3] );
+			trap_S_StartSound (NULL, es->number, CHAN_BODY, cgs.media.footsteps[ FOOTSTEP_SPLASH ][rand()&3] );
 		}
 		break;
 	case EV_FOOTWADE:
 		if (cg_footsteps.integer) {
-			trap_S_StartSound (NULL, es->number, CHAN_BODY, 
-				cgs.media.footsteps[ FOOTSTEP_SPLASH ][rand()&3] );
+			trap_S_StartSound (NULL, es->number, CHAN_BODY, cgs.media.footsteps[ FOOTSTEP_SPLASH ][rand()&3] );
 		}
 		break;
 	case EV_SWIM:
 		if (cg_footsteps.integer) {
-			trap_S_StartSound (NULL, es->number, CHAN_BODY, 
-				cgs.media.footsteps[ FOOTSTEP_SPLASH ][rand()&3] );
+			trap_S_StartSound (NULL, es->number, CHAN_BODY, cgs.media.footsteps[ FOOTSTEP_SPLASH ][rand()&3] );
 		}
 		break;
 
@@ -699,12 +693,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 			vec3_t			up = {0, 0, 1};
 
 
-			CG_SmokePuff( cent->lerpOrigin, up, 
-						  32, 
-						  1, 1, 1, 0.33f,
-						  1000, 
-						  cg.time, 0,
-						  LEF_PUFF_DONT_SCALE, 
+			CG_SmokePuff( cent->lerpOrigin, up,  32, 1, 1, 1, 0.33f, 1000, cg.time, 0, LEF_PUFF_DONT_SCALE, 
 						  cgs.media.smokePuffShader );
 		}
 
@@ -756,7 +745,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 
 	case EV_ITEM_PICKUP:
 		{
-			gitem_t	*item;
+			const gitem_t	*item;
 			int		index;
 
 			index = es->eventParm;		// player predicted
@@ -815,7 +804,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 
 	case EV_GLOBAL_ITEM_PICKUP:
 		{
-			gitem_t	*item;
+			const gitem_t	*item;
 			int		index;
 
 			index = es->eventParm;		// player predicted
@@ -837,7 +826,8 @@ void CG_EntityEvent( centity_t *cent, vec3_t position, int entityNum ) {
 			item = &bg_itemlist[ index ];
 			// powerup pickups are global
 			if( item->pickup_sound ) {
-				trap_S_StartSound (NULL, cg.snap->ps.clientNum, CHAN_AUTO, trap_S_RegisterSound( item->pickup_sound, qfalse ) );
+				trap_S_StartSound (NULL, cg.snap->ps.clientNum, CHAN_AUTO,
+								  trap_S_RegisterSound( item->pickup_sound, qfalse ) );
 			}
 
 			// show icon and name on status bar

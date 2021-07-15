@@ -249,7 +249,8 @@ static void CG_CheckPlayerstateEvents( const playerState_t *ps, const playerStat
 		if ( i >= ops->eventSequence
 			// or the server told us to play another event instead of a predicted event we already issued
 			// or something the server told us changed our prediction causing a different event
-			|| (i > ops->eventSequence - MAX_PS_EVENTS && ps->events[i & (MAX_PS_EVENTS-1)] != ops->events[i & (MAX_PS_EVENTS-1)]) ) {
+			|| (i > ops->eventSequence - MAX_PS_EVENTS &&
+				ps->events[i & (MAX_PS_EVENTS-1)] != ops->events[i & (MAX_PS_EVENTS-1)]) ) {
 
 			event = ps->events[ i & (MAX_PS_EVENTS-1) ];
 			if ( event == EV_NONE ) // ignore empty events
@@ -463,12 +464,10 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 		if ( !( cg.timelimitWarnings & 4 ) && msec > ( cgs.timelimit * 60 + 2 ) * 1000 ) {
 			cg.timelimitWarnings |= 1 | 2 | 4;
 			trap_S_StartLocalSound( cgs.media.suddenDeathSound, CHAN_ANNOUNCER );
-		}
-		else if ( !( cg.timelimitWarnings & 2 ) && msec > (cgs.timelimit - 1) * 60 * 1000 ) {
+		} else if ( !( cg.timelimitWarnings & 2 ) && msec > (cgs.timelimit - 1) * 60 * 1000 ) {
 			cg.timelimitWarnings |= 1 | 2;
 			CG_AddBufferedSound( cgs.media.oneMinuteSound );
-		}
-		else if ( cgs.timelimit > 5 && !( cg.timelimitWarnings & 1 ) && msec > (cgs.timelimit - 5) * 60 * 1000 ) {
+		} else if ( cgs.timelimit > 5 && !( cg.timelimitWarnings & 1 ) && msec > (cgs.timelimit - 5) * 60 * 1000 ) {
 			cg.timelimitWarnings |= 1;
 			CG_AddBufferedSound( cgs.media.fiveMinuteSound );
 		}
@@ -485,12 +484,10 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 		if ( !( cg.fraglimitWarnings & 4 ) && highScore == (cgs.fraglimit - 1) ) {
 			cg.fraglimitWarnings |= 1 | 2 | 4;
 			CG_AddBufferedSound(cgs.media.oneFragSound);
-		}
-		else if ( cgs.fraglimit > 2 && !( cg.fraglimitWarnings & 2 ) && highScore == (cgs.fraglimit - 2) ) {
+		} else if ( cgs.fraglimit > 2 && !( cg.fraglimitWarnings & 2 ) && highScore == (cgs.fraglimit - 2) ) {
 			cg.fraglimitWarnings |= 1 | 2;
 			CG_AddBufferedSound(cgs.media.twoFragSound);
-		}
-		else if ( cgs.fraglimit > 3 && !( cg.fraglimitWarnings & 1 ) && highScore == (cgs.fraglimit - 3) ) {
+		} else if ( cgs.fraglimit > 3 && !( cg.fraglimitWarnings & 1 ) && highScore == (cgs.fraglimit - 3) ) {
 			cg.fraglimitWarnings |= 1;
 			CG_AddBufferedSound(cgs.media.threeFragSound);
 		}

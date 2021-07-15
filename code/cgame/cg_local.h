@@ -128,11 +128,7 @@ typedef enum {
 	FOOTSTEP_TOTAL
 } footstep_t;
 
-typedef enum {
-	IMPACTSOUND_DEFAULT,
-	IMPACTSOUND_METAL,
-	IMPACTSOUND_FLESH
-} impactSound_t;
+typedef enum {IMPACTSOUND_DEFAULT, IMPACTSOUND_METAL, IMPACTSOUND_FLESH} impactSound_t;
 
 //=================================================
 
@@ -265,11 +261,7 @@ typedef enum {
 	LEF_SOUND2			 = 0x0008			// sound 2 for kamikaze
 } leFlag_t;
 
-typedef enum {
-	LEMT_NONE,
-	LEMT_BURN,
-	LEMT_BLOOD
-} leMarkType_t;			// fragment local entities can leave marks on walls
+typedef enum { LEMT_NONE, LEMT_BURN, LEMT_BLOOD } leMarkType_t;			// fragment local entities can leave marks on walls
 
 typedef enum {
 	LEBS_NONE,
@@ -414,7 +406,7 @@ typedef struct {
 // weapon and its effects
 typedef struct weaponInfo_s {
 	qboolean		registered;
-	gitem_t			*item;
+	const gitem_t			*item;
 
 	qhandle_t		handsModel;			// the hands don't actually draw, they just position the weapon
 	qhandle_t		weaponModel;
@@ -1349,8 +1341,8 @@ void CG_FillRect( float x, float y, float width, float height, const float *colo
 void CG_FillScreen( const float *color );
 void CG_DrawPic( float x, float y, float width, float height, qhandle_t hShader );
 
-void CG_DrawStringExt( int x, int y, const char *string, const float *setColor, 
-		qboolean forceColor, qboolean shadow, int charWidth, int charHeight, int maxChars );
+void CG_DrawStringExt( int x, int y, const char *string, const float *setColor, qboolean forceColor, qboolean shadow,
+					  int charWidth, int charHeight, int maxChars);
 
 int CG_DrawStrlen( const char *str );
 
@@ -1361,7 +1353,7 @@ void CG_TileClear( void );
 void CG_ColorForHealth( vec4_t hcolor );
 void CG_GetColorForHealth( int health, int armor, vec4_t hcolor );
 
-void UI_DrawProportionalString( int x, int y, const char* str, int style, vec4_t color );
+void UI_DrawProportionalString( int x, int y, const char *str, int style, const vec4_t color );
 void CG_DrawRect( float x, float y, float width, float height, float size, const float *color );
 void CG_DrawSides(float x, float y, float w, float h, float size);
 void CG_DrawTopBottom(float x, float y, float w, float h, float size);
@@ -1464,11 +1456,9 @@ void CG_AddPacketEntities( void );
 void CG_Beam( const centity_t *cent );
 void CG_AdjustPositionForMover(const vec3_t in, int moverNum, int fromTime, int toTime, vec3_t out, const vec3_t angles_in, vec3_t angles_out );
 
-void CG_PositionEntityOnTag( refEntity_t *entity, const refEntity_t *parent, 
-							qhandle_t parentModel, const char *tagName );
-void CG_PositionRotatedEntityOnTag( refEntity_t *entity, const refEntity_t *parent, 
-							qhandle_t parentModel, const char *tagName );
-
+void CG_PositionEntityOnTag( refEntity_t *entity, const refEntity_t *parent, qhandle_t parentModel, const char *tagName );
+void CG_PositionRotatedEntityOnTag( refEntity_t *entity, const refEntity_t *parent, qhandle_t parentModel,
+								   const char *tagName );
 
 
 //
@@ -1500,12 +1490,8 @@ void CG_OutOfAmmoChange( void );	// should this be in pmove?
 //
 void	CG_InitMarkPolys( void );
 void	CG_AddMarks( void );
-void	CG_ImpactMark( qhandle_t markShader, 
-				    const vec3_t origin, const vec3_t dir, 
-					float orientation, 
-				    float r, float g, float b, float a, 
-					qboolean alphaFade, 
-					float radius, qboolean temporary );
+void	CG_ImpactMark( qhandle_t markShader,  const vec3_t origin, const vec3_t dir, float orientation, float r, float g,
+				   float b, float a, qboolean alphaFade, float radius, qboolean temporary );
 
 //
 // cg_localents.c
@@ -1517,15 +1503,7 @@ void	CG_AddLocalEntities( void );
 //
 // cg_effects.c
 //
-localEntity_t *CG_SmokePuff( const vec3_t p, 
-				   const vec3_t vel, 
-				   float radius,
-				   float r, float g, float b, float a,
-				   float duration,
-				   int startTime,
-				   int fadeInTime,
-				   int leFlags,
-				   qhandle_t hShader );
+localEntity_t *CG_SmokePuff( const vec3_t p, const vec3_t vel,  float radius, float r, float g, float b, float a, float duration, int startTime, int fadeInTime, int leFlags, qhandle_t hShader );
 void CG_BubbleTrail( const vec3_t start, const vec3_t end, float spacing );
 void CG_SpawnEffect( const vec3_t origin );
 #ifdef MISSIONPACK
@@ -1543,8 +1521,7 @@ void CG_BigExplode( vec3_t playerOrigin );
 
 void CG_Bleed( const vec3_t origin, int entityNum );
 
-localEntity_t *CG_MakeExplosion( const vec3_t origin, const vec3_t dir,
-								qhandle_t hModel, qhandle_t shader, int msec,
+localEntity_t *CG_MakeExplosion( const vec3_t origin, const vec3_t dir, qhandle_t hModel, qhandle_t shader, int msec,
 								qboolean isSprite );
 
 //
@@ -1657,26 +1634,17 @@ clipHandle_t trap_CM_InlineModel( int index );		// 0 = world, 1+ = bmodels
 clipHandle_t trap_CM_TempBoxModel( const vec3_t mins, const vec3_t maxs );
 int			trap_CM_PointContents( const vec3_t p, clipHandle_t model );
 int			trap_CM_TransformedPointContents( const vec3_t p, clipHandle_t model, const vec3_t origin, const vec3_t angles );
-void		trap_CM_BoxTrace( trace_t *results, const vec3_t start, const vec3_t end,
-					  const vec3_t mins, const vec3_t maxs,
+void		trap_CM_BoxTrace( trace_t *results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs,
 					  clipHandle_t model, int brushmask );
-void		trap_CM_CapsuleTrace( trace_t *results, const vec3_t start, const vec3_t end,
-					  const vec3_t mins, const vec3_t maxs,
-					  clipHandle_t model, int brushmask );
-void		trap_CM_TransformedBoxTrace( trace_t *results, const vec3_t start, const vec3_t end,
-					  const vec3_t mins, const vec3_t maxs,
-					  clipHandle_t model, int brushmask,
-					  const vec3_t origin, const vec3_t angles );
-void		trap_CM_TransformedCapsuleTrace( trace_t *results, const vec3_t start, const vec3_t end,
-					  const vec3_t mins, const vec3_t maxs,
-					  clipHandle_t model, int brushmask,
-					  const vec3_t origin, const vec3_t angles );
+void		trap_CM_CapsuleTrace( trace_t *results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs, clipHandle_t model, int brushmask );
+void		trap_CM_TransformedBoxTrace( trace_t *results, const vec3_t start, const vec3_t end, const vec3_t mins,
+								 const vec3_t maxs, clipHandle_t model, int brushmask, const vec3_t origin,
+								 const vec3_t angles );
+void		trap_CM_TransformedCapsuleTrace( trace_t *results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs, clipHandle_t model, int brushmask, const vec3_t origin, const vec3_t angles );
 
 // Returns the projection of a polygon onto the solid brushes in the world
-int			trap_CM_MarkFragments( int numPoints, const vec3_t *points, 
-			const vec3_t projection,
-			int maxPoints, vec3_t pointBuffer,
-			int maxFragments, markFragment_t *fragmentBuffer );
+int			trap_CM_MarkFragments( int numPoints, const vec3_t *points, const vec3_t projection, int maxPoints,
+						  vec3_t pointBuffer, int maxFragments, markFragment_t *fragmentBuffer );
 
 // normal sounds will have their volume dynamically changed as their entity
 // moves and the listener moves
@@ -1721,11 +1689,10 @@ void		trap_R_AddAdditiveLightToScene( const vec3_t org, float intensity, float r
 int			trap_R_LightForPoint( vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir );
 void		trap_R_RenderScene( const refdef_t *fd );
 void		trap_R_SetColor( const float *rgba );	// NULL = 1,1,1,1
-void		trap_R_DrawStretchPic( float x, float y, float w, float h, 
-			float s1, float t1, float s2, float t2, qhandle_t hShader );
+void		trap_R_DrawStretchPic( float x, float y, float w, float h, float s1, float t1, float s2, float t2,
+						   qhandle_t hShader );
 void		trap_R_ModelBounds( clipHandle_t model, vec3_t mins, vec3_t maxs );
-int			trap_R_LerpTag( orientation_t *tag, clipHandle_t mod, int startFrame, int endFrame, 
-					   float frac, const char *tagName );
+int			trap_R_LerpTag( orientation_t *tag, clipHandle_t mod, int startFrame, int endFrame,  float frac, const char *tagName );
 void		trap_R_RemapShader( const char *oldShader, const char *newShader, const char *timeOffset );
 qboolean	trap_R_inPVS( const vec3_t p1, const vec3_t p2 );
 
@@ -1781,7 +1748,6 @@ typedef enum {
   CHAT_PRINT,
   TEAMCHAT_PRINT
 } q3print_t;
-
 
 int trap_CIN_PlayCinematic( const char *arg0, int xpos, int ypos, int width, int height, int bits);
 e_status trap_CIN_StopCinematic(int handle);

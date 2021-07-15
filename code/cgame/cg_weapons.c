@@ -617,7 +617,8 @@ The server says this item is used on this level
 */
 void CG_RegisterWeapon( int weaponNum ) {
 	weaponInfo_t	*weaponInfo;
-	gitem_t			*item, *ammo;
+	const gitem_t *item;
+	const gitem_t *ammo;
 	char			path[MAX_QPATH];
 	vec3_t			mins, maxs;
 	int				i;
@@ -852,7 +853,7 @@ The server says this item is used on this level
 */
 void CG_RegisterItemVisuals( int itemNum ) {
 	itemInfo_t		*itemInfo;
-	gitem_t			*item;
+	const gitem_t			*item;
 
 	if ( itemNum < 0 || itemNum >= bg_numItems ) {
 		CG_Error( "CG_RegisterItemVisuals: itemNum %d out of range [0-%d]", itemNum, bg_numItems-1 );
@@ -897,8 +898,8 @@ void CG_RegisterItemVisuals( int itemNum ) {
 	//
 	// powerups have an accompanying ring or sphere
 	//
-	if ( item->giType == IT_POWERUP || item->giType == IT_HEALTH || 
-		item->giType == IT_ARMOR || item->giType == IT_HOLDABLE ) {
+	if ( item->giType == IT_POWERUP || item->giType == IT_HEALTH ||  item->giType == IT_ARMOR ||
+		item->giType == IT_HOLDABLE ) {
 		if ( item->world_model[1] ) {
 			itemInfo->models[1] = trap_R_RegisterModel( item->world_model[1] );
 		}
@@ -923,20 +924,17 @@ CG_MapTorsoToWeaponFrame
 static int CG_MapTorsoToWeaponFrame( const clientInfo_t *ci, int frame ) {
 
 	// change weapon
-	if ( frame >= ci->animations[TORSO_DROP].firstFrame 
-		&& frame < ci->animations[TORSO_DROP].firstFrame + 9 ) {
+	if ( frame >= ci->animations[TORSO_DROP].firstFrame  && frame < ci->animations[TORSO_DROP].firstFrame + 9 ) {
 		return frame - ci->animations[TORSO_DROP].firstFrame + 6;
 	}
 
 	// stand attack
-	if ( frame >= ci->animations[TORSO_ATTACK].firstFrame 
-		&& frame < ci->animations[TORSO_ATTACK].firstFrame + 6 ) {
+	if ( frame >= ci->animations[TORSO_ATTACK].firstFrame && frame < ci->animations[TORSO_ATTACK].firstFrame + 6 ) {
 		return 1 + frame - ci->animations[TORSO_ATTACK].firstFrame;
 	}
 
 	// stand attack 2
-	if ( frame >= ci->animations[TORSO_ATTACK2].firstFrame 
-		&& frame < ci->animations[TORSO_ATTACK2].firstFrame + 6 ) {
+	if ( frame >= ci->animations[TORSO_ATTACK2].firstFrame && frame < ci->animations[TORSO_ATTACK2].firstFrame + 6 ) {
 		return 1 + frame - ci->animations[TORSO_ATTACK2].firstFrame;
 	}
 	
@@ -965,35 +963,34 @@ static void CG_CalculateWeaponPosition( vec3_t origin, vec3_t angles ) {
 	}
 
 	// gun angles from bobbing
-	angles[ROLL] += scale * cg.bobfracsin * 0.005;
-	angles[YAW] += scale * cg.bobfracsin * 0.01;
-	angles[PITCH] += cg.xyspeed * cg.bobfracsin * 0.005;
+	angles[ROLL] += scale * cg.bobfracsin * 0.005f;
+	angles[YAW] += scale * cg.bobfracsin * 0.01f;
+	angles[PITCH] += cg.xyspeed * cg.bobfracsin * 0.005f;
 
 	// drop the weapon when landing
 	delta = cg.time - cg.landTime;
 	if ( delta < LAND_DEFLECT_TIME ) {
-		origin[2] += cg.landChange*0.25 * delta / LAND_DEFLECT_TIME;
+		origin[2] += cg.landChange*0.25f * delta / LAND_DEFLECT_TIME;
 	} else if ( delta < LAND_DEFLECT_TIME + LAND_RETURN_TIME ) {
-		origin[2] += cg.landChange*0.25 * 
-			(LAND_DEFLECT_TIME + LAND_RETURN_TIME - delta) / LAND_RETURN_TIME;
+		origin[2] += cg.landChange*0.25f * (LAND_DEFLECT_TIME + LAND_RETURN_TIME - delta) / LAND_RETURN_TIME;
 	}
 
 #if 0
 	// drop the weapon when stair climbing
 	delta = cg.time - cg.stepTime;
 	if ( delta < STEP_TIME/2 ) {
-		origin[2] -= cg.stepChange*0.25 * delta / (STEP_TIME/2);
+		origin[2] -= cg.stepChange*0.25f * delta / (STEP_TIME/2);
 	} else if ( delta < STEP_TIME ) {
-		origin[2] -= cg.stepChange*0.25 * (STEP_TIME - delta) / (STEP_TIME/2);
+		origin[2] -= cg.stepChange*0.25f * (STEP_TIME - delta) / (STEP_TIME/2);
 	}
 #endif
 
 	// idle drift
 	scale = cg.xyspeed + 40;
-	fracsin = sin( ( cg.time % TMOD_1000 ) * 0.001 );
-	angles[ROLL] += scale * fracsin * 0.01;
-	angles[YAW] += scale * fracsin * 0.01;
-	angles[PITCH] += scale * fracsin * 0.01;
+	fracsin = sin( ( cg.time % TMOD_1000 ) * 0.001f );
+	angles[ROLL] += scale * fracsin * 0.01f;
+	angles[YAW] += scale * fracsin * 0.01f;
+	angles[PITCH] += scale * fracsin * 0.01f;
 }
 
 
@@ -1214,7 +1211,7 @@ static float	CG_MachinegunSpinAngle( centity_t *cent ) {
 			delta = COAST_TIME;
 		}
 
-		speed = 0.5 * ( SPIN_SPEED + (float)( COAST_TIME - delta ) / COAST_TIME );
+		speed = 0.5f * ( SPIN_SPEED + (float)( COAST_TIME - delta ) / COAST_TIME );
 		angle = cent->pe.barrelAngle + delta * speed;
 	}
 
@@ -1852,8 +1849,7 @@ void CG_FireWeapon( centity_t *cent ) {
 	}
 	if ( c > 0 ) {
 		c = rand() % c;
-		if ( weap->flashSound[c] )
-		{
+		if ( weap->flashSound[c] ) {
 			trap_S_StartSound( NULL, ent->number, CHAN_WEAPON, weap->flashSound[c] );
 		}
 	}
@@ -1891,9 +1887,9 @@ void CG_MissileHitWall( weapon_t weapon, int clientNum, vec3_t origin, vec3_t di
 	mod = 0;
 	shader = 0;
 	light = 0;
-	lightColor[0] = 1;
-	lightColor[1] = 1;
-	lightColor[2] = 0;
+	lightColor[0] = 1.0f;
+	lightColor[1] = 1.0f;
+	lightColor[2] = 0.0f;
 
 	// set defaults
 	isSprite = qfalse;
@@ -1956,9 +1952,9 @@ void CG_MissileHitWall( weapon_t weapon, int clientNum, vec3_t origin, vec3_t di
 		light = RL_EXPLOSION_RADIUS;
 		isSprite = qtrue;
 		duration = 1000;
-		lightColor[0] = 1.0;
-		lightColor[1] = 0.75;
-		lightColor[2] = 0.0;
+		lightColor[0] = 1.0f;
+		lightColor[1] = 0.75f;
+		lightColor[2] = 0.0f;
 		if (cg_oldRocket.integer == 0) {
 			// explosion sprite animation
 			VectorMA( origin, 24, dir, sprOrg );
@@ -2052,9 +2048,7 @@ void CG_MissileHitWall( weapon_t weapon, int clientNum, vec3_t origin, vec3_t di
 	// create the explosion
 	//
 	if ( mod ) {
-		le = CG_MakeExplosion( origin, dir, 
-							   mod,	shader,
-							   duration, isSprite );
+		le = CG_MakeExplosion( origin, dir,  mod,	shader, duration, isSprite );
 		le->light = light;
 		VectorCopy( lightColor, le->lightColor );
 		if ( weapon == WP_RAILGUN ) {
@@ -2076,9 +2070,9 @@ void CG_MissileHitWall( weapon_t weapon, int clientNum, vec3_t origin, vec3_t di
 
 		// colorize with client color
 		color = cgs.clientinfo[clientNum].color1; // was color2
-		CG_ImpactMark( mark, origin, dir, random()*360, color[0],color[1], color[2],1.0, alphaFade, radius, qfalse );
+		CG_ImpactMark( mark, origin, dir, random()*360, color[0],color[1], color[2],1.0f, alphaFade, radius, qfalse );
 	} else {
-		CG_ImpactMark( mark, origin, dir, random()*360, 1.0,1.0,1.0,1.0, alphaFade, radius, qfalse );
+		CG_ImpactMark( mark, origin, dir, random()*360, 1.0f,1.0f,1.0f,1.0f, alphaFade, radius, qfalse );
 	}
 }
 

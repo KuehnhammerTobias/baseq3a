@@ -358,7 +358,7 @@ static const cvarTable_t cvarTable[] = {
 CG_RegisterCvars
 =================
 */
-void CG_RegisterCvars( void ) {
+static void CG_RegisterCvars( void ) {
 	int			i;
 	const cvarTable_t	*cv;
 	char		var[MAX_TOKEN_CHARS];
@@ -538,7 +538,7 @@ The server says this item is used on this level
 =================
 */
 static void CG_RegisterItemSounds( int itemNum ) {
-	gitem_t			*item;
+	const gitem_t			*item;
 	char			data[MAX_QPATH];
 	const char			*s, *start;
 	int				len;
@@ -562,8 +562,7 @@ static void CG_RegisterItemSounds( int itemNum ) {
 
 		len = s-start;
 		if (len >= MAX_QPATH || len < 5) {
-			CG_Error( "PrecacheItem: %s has bad precache string", 
-				item->classname);
+			CG_Error( "PrecacheItem: %s has bad precache string", item->classname);
 			return;
 		}
 		memcpy (data, start, len);
@@ -861,7 +860,7 @@ This function may execute for a couple of minutes with a slow disk.
 static void CG_RegisterGraphics( void ) {
 	int			i;
 	char		items[MAX_ITEMS+1];
-	static char		*sb_nums[11] = {
+	static const char		*sb_nums[11] = {
 		"gfx/2d/numbers/zero_32b",
 		"gfx/2d/numbers/one_32b",
 		"gfx/2d/numbers/two_32b",

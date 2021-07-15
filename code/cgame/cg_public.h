@@ -19,7 +19,6 @@ along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
-//
 
 
 #define	CMD_BACKUP			64	
@@ -53,12 +52,7 @@ typedef struct {
 	int				serverCommandSequence;	// snapshot becomes current
 } snapshot_t;
 
-typedef enum {
-  CGAME_EVENT_NONE,
-  CGAME_EVENT_TEAMMENU,
-  CGAME_EVENT_SCOREBOARD,
-  CGAME_EVENT_EDITHUD
-} cgame_event_t;
+typedef enum { CGAME_EVENT_NONE, CGAME_EVENT_TEAMMENU, CGAME_EVENT_SCOREBOARD, CGAME_EVENT_EDITHUD } cgame_event_t;
 
 
 /*
